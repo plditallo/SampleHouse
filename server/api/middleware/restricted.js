@@ -2,7 +2,9 @@ module.exports = (req, res, next) => {
   const {
     authorization
   } = req.headers;
-  // console.log({ authorization });
+  console.log("restricted", {
+    authorization
+  });
   if (authorization) {
     jwt.verify(authorization, JWT_SECRET, (err, decodedToken) => {
       if (err) {
