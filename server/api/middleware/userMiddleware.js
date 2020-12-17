@@ -27,8 +27,8 @@ function validateUserBody(req, res, next) {
 
 function checkExistingUsers(req, res, next) {
     const user = req.body
-    userDb.getUserByEmail(user.email).then(oldUser => {
-        if (oldUser.length) {
+    userDb.getUserByEmail(user.email).then(([oldUser]) => {
+        if (oldUser) {
             res.status(400).json({
                 message: "This email is already associated with an account.",
             })

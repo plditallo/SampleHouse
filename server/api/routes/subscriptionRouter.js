@@ -1,37 +1,17 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
-const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
-
-// const {
-//     JWT_SECRET = "not a secret"
-// } = process.env;
+const subDb = require('../../../database/model/subscriptionModel');
 
 const {
-    validateUserBody,
-    checkExistingUsers,
-    validateHeaders,
-} = require("../middleware/userMiddleware");
+    validateUser
+} = require("../middleware/subscriptionMiddleware");
 
-router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
+router.post("/subscribe", validateUser, (req, res) => {
     let user = req.body;
-    const hash = bcrypt.hashSync(user.password, 13);
-    user.password = hash;
-    console.log(user)
-    userDb
-        .insertUser(user)
-        .then(([newUser]) => {
-            // user.token = generateToken(newUser);
-            res.status(201).json({
-                user
-            });
-        })
-        .catch((err) =>
-            res.status(500).json(err)
-        );
+    
 });
 
-//todo validateHeaders middleware
+// !remove below
 router.post("/login", (req, res) => {
     const {
         email,
