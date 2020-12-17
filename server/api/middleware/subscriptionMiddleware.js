@@ -1,13 +1,15 @@
 const userDb = require("../../../database/model/userModel");
+const subDb = require("../../../database/model/subscriptionModel");
 
 module.exports = {
-    validateUser
+    validateUser,
+    validateSubscription
 };
 
 
 function validateUser(req, res, next) {
-    const user = req.body
-    userDb.getUserByEmail(user.email).then(([user]) => {
+    const email = req.body.email
+    userDb.getUserByEmail(email).then(([user]) => {
         if (user) next()
         else {
             res.status(400).json({
@@ -15,8 +17,18 @@ function validateUser(req, res, next) {
             })
         }
     })
+}
 
-
+function validateSubscription(req, res, next) {
+    const tier = req.body.subscription
+    subDb.getSubByTier(tier).then(([sub]) => {
+        if (sub) next()
+        else {
+            res.status(400).json({
+                message: "No Subscription found.",
+            })
+        }
+    })
 }
 
 function validateHeaders(req, res, next) {

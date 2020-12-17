@@ -10,9 +10,10 @@ const bcrypt = require("bcryptjs");
 const {
     validateUserBody,
     checkExistingUsers,
+    validateSubscription,
     validateHeaders,
 } = require("../middleware/userMiddleware");
-
+// todo validateSubscription for login
 router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 13);
