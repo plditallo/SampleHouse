@@ -4,22 +4,16 @@ exports.seed = function (knex) {
     .then(function () {
       // Inserts seed entries
       return knex('User').insert([{
-          id: 1,
           email: 'user1',
-          password: 'pass1',
-          tier: 1
+          password: 'pass1'
         },
         {
-          id: 2,
           email: 'user2',
-          password: 'pass2',
-          tier: 2
+          password: 'pass2'
         },
         {
-          id: 3,
           email: 'user3',
-          password: 'pass3',
-          tier: 3
+          password: 'pass3'
         },
       ]);
     });
