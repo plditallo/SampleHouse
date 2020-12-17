@@ -4,7 +4,7 @@ module.exports = {
     insertUser,
     getUsers,
     getUserById,
-    getUserByUsername,
+    getUserByEmail,
     updateUser,
     removeUser
 }
@@ -17,9 +17,9 @@ function getUsers() {
     return db("User")
 }
 
-function getUserByUsername(username) {
+function getUserByEmail(email) {
     return db("User").where({
-        username
+        email
     })
 }
 
