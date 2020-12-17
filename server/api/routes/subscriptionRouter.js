@@ -3,12 +3,37 @@ const userDb = require("../../../database/model/userModel");
 const subDb = require('../../../database/model/subscriptionModel');
 
 const {
-    validateUser
+    validateUser,
+    validateSubscription
 } = require("../middleware/subscriptionMiddleware");
 
-router.post("/subscribe", validateUser, (req, res) => {
-    let user = req.body;
-    
+router.post("/subscribe", validateUser, validateSubscription, (req, res) => {
+    const {
+        email,
+        subscription
+    } = req.body;
+
+    userDb.getUserByEmail(email).then(([user]) => subDb.getSubByTier(subscription).then(([sub]) => {
+        const data = {
+            "subDate": Date.now(),
+            "balance": user.balance + sub.credits,
+            "tier": subscription
+        }
+        userDb.updateUser(user.id, data).then(resp => res.status(201).json(resp)).catch(err => res.status(403).json(err))
+    }))
+    // const user = async () => await userDb.getUserByEmail(email).then(([user]) => user).catch(err => res.status(403).json(err))
+
+    // const sub = subDb.getSubByTier(subscription).then(([sub]) => sub).catch(err => res.status(403).json(err));
+
+    // const data = {
+    //     "subDate": Date.now(),
+    //     "balance": user.balance + sub.credits,
+    //     "tier": subscription
+    // }
+
+    // console.log(user, sub, data)
+
+    // userDb.updateUser(user.id, data).then(resp => res.status(201).json(resp)).catch(err => res.status(403).json(err))
 });
 
 // !remove below
