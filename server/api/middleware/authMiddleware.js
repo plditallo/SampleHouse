@@ -7,6 +7,8 @@ module.exports = {
 };
 
 function validateUserBody(req, res, next) {
+    //todo validate email w/ @ regenex?
+    // todo validate email w/ confirmation
     const user = req.body;
 
     if (user) {

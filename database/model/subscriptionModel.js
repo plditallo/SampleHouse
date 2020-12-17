@@ -2,36 +2,36 @@ const db = require("../database-config");
 
 module.exports = {
     insertSub,
-    getSub,
-    getSubById,
+    getSubs,
+    getSubByTier,
     updateSub,
     removeSub
 }
 
 function insertSub(data) {
-    return db("User").insert(data)
+    return db("Subscription").insert(data)
 }
 
-function getSub() {
-    return db("User")
+function getSubs() {
+    return db("Subscription")
 }
 
-function getSubById(id) {
-    return db("User").where({
-        id
+function getSubByTier(tier) {
+    return db("Subscription").where({
+        tier
     })
 }
 
-function updateSub(id, data) {
-    return db("User").update(data)
+function updateSub(tier, data) {
+    return db("Subscription").update(data)
         .where({
-            id
+            tier
         })
 
 }
 
-function removeSub(id) {
-    return db("User").where({
-        id
+function removeSub(tier) {
+    return db("Subscription").where({
+        tier
     }).del();
 }

@@ -1,17 +1,17 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
-const {
-    JWT_SECRET = "not a secret"
-} = process.env;
+// const {
+//     JWT_SECRET = "not a secret"
+// } = process.env;
 
 const {
     validateUserBody,
     checkExistingUsers,
     validateHeaders,
-} = require("../middleware/auth");
+} = require("../middleware/authMiddleware");
 
 router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
     let user = req.body;
@@ -21,7 +21,7 @@ router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
     userDb
         .insertUser(user)
         .then(([newUser]) => {
-            user.token = generateToken(newUser);
+            // user.token = generateToken(newUser);
             res.status(201).json({
                 user
             });
@@ -31,24 +31,22 @@ router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
         );
 });
 
-router.post("/login", validateHeaders, (req, res) => {
+//todo validateHeaders middleware
+router.post("/login", (req, res) => {
     const {
-        username,
+        email,
         password
     } = req.body;
     userDb
-        .getUserByUsername(username)
-        .then((user) => {
+        .getUserByEmail(email)
+        .then(([user]) => {
             if (!user) {
                 res.status(403).json({
-                    errorMessage: "Invalid credentials, please try again.",
-                    errorFrom: "Incorrect Username"
+                    message: "Email is not associated with any account."
                 });
             } else if (bcrypt.compareSync(password, user.password)) {
-                user.token = generateToken(user);
-                res.status(200).json({
-                    user
-                });
+                // user.token = generateToken(user);
+                res.status(200).json(user);
             } else {
                 res.status(403).json({
                     errorMessage: "Invalid credentials, please try again."
