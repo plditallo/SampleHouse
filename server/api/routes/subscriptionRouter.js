@@ -14,10 +14,12 @@ router.post("/subscribe", validateUser, validateSubscription, (req, res) => {
     } = req.body;
 
     userDb.getUserByEmail(email).then(([user]) => subDb.getSubByTier(subscription).then(([sub]) => {
+        console.log(user.subDate)
+        // todo check for current sub and add 30 days
         const data = {
             "subDate": Date.now(),
             "balance": user.balance + sub.credits,
-            "tier": subscription
+            "tier": sub.tier
         }
         userDb.updateUser(user.id, data).then(resp => res.status(201).json(resp)).catch(err => res.status(403).json(err))
     }))
