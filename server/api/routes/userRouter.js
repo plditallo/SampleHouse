@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
 const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const {
+    v1: uuidv1
+} = require('uuid');
 
-// const {
-//     JWT_SECRET = "not a secret"
-// } = process.env;
+const {
+    JWT_SECRET = "not a secret"
+} = process.env;
 
 const {
     validateUserBody,
@@ -18,13 +21,14 @@ router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 13);
     user.password = hash;
-    console.log(user)
+    user.id = uuidv1();
+    // console.log(user)
     userDb
         .insertUser(user)
         .then(([newUser]) => {
             // user.token = generateToken(newUser);
             res.status(201).json({
-                user
+                newUser
             });
         })
         .catch((err) =>
@@ -46,7 +50,7 @@ router.post("/login", (req, res) => {
                     message: "Email is not associated with any account."
                 });
             } else if (bcrypt.compareSync(password, user.password)) {
-                // user.token = generateToken(user);
+                user.token = generateToken(user);
                 res.status(200).json(user);
             } else {
                 res.status(403).json({
