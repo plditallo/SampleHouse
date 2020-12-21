@@ -1,0 +1,11 @@
+def first_not_repeating_character(s):
+    dic = dict()
+    for l in s:
+        if l not in dic:
+            dic[l] = 1
+        else:
+            return l
+    return "_"
+
+print(first_not_repeating_character("12345"))
+print(first_not_repeating_character("123345"))

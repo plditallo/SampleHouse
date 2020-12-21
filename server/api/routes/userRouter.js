@@ -17,7 +17,9 @@ const {
     validateHeaders,
 } = require("../middleware/userMiddleware");
 // todo validateSubscription for login
+
 router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
+    //todo email validation
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 13);
     user.password = hash;
@@ -26,7 +28,7 @@ router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
     userDb
         .insertUser(user)
         .then(([newUser]) => {
-            // user.token = generateToken(newUser);
+            user.token = generateToken(newUser);
             res.status(201).json({
                 newUser
             });
@@ -35,13 +37,14 @@ router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
             res.status(500).json(err)
         );
 });
-
-//todo validateHeaders middleware
+// todo forgot password
+// todo validateHeaders middleware
 router.post("/login", (req, res) => {
     const {
         email,
         password
     } = req.body;
+
     userDb
         .getUserByEmail(email)
         .then(([user]) => {
@@ -63,6 +66,33 @@ router.post("/login", (req, res) => {
             error: err,
         }))
 });
+
+
+//todo validate w/ token
+router.post("/token", restricted, (req, res) => {
+    const {
+        authorization
+    } = req.headers;
+    console.log("restricted", {
+        authorization
+    });
+    if (authorization) {
+        jwt.verify(authorization, JWT_SECRET, (err, decodedToken) => {
+            if (err) {
+                res.status(401).json({
+                    errorMessage: "Invalid Credentials"
+                });
+            } else {
+                req.decodedToken = decodedToken;
+                next();
+            }
+        });
+    } else {
+        res.status(400).json({
+            message: "No credentials provided"
+        });
+    }
+})
 
 router.get("/users", (req, res) => {
     userDb
@@ -88,7 +118,7 @@ function generateToken(user) {
     };
     // const secret = JWT_SECRET || "not a secret";
     const options = {
-        expiresIn: "2w",
+        expiresIn: "72h",
     };
     return jwt.sign(payload, JWT_SECRET, options);
 }
