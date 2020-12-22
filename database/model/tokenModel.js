@@ -1,31 +1,31 @@
 const db = require("../database-config");
 
 module.exports = {
-    insert,
-    getUserById,
-    getUserByEmail,
-    updateUser,
-    removeUser
+    insert
 }
 
-function insert(data) {
-    return db("User").insert(data)
+function insert(token) {
+    return db("Token").insert(token)
+}
+
+function getUsers() {
+    return db("Token")
 }
 
 function getUserByEmail(email) {
-    return db("User").where({
+    return db("Token").where({
         email
     })
 }
 
 function getUserById(id) {
-    return db("User").where({
+    return db("Token").where({
         id
     })
 }
 
 function updateUser(id, data) {
-    return db("User").update(data)
+    return db("Token").update(data)
         .where({
             id
         })
@@ -33,7 +33,7 @@ function updateUser(id, data) {
 }
 
 function removeUser(id) {
-    return db("User").where({
+    return db("Token").where({
         id
     }).del();
 }

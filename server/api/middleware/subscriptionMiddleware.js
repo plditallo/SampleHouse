@@ -13,7 +13,7 @@ function validateUser(req, res, next) {
         if (user) next()
         else {
             res.status(400).json({
-                message: "No user found.",
+                msg: "No user found.",
             })
         }
     })
@@ -25,7 +25,7 @@ function validateSubscription(req, res, next) {
         if (sub) next()
         else {
             res.status(400).json({
-                message: "No Subscription found.",
+                msg: "No Subscription found.",
             })
         }
     })

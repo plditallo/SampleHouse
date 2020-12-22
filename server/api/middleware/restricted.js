@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     jwt.verify(authorization, JWT_SECRET, (err, decodedToken) => {
       if (err) {
         res.status(401).json({
-          errorMessage: "Invalid Credentials"
+          errormsg: "Invalid Credentials"
         });
       } else {
         req.decodedToken = decodedToken;
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
     });
   } else {
     res.status(400).json({
-      message: "No credentials provided"
+      msg: "No credentials provided"
     });
   }
 };
