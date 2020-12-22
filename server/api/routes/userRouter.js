@@ -1,111 +1,137 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
+const tokenDb = require("../../../database/model/tokenModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const {
     v1: uuidv1
 } = require('uuid');
+const {
+    body,
+    validationResult
+} = require('express-validator');
+
 
 const {
-    JWT_SECRET = "not a secret"
+    SENDGRID_USERNAME,
+    SENDGRID_PASSWORD,
+    JWT_SECRET = "not a secret",
 } = process.env;
 
 const {
-    validateUserBody,
-    checkExistingUsers,
-    validateSubscription,
-    validateHeaders,
+    checkExistingUsers
 } = require("../middleware/userMiddleware");
+
 // todo validateSubscription for login
 
-router.post("/register", validateUserBody, checkExistingUsers, (req, res) => {
-    //todo email validation
-    let user = req.body;
-    const hash = bcrypt.hashSync(user.password, 13);
-    user.password = hash;
-    user.id = uuidv1();
-    // console.log(user)
-    userDb
-        .insertUser(user)
-        .then(([newUser]) => {
-            user.token = generateToken(newUser);
-            res.status(201).json({
-                newUser
-            });
+router.post("/register",
+    //* validate email and password
+    [body('email').isEmail().normalizeEmail(),
+        body('password').isLength({
+            min: 6
         })
-        .catch((err) =>
-            res.status(500).json(err)
-        );
-});
+    ],
+    checkExistingUsers, (req, res) => {
+        //todo email validation
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).send(errors.array());
+        const {
+            email,
+            password
+        } = req.body;
+        const hash = bcrypt.hashSync(password, 13);
+        const user = {
+            id: uuidv1(),
+            email: email,
+            password: hash,
+        }
+        //* Create validation token
+        const token = {
+            userId: user.id,
+            token: crypto.randomBytes(16).toString('hex')
+        }
+
+        const transporter = nodemailer.createTransport({
+            //todo check other smtp mail servers (SendinBlue)
+            service: 'Sendgrid',
+            host: "smtp.sendgrid.net",
+            port: 465,
+            secure: true, //true only for port 465
+            auth: {
+                user: SENDGRID_USERNAME,
+                pass: SENDGRID_PASSWORD
+            }
+        });
+        const mailOptions = {
+            from: 'no-reply@craigVST.com',
+            to: user.email,
+            subject: 'Craig VST Account Verification Token',
+            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
+        };
+        userDb
+            .insert(user)
+            .then(([newUser]) => {
+                tokenDb.insert(token).catch(err => res.status(500).send(err))
+                //* Send verification email
+                transporter.sendMail(mailOptions, (err) => {
+                    if (err) return res.status(500).send({
+                        msg: err.message
+                    });
+                    return res.status(200).send('A verification email has been sent to ' + user.email + '.');
+                });
+            })
+            .catch((err) =>
+                res.status(500).json(err)
+            );
+    });
 // todo forgot password
 // todo validateHeaders middleware
-router.post("/login", (req, res) => {
-    const {
-        email,
-        password
-    } = req.body;
+//todo logging in from VST? (Header?)
+router.post("/login",
+    [body('email').isEmail().normalizeEmail()], (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).send(errors.array());
 
-    userDb
-        .getUserByEmail(email)
-        .then(([user]) => {
-            if (!user) {
-                res.status(403).json({
-                    message: "Email is not associated with any account."
+        const {
+            email,
+            password
+        } = req.body;
+
+        userDb
+            .getUserByEmail(email)
+            .then(([user]) => {
+                if (!user) return res.status(403).json({
+                    msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
                 });
-            } else if (bcrypt.compareSync(password, user.password)) {
+                //* Check password
+                if (!bcrypt.compareSync(password, user.password)) {
+                    res.status(403).json({
+                        errormsg: "Invalid credentials"
+                    });
+                }
+                //* Check user has verified email
+                if (!user.isVerified) return res.status(401).send({
+                    type: 'not-verified',
+                    msg: 'Your account has not been verified.'
+                });
+                //* Login successful, write token, and send back user
                 user.token = generateToken(user);
                 res.status(200).json(user);
-            } else {
-                res.status(403).json({
-                    errorMessage: "Invalid credentials, please try again."
-                });
-            }
-        })
-        .catch((err) => res.status(500).json({
-            errorMessage: "unable to retrieve user",
-            error: err,
-        }))
-});
-
-
-//todo validate w/ token
-router.post("/token", restricted, (req, res) => {
-    const {
-        authorization
-    } = req.headers;
-    console.log("restricted", {
-        authorization
+            })
+            .catch((err) => res.status(500).json({
+                errormsg: "unable to retrieve user",
+                error: err,
+            }))
     });
-    if (authorization) {
-        jwt.verify(authorization, JWT_SECRET, (err, decodedToken) => {
-            if (err) {
-                res.status(401).json({
-                    errorMessage: "Invalid Credentials"
-                });
-            } else {
-                req.decodedToken = decodedToken;
-                next();
-            }
-        });
-    } else {
-        res.status(400).json({
-            message: "No credentials provided"
-        });
-    }
-})
 
-router.get("/users", (req, res) => {
-    userDb
-        .getUsers()
-        .then((users) => res.status(200).json(users))
-        .catch((err) =>
-            res.status(500).json(err)
-        );
-});
+
+//todo validate w/ token in login?
 
 router.use("/", (req, res) => {
     res.status(200).json({
-        Route: "Auth Route up"
+        Route: "User Route"
     });
 });
 
