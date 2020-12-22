@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+
 const {
     v1: uuidv1
 } = require('uuid');
@@ -52,34 +53,37 @@ router.post("/register",
             userId: user.id,
             token: crypto.randomBytes(16).toString('hex')
         }
-
-        const transporter = nodemailer.createTransport({
-            //todo check other smtp mail servers (SendinBlue)
-            service: 'Sendgrid',
-            host: "smtp.sendgrid.net",
-            port: 465,
-            secure: true, //true only for port 465
+        //! transporter and mail options
+        // todo check other smtp mail servers (SendinBlue)
+        const mailClient = nodemailer.createTransport({
+            service: 'SendGrid',
             auth: {
                 user: SENDGRID_USERNAME,
                 pass: SENDGRID_PASSWORD
             }
         });
-        const mailOptions = {
-            from: 'no-reply@craigVST.com',
+        const emailTemplate = {
+            // todo change FROM to a no-reply@company.com
+            from: 'no-reply@bluesmokemedia.net',
             to: user.email,
             subject: 'Craig VST Account Verification Token',
             text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
         };
+
         userDb
             .insert(user)
             .then(([newUser]) => {
                 tokenDb.insert(token).catch(err => res.status(500).send(err))
                 //* Send verification email
-                transporter.sendMail(mailOptions, (err) => {
+
+                mailClient.sendMail(emailTemplate, (err, info) => {
                     if (err) return res.status(500).send({
-                        msg: err.message
+                        msg: err.message,
                     });
-                    return res.status(200).send('A verification email has been sent to ' + user.email + '.');
+                    return res.status(200).send({
+                        msg: 'A verification email has been sent to ' + user.email + '.  ',
+                        info: info
+                    });
                 });
             })
             .catch((err) =>
