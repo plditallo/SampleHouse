@@ -1,44 +1,15 @@
 const userDb = require("../../../database/model/userModel");
 
 module.exports = {
-    validateUserBody,
     checkExistingUsers,
-    validateHeaders
 };
 
-function validateUserBody(req, res, next) {
-    //todo validate email w/ @ regenex?
-    // todo validate email w/ confirmation
-    const user = req.body;
-
-    if (user) {
-        if (!user.email || !user.password) {
-            res.status(400).json({
-                message: "Please provide email and password"
-            })
-        }
-    } else {
-        res.status(400).json({
-            message: "No user provided"
-        });
-    }
-    next()
-}
-
 function checkExistingUsers(req, res, next) {
-    const user = req.body
-    userDb.getUserByEmail(user.email).then(([oldUser]) => {
-        if (oldUser) {
-            res.status(400).json({
-                message: "This email is already associated with an account.",
-            })
-        } else next()
+    const email = req.body.email
+    userDb.getUserByEmail(email).then(([user]) => {
+        if (user) res.status(400).send({
+            msg: 'The email address you have entered is already associated with another account.',
+        })
+        else next()
     })
-
-
-}
-
-function validateHeaders(req, res, next) {
-    console.log(req.body)
-    next()
 }

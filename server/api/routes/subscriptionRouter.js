@@ -49,19 +49,19 @@ router.post("/login", (req, res) => {
         .then(([user]) => {
             if (!user) {
                 res.status(403).json({
-                    message: "Email is not associated with any account."
+                    msg: "Email is not associated with any account."
                 });
             } else if (bcrypt.compareSync(password, user.password)) {
                 // user.token = generateToken(user);
                 res.status(200).json(user);
             } else {
                 res.status(403).json({
-                    errorMessage: "Invalid credentials, please try again."
+                    errormsg: "Invalid credentials, please try again."
                 });
             }
         })
         .catch((err) => res.status(500).json({
-            errorMessage: "unable to retrieve user",
+            errormsg: "unable to retrieve user",
             error: err,
         }))
 });
