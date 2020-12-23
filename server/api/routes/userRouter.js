@@ -16,8 +16,9 @@ const {
 
 
 const {
-    SENDGRID_USERNAME,
-    SENDGRID_PASSWORD,
+    EMAIL_HOST,
+    EMAIL_USERNAME,
+    EMAIL_PASSWORD,
     JWT_SECRET = "not a secret",
 } = process.env;
 
@@ -53,19 +54,26 @@ router.post("/register",
             userId: user.id,
             token: crypto.randomBytes(16).toString('hex')
         }
-        //! transporter and mail options
-        // todo check other smtp mail servers (SendinBlue)
-        const mailClient = nodemailer.createTransport({
-            service: 'SendGrid',
+        // todo set privacy on folder for music, create user for login via api
+
+        //! email transporter and mail options
+        const transporter = nodemailer.createTransport({
+            host: EMAIL_HOST,
+            pool: true,
+            port: 465,
+            secure: true, // use TLS
             auth: {
-                user: SENDGRID_USERNAME,
-                pass: SENDGRID_PASSWORD
+                type: "login",
+                user: EMAIL_USERNAME,
+                pass: EMAIL_PASSWORD
             }
         });
+
         const emailTemplate = {
             // todo change FROM to a no-reply@company.com
-            from: 'no-reply@bluesmokemedia.net',
+            from: 'no-reply@COMPANY.net',
             to: user.email,
+            // todo change subject line to business name
             subject: 'Craig VST Account Verification Token',
             text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
         };
@@ -74,9 +82,9 @@ router.post("/register",
             .insert(user)
             .then(([newUser]) => {
                 tokenDb.insert(token).catch(err => res.status(500).send(err))
+                //? transporter.verify() doesn't return undefined if undefined
                 //* Send verification email
-
-                mailClient.sendMail(emailTemplate, (err, info) => {
+                transporter.sendMail(emailTemplate, (err, info) => {
                     if (err) return res.status(500).send({
                         msg: err.message,
                     });
@@ -93,6 +101,10 @@ router.post("/register",
 // todo forgot password
 // todo validateHeaders middleware
 //todo logging in from VST? (Header?)
+//todo Make sure that you can't have 2 subscriptions for a client at the same time.
+// https://stackoverflow.com/questions/23507200/good-practices-for-designing-monthly-subscription-system-in-database
+
+//TODO .env file still not being ignored by git
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
         const errors = validationResult(req);
