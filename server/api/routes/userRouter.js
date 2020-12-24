@@ -56,7 +56,7 @@ router.post("/register",
         }
         // todo set privacy on folder for music, create user for login via api
 
-        //! email transporter and mail options
+        //* email transporter and mail options
         const transporter = nodemailer.createTransport({
             host: EMAIL_HOST,
             pool: true,
@@ -75,13 +75,13 @@ router.post("/register",
             to: user.email,
             // todo change subject line to business name
             subject: 'Craig VST Account Verification Token',
-            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n'
+            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
         };
 
         userDb
             .insert(user)
             .then(([newUser]) => {
-                tokenDb.insert(token).catch(err => res.status(500).send(err))
+                tokenDb.insertToken(token).catch(err => res.status(500).send(err))
                 //? transporter.verify() doesn't return undefined if undefined
                 //* Send verification email
                 transporter.sendMail(emailTemplate, (err, info) => {
@@ -89,7 +89,7 @@ router.post("/register",
                         msg: err.message,
                     });
                     return res.status(200).send({
-                        msg: 'A verification email has been sent to ' + user.email + '.  ',
+                        msg: 'A verification email has been sent to ' + user.email + '.',
                         info: info
                     });
                 });
@@ -124,7 +124,7 @@ router.post("/login",
                 //* Check password
                 if (!bcrypt.compareSync(password, user.password)) {
                     res.status(403).json({
-                        errormsg: "Invalid credentials"
+                        msg: "Invalid credentials"
                     });
                 }
                 //* Check user has verified email
@@ -137,7 +137,7 @@ router.post("/login",
                 res.status(200).json(user);
             })
             .catch((err) => res.status(500).json({
-                errormsg: "unable to retrieve user",
+                msg: "unable to retrieve user",
                 error: err,
             }))
     });

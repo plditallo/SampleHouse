@@ -1,39 +1,23 @@
 const db = require("../database-config");
 
 module.exports = {
-    insert
+    insertToken,
+    getToken,
+    removeToken
 }
 
-function insert(token) {
+function insertToken(token) {
     return db("Token").insert(token)
 }
 
-function getUsers() {
-    return db("Token")
-}
-
-function getUserByEmail(email) {
+function getToken(token) {
     return db("Token").where({
-        email
+        token
     })
 }
 
-function getUserById(id) {
+function removeToken(userId) {
     return db("Token").where({
-        id
-    })
-}
-
-function updateUser(id, data) {
-    return db("Token").update(data)
-        .where({
-            id
-        })
-
-}
-
-function removeUser(id) {
-    return db("Token").where({
-        id
+        userId
     }).del();
 }
