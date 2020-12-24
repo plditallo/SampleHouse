@@ -12,7 +12,7 @@ const {
 } = require("../../../database/model/tokenModel");
 
 
-function tokenEmailer(user, host) {
+function tokenEmailer(user, host, type) {
     //* Create validation Token
     const token = {
         userId: user.id,
@@ -41,6 +41,11 @@ function tokenEmailer(user, host) {
             subject: 'Craig VST Account Verification Token',
             text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
         };
+        if (type === "password") {
+            emailTemplate.subject = "Craig VST Account Reset Password";
+            // todo SEND EMAIL W/ LINK TO FORM TO REST PASSWORD THEN POST REQUEST
+            emailTemplate.text = 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + host + '\/api\/token\/resetPassword\/' + token.token + '. This will expire in 6 hours.'
+        }
 
         //* Send verification email
         transporter.sendMail(emailTemplate, (err, info) => {
@@ -49,7 +54,8 @@ function tokenEmailer(user, host) {
             });
         });
     })
+    if (type === "password") return token
     return {
-        msg: 'A verification email has been sent to ' + user.email + '.'
+        msg: 'A confirmation email has been sent to ' + user.email + '.'
     }
 }

@@ -1,5 +1,7 @@
 const router = require("express").Router();
-
+const {
+    hashSync
+} = require("bcryptjs");
 const {
     body,
     validationResult
@@ -21,12 +23,12 @@ router.use("/confirmation", (req, res) => {
     const token = req.url.slice(1);
     getToken(token).then(([token]) => {
         //* token has expired or not found
-        if (!token || (Date.now() - (token.createdAt + 43200000 /*12hr*/ ) >= 0)) {
+        if (!token || (Date.now() - token.expiresAt >= 0)) {
             //* remove expired token
             if (token) removeToken(token.userId).then(null)
             return res.status(400).send({
                 type: 'not-verified',
-                msg: 'We were unable to find a valid token. Your token my have expired.'
+                msg: 'We were unable to find a valid token. Your token may have expired.'
             })
         }
         //* verify user
@@ -70,6 +72,50 @@ router.get("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => 
 
         return res.send(tokenEmailer(user, req.headers.host))
     })
+})
+
+
+router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send(errors.array());
+    const {
+        email,
+        password,
+        token
+    } = req.body;
+    getUserByEmail(email)
+        .then(([user]) => {
+            if (!user) return res.status(403).json({
+                msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
+            });
+            if (!user.isVerified) return res.status(401).send({
+                type: 'not-verified',
+                msg: 'Your account has not been verified.'
+            });
+            //* Token expired
+            if (Date.now() - user.passwordResetExpires >= 0) {
+                user.passwordResetToken = null
+                user.passwordResetExpires = null
+                return updateUser(user.id, user).then(() => res.status(400).send({
+                    type: 'token-expired',
+                    msg: 'We were unable to find a valid token. Your token may have expired.'
+                }))
+            }
+            if (user.passwordResetToken === token) {
+                user.passwordResetToken = null
+                user.passwordResetExpires = null
+                user.password = hashSync(password, 13)
+                // todo add link to msg to login in
+                return updateUser(user.id, user).then(() => res.status(200).send({
+                    type: 'password-reset',
+                    msg: 'Password has been successfully been changed.'
+                }))
+            }
+            return res.status(400).send({
+                type: 'wrong-token',
+                msg: 'We were unable to find a valid token. Your token may have expired.'
+            })
+        })
 })
 
 router.use("/", (req, res) => {

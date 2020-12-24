@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const userDb = require("../../../database/model/userModel");
+const {
+    insertUser,
+    getUserByEmail,
+    updateUser
+} = require("../../../database/model/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const tokenEmailer = require("../utils/tokenEmailer");
@@ -39,8 +43,7 @@ router.post("/register",
             password: hash,
         }
 
-        userDb
-            .insert(user)
+        insertUser(user)
             .then(() => res.send(tokenEmailer(user, req.headers.host)))
             .catch((err) =>
                 res.status(500).json(err)
@@ -61,8 +64,7 @@ router.post("/login",
             email,
             password
         } = req.body;
-        userDb
-            .getUserByEmail(email)
+        getUserByEmail(email)
             .then(([user]) => {
                 if (!user) return res.status(403).json({
                     msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
@@ -87,6 +89,32 @@ router.post("/login",
             }))
     });
 
+router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send(errors.array());
+
+    const {
+        email,
+    } = req.body;
+
+    getUserByEmail(email)
+        .then(([user]) => {
+            if (!user) return res.status(403).json({
+                msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
+            });
+            if (!user.isVerified) return res.status(401).send({
+                type: 'not-verified',
+                msg: 'Your account has not been verified.'
+            });
+            // sends token email & saves variable
+            const token = tokenEmailer(user, req.headers.host, "password");
+
+            user.passwordResetToken = token.token
+            user.passwordResetExpires = Date.now() + 21600000 //6hrs
+
+            updateUser(user.id, user).then(() => res.status(200).send('A email as been sent with a link to reset your password.'))
+        })
+})
 
 //todo validate w/ token in login?
 

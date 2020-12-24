@@ -1,14 +1,14 @@
 const db = require("../database-config");
 
 module.exports = {
-    insert,
+    insertUser,
     getUserById,
     getUserByEmail,
     updateUser,
     removeUser
 }
 
-function insert(data) {
+function insertUser(data) {
     return db("User").insert(data)
 }
 
