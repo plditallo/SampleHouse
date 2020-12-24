@@ -1,10 +1,7 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
-const tokenDb = require("../../../database/model/tokenModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const tokenEmailer = require("../utils/tokenEmailer");
 // todo remove user from database
 const {
@@ -14,13 +11,6 @@ const {
     body,
     validationResult
 } = require('express-validator');
-
-const {
-    EMAIL_HOST,
-    EMAIL_USERNAME,
-    EMAIL_PASSWORD,
-    JWT_SECRET = "not a secret",
-} = process.env;
 
 const {
     checkExistingUsers
@@ -35,10 +25,9 @@ router.post("/register",
         })
     ],
     checkExistingUsers, (req, res) => {
-        //todo email validation
-        console.log(tokenEmailer)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
+
         const {
             email,
             password
@@ -49,57 +38,15 @@ router.post("/register",
             email: email,
             password: hash,
         }
-        //* Create validation token
-        // const token = {
-        //     userId: user.id,
-        //     token: crypto.randomBytes(16).toString('hex')
-        // }
-        // todo set privacy on folder for music, create user for login via api
-
-        // //* email transporter and mail options
-        // const transporter = nodemailer.createTransport({
-        //     host: EMAIL_HOST,
-        //     pool: true,
-        //     port: 465,
-        //     secure: true, // use TLS
-        //     auth: {
-        //         type: "login",
-        //         user: EMAIL_USERNAME,
-        //         pass: EMAIL_PASSWORD
-        //     }
-        // });
-
-        // const emailTemplate = {
-        //     // todo change FROM to a no-reply@company.com
-        //     from: 'no-reply@COMPANY.net',
-        //     to: user.email,
-        //     // todo change subject line to business name
-        //     subject: 'Craig VST Account Verification Token',
-        //     text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
-        // };
 
         userDb
             .insert(user)
-            .then(() => res.send(tokenEmailer(user, req.headers.host))
-                // tokenDb.insertToken(token).catch(err => res.status(500).send(err))
-                // //? transporter.verify() doesn't return undefined if undefined
-                // //* Send verification email
-                // transporter.sendMail(emailTemplate, (err, info) => {
-                //     if (err) return res.status(500).send({
-                //         msg: err.message,
-                //     });
-                //     return res.status(200).send({
-                //         msg: 'A verification email has been sent to ' + user.email + '.',
-                //         info: info
-                //     });
-                // });
-            )
+            .then(() => res.send(tokenEmailer(user, req.headers.host)))
             .catch((err) =>
                 res.status(500).json(err)
             );
     });
 // todo forgot password
-// todo validateHeaders middleware
 //todo logging in from VST? (Header?)
 //todo Make sure that you can't have 2 subscriptions for a client at the same time.
 // https://stackoverflow.com/questions/23507200/good-practices-for-designing-monthly-subscription-system-in-database

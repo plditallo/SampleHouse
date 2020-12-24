@@ -20,6 +20,7 @@ function tokenEmailer(user, host) {
     }
 
     insertToken(token).then(() => {
+        //* email transporter and mail options
         const transporter = nodemailer.createTransport({
             host: EMAIL_HOST,
             pool: true,
@@ -31,6 +32,7 @@ function tokenEmailer(user, host) {
                 pass: EMAIL_PASSWORD
             }
         });
+
         const emailTemplate = {
             // todo change FROM to a no-reply@company.com
             from: 'no-reply@COMPANY.net',
