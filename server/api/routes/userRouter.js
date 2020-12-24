@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const tokenEmailer = require("../utils/tokenEmailer");
 // todo remove user from database
 const {
     v1: uuidv1
@@ -13,7 +14,6 @@ const {
     body,
     validationResult
 } = require('express-validator');
-
 
 const {
     EMAIL_HOST,
@@ -27,7 +27,6 @@ const {
 } = require("../middleware/userMiddleware");
 
 // todo validateSubscription for login
-
 router.post("/register",
     //* validate email and password
     [body('email').isEmail().normalizeEmail(),
@@ -37,6 +36,7 @@ router.post("/register",
     ],
     checkExistingUsers, (req, res) => {
         //todo email validation
+        console.log(tokenEmailer)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         const {
@@ -50,50 +50,50 @@ router.post("/register",
             password: hash,
         }
         //* Create validation token
-        const token = {
-            userId: user.id,
-            token: crypto.randomBytes(16).toString('hex')
-        }
+        // const token = {
+        //     userId: user.id,
+        //     token: crypto.randomBytes(16).toString('hex')
+        // }
         // todo set privacy on folder for music, create user for login via api
 
-        //* email transporter and mail options
-        const transporter = nodemailer.createTransport({
-            host: EMAIL_HOST,
-            pool: true,
-            port: 465,
-            secure: true, // use TLS
-            auth: {
-                type: "login",
-                user: EMAIL_USERNAME,
-                pass: EMAIL_PASSWORD
-            }
-        });
+        // //* email transporter and mail options
+        // const transporter = nodemailer.createTransport({
+        //     host: EMAIL_HOST,
+        //     pool: true,
+        //     port: 465,
+        //     secure: true, // use TLS
+        //     auth: {
+        //         type: "login",
+        //         user: EMAIL_USERNAME,
+        //         pass: EMAIL_PASSWORD
+        //     }
+        // });
 
-        const emailTemplate = {
-            // todo change FROM to a no-reply@company.com
-            from: 'no-reply@COMPANY.net',
-            to: user.email,
-            // todo change subject line to business name
-            subject: 'Craig VST Account Verification Token',
-            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
-        };
+        // const emailTemplate = {
+        //     // todo change FROM to a no-reply@company.com
+        //     from: 'no-reply@COMPANY.net',
+        //     to: user.email,
+        //     // todo change subject line to business name
+        //     subject: 'Craig VST Account Verification Token',
+        //     text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
+        // };
 
         userDb
             .insert(user)
-            .then(([newUser]) => {
-                tokenDb.insertToken(token).catch(err => res.status(500).send(err))
-                //? transporter.verify() doesn't return undefined if undefined
-                //* Send verification email
-                transporter.sendMail(emailTemplate, (err, info) => {
-                    if (err) return res.status(500).send({
-                        msg: err.message,
-                    });
-                    return res.status(200).send({
-                        msg: 'A verification email has been sent to ' + user.email + '.',
-                        info: info
-                    });
-                });
-            })
+            .then(() => res.send(tokenEmailer(user, req.headers.host))
+                // tokenDb.insertToken(token).catch(err => res.status(500).send(err))
+                // //? transporter.verify() doesn't return undefined if undefined
+                // //* Send verification email
+                // transporter.sendMail(emailTemplate, (err, info) => {
+                //     if (err) return res.status(500).send({
+                //         msg: err.message,
+                //     });
+                //     return res.status(200).send({
+                //         msg: 'A verification email has been sent to ' + user.email + '.',
+                //         info: info
+                //     });
+                // });
+            )
             .catch((err) =>
                 res.status(500).json(err)
             );
@@ -114,7 +114,6 @@ router.post("/login",
             email,
             password
         } = req.body;
-
         userDb
             .getUserByEmail(email)
             .then(([user]) => {
@@ -122,23 +121,22 @@ router.post("/login",
                     msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
                 });
                 //* Check password
-                if (!bcrypt.compareSync(password, user.password)) {
-                    res.status(403).json({
-                        msg: "Invalid credentials"
-                    });
-                }
+                if (!bcrypt.compareSync(password, user.password)) return res.status(403).json({
+                    msg: "Invalid credentials"
+                });
+                console.log(user)
                 //* Check user has verified email
                 if (!user.isVerified) return res.status(401).send({
                     type: 'not-verified',
                     msg: 'Your account has not been verified.'
                 });
                 //* Login successful, write token, and send back user
-                user.token = generateToken(user);
+                // user.token = generateToken(user);
                 res.status(200).json(user);
             })
             .catch((err) => res.status(500).json({
                 msg: "unable to retrieve user",
-                error: err,
+                error: err.message,
             }))
     });
 
