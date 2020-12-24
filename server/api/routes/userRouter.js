@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-
+// todo remove user from database
 const {
     v1: uuidv1
 } = require('uuid');
@@ -152,15 +152,3 @@ router.use("/", (req, res) => {
 });
 
 module.exports = router;
-
-function generateToken(user) {
-    const payload = {
-        subject: user.id,
-        username: user.username,
-    };
-    // const secret = JWT_SECRET || "not a secret";
-    const options = {
-        expiresIn: "72h",
-    };
-    return jwt.sign(payload, JWT_SECRET, options);
-}

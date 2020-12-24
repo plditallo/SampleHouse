@@ -3,7 +3,7 @@ const db = require("../database-config");
 module.exports = {
     insertToken,
     getToken,
-    removeToken
+    removeToken,
 }
 
 function insertToken(token) {

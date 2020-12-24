@@ -3,22 +3,41 @@ const {
     token
 } = require("morgan");
 const {
+    insertToken,
     getToken,
-    removeToken
+    removeToken,
 } = require("../../../database/model/tokenModel");
 const {
     getUserById,
-    updateUser
+    updateUser,
+    getUserByEmail
 } = require("../../../database/model/userModel");
+const {
+    body,
+    validationResult
+} = require('express-validator');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const {
+    EMAIL_HOST,
+    EMAIL_USERNAME,
+    EMAIL_PASSWORD,
+    JWT_SECRET = "not a secret",
+} = process.env;
+
 
 router.use("/confirmation", (req, res) => {
     const token = req.url.slice(1);
     getToken(token).then(([token]) => {
         //* token has expired or not found
-        if (!token || (Date.now() - (token.createdAt + 43200000 /*12hr*/ ) >= 0)) return res.status(400).send({
-            type: 'not-verified',
-            msg: 'We were unable to find a valid token. Your token my have expired.'
-        });
+        if (!token || (Date.now() - (token.createdAt + 43200000 /*12hr*/ ) >= 0)) {
+            //* remove expired token
+            if (token) removeToken(token.userId).then(null)
+            return res.status(400).send({
+                type: 'not-verified',
+                msg: 'We were unable to find a valid token. Your token my have expired.'
+            })
+        }
         //* verify user
         getUserById(token.userId).then(([user]) => {
             if (!user) return res.status(400).send({
@@ -34,14 +53,32 @@ router.use("/confirmation", (req, res) => {
             updateUser(user.id, user).then(() => res.status(200).send("The account has been verified. Please log in.")).catch(err => res.status(500).send({
                 msg: err.message
             }))
-            //? why is the .then/.catch required to make it remove the token?
-            removeToken(user.id).then((resp) => console.log(resp)).catch(err => console.log(err))
+            //? why is the .then required to remove the token?
+            removeToken(user.id).then(null)
         })
     })
 })
 
-router.get("/resend", (req, res) => {
-    // resend token...
+router.get("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => {
+    //* check for active tokens first and remove
+    const {
+        email
+    } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).send(errors.array());
+
+    getUserByEmail(email).then(([user]) => {
+        if (!user) return res.status(400).send({
+            msg: "We were unable to find a account associated with this email."
+        })
+        if (user.isVerified) return res.status(400).send({
+            msg: 'This account has already been verified. Please log in.'
+        });
+        //* remove any existing tokens
+        removeToken(user.id).then(null)
+
+        return res.send(tokenEmailer(user, req.headers.host))
+    })
 })
 
 router.use("/", (req, res) => {
@@ -51,3 +88,43 @@ router.use("/", (req, res) => {
 });
 
 module.exports = router;
+
+function tokenEmailer(user, host) {
+    const token = {
+        userId: user.id,
+        token: crypto.randomBytes(16).toString('hex')
+    }
+
+    insertToken(token).then(() => {
+        const transporter = nodemailer.createTransport({
+            host: EMAIL_HOST,
+            pool: true,
+            port: 465,
+            secure: true, // use TLS
+            auth: {
+                type: "login",
+                user: EMAIL_USERNAME,
+                pass: EMAIL_PASSWORD
+            }
+        });
+        const emailTemplate = {
+            // todo change FROM to a no-reply@company.com
+            from: 'no-reply@COMPANY.net',
+            to: user.email,
+            // todo change subject line to business name
+            subject: 'Craig VST Account Verification Token',
+            text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
+        };
+        //* Send verification email
+        transporter.sendMail(emailTemplate, (err, info) => {
+            if (err) return res.status(500).send({
+                msg: err.message,
+            });
+
+
+        });
+    })
+    return {
+        msg: 'A verification email has been sent to ' + user.email + '.'
+    }
+}
