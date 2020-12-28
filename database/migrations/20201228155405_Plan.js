@@ -4,7 +4,6 @@ exports.up = function (knex) {
         tbl.integer("tier")
         tbl.integer("credits").notNullable()
         tbl.integer("length").default(30)
-        tbl.integer("trial_length").default(10)
     })
 };
 

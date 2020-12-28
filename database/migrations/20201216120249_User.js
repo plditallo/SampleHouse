@@ -12,6 +12,7 @@ exports.up = function (knex) {
         tbl.date("created").default(Date.now()); //knex.fn.now()
         tbl.boolean("active").default(false)
         tbl.string('role').default("user")
+        tbl.boolean("auto_subscribe").default(false)
     })
 };
 
