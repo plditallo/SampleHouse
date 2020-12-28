@@ -18,8 +18,7 @@ function tokenEmailer(user, host, type) {
         userId: user.id,
         token: crypto.randomBytes(16).toString('hex')
     }
-
-    insertToken(token).then(() => {
+    if (type !== "password") insertToken(token).then(() => {
         //* email transporter and mail options
         const transporter = nodemailer.createTransport({
             host: EMAIL_HOST,
@@ -38,13 +37,13 @@ function tokenEmailer(user, host, type) {
             from: 'no-reply@COMPANY.net',
             to: user.email,
             // todo change subject line to business name
-            subject: 'Craig VST Account Verification Token',
+            subject: 'Sound.House Account Verification Token',
             text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + host + '\/api\/token\/confirmation\/' + token.token + '. This token will expire in 12 hours.'
         };
         if (type === "password") {
-            emailTemplate.subject = "Craig VST Account Reset Password";
+            emailTemplate.subject = "Sound.House Account Reset Password";
             // todo SEND EMAIL W/ LINK TO FORM TO REST PASSWORD THEN POST REQUEST
-            emailTemplate.text = 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + host + '\/api\/token\/resetPassword\/' + token.token + '. This will expire in 6 hours.'
+            emailTemplate.text = 'Hello,\n\n' + 'Please reset your password by clicking the link: \nhttp:\/\/' + host + '\/api\/user\/resetPassword\/' + token.token + '. This will expire in 6 hours.'
         }
 
         //* Send verification email
