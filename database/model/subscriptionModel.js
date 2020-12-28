@@ -2,7 +2,6 @@ const db = require("../database-config");
 
 module.exports = {
     insertSub,
-    getSubs,
     getSubByTier,
     updateSub,
     removeSub
@@ -10,10 +9,6 @@ module.exports = {
 
 function insertSub(data) {
     return db("Subscription").insert(data)
-}
-
-function getSubs() {
-    return db("Subscription")
 }
 
 function getSubByTier(tier) {

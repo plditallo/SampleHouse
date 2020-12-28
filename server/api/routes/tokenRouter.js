@@ -19,8 +19,11 @@ const {
 } = require("../../../database/model/userModel");
 
 
-router.use("/confirmation", (req, res) => {
-    const token = req.url.slice(1);
+router.use("/confirmation/:token", (req, res) => {
+    const {
+        token
+    } = req.params;
+
     getToken(token).then(([token]) => {
         //* token has expired or not found
         if (!token || (Date.now() - token.expiresAt >= 0)) {
@@ -74,48 +77,6 @@ router.get("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => 
     })
 })
 
-//todo post here from form w/ body containing email, newPass, and token
-router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).send(errors.array());
-    const {
-        email,
-        password,
-        token
-    } = req.body;
-    getUserByEmail(email)
-        .then(([user]) => {
-            if (!user) return res.status(403).json({
-                msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
-            });
-            if (!user.isVerified) return res.status(401).send({
-                type: 'not-verified',
-                msg: 'Your account has not been verified.'
-            });
-            //* Token expired
-            if (Date.now() - user.passwordResetExpires >= 0) {
-                user.passwordResetToken = null
-                user.passwordResetExpires = null
-                return updateUser(user.id, user).then(() => res.status(400).send({
-                    type: 'token-expired',
-                    msg: 'We were unable to find a valid token. Your token may have expired.'
-                }))
-            }
-            if (user.passwordResetToken === token) {
-                user.passwordResetToken = null
-                user.passwordResetExpires = null
-                user.password = hashSync(password, 13)
-                return updateUser(user.id, user).then(() => res.status(200).send({
-                    type: 'password-reset',
-                    msg: 'Password has been successfully been changed. Click this link to login: http:\/\/' + req.headers.host + '\/api\/user\/login\/.'
-                }))
-            }
-            return res.status(400).send({
-                type: 'wrong-token',
-                msg: 'We were unable to find a valid token. Your token may have expired.'
-            })
-        })
-})
 
 router.use("/", (req, res) => {
     res.status(200).json({

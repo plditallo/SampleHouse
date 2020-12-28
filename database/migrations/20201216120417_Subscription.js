@@ -1,9 +1,10 @@
 exports.up = function (knex) {
     return knex.schema.createTable("Subscription", (tbl) => {
         tbl.increments("id").primary().unique()
-        tbl.integer("tier").notNullable()
+        tbl.integer("tier")
         tbl.integer("credits").notNullable()
         tbl.integer("length").default(30)
+        tbl.integer("trial_length").default(10)
     })
 };
 
