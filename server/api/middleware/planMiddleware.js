@@ -1,18 +1,20 @@
 const userDb = require("../../../database/model/userModel");
-const subDb = require("../../../database/model/subscriptionModel");
+const {
+    getPlanByTier
+} = require("../../../database/model/planModel");
 
 module.exports = {
-    validateSubscription
+    validatePlan
 };
 
 
-function validateSubscription(req, res, next) {
-    const tier = req.body.subscription
-    subDb.getSubByTier(tier).then(([sub]) => {
+function validatePlan(req, res, next) {
+    const tier = req.body.plan
+    getPlanByTier(tier).then(([sub]) => {
         if (sub) next()
         else {
             res.status(400).json({
-                msg: "No Subscription found.",
+                msg: "No Plan found.",
             })
         }
     })

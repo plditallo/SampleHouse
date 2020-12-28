@@ -3,13 +3,12 @@ const {
     getUserByEmail
 } = require("../../../database/model/userModel");
 const {
-    getSubByTier
-} = require('../../../database/model/subscriptionModel');
+    getPlanByTier
+} = require('../../../database/model/planModel');
 
 const {
-    validateUser,
-    validateSubscription
-} = require("../middleware/subscriptionMiddleware");
+    validatePlan
+} = require("../middleware/planMiddleware");
 const {
     body,
     validationResult
@@ -17,17 +16,17 @@ const {
 
 router.post("/subscribe",
     //  [body('email').isEmail().normalizeEmail()],
-    validateSubscription, (req, res) => {
+    validatePlan, (req, res) => {
         const {
             email,
-            subscription
+            plan
         } = req.body;
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         console.log("subscription route", email)
         //     getUserByEmail(email).then(([user]) => {
-        //         getSubByTier(subscription).then(([sub]) => {
+        //         getPlanByTier(subscription).then(([sub]) => {
         //             // console.log(user.subDate)
         //             // todo check for current sub and add 30 days
         //             const data = {
