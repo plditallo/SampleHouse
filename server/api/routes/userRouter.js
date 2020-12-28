@@ -7,7 +7,8 @@ const {
     removeUser
 } = require("../../../database/model/userModel");
 const {
-    hashSync
+    hashSync,
+    compareSync
 } = require("bcryptjs");
 const jwt = require("jsonwebtoken")
 const tokenEmailer = require("../utils/tokenEmailer");
@@ -72,7 +73,7 @@ router.post("/login",
                     msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
                 });
                 //* Check password
-                if (!bcrypt.compareSync(password, user.password)) return res.status(403).json({
+                if (!compareSync(password, user.password)) return res.status(403).json({
                     msg: "Invalid credentials"
                 });
                 //* Check user has verified email
@@ -177,7 +178,7 @@ router.delete("/:id", (req, res) => {
             msg: 'The user id:' + id + ' is not associated with any account.'
         });
         //* Check password
-        if (!bcrypt.compareSync(password, user.password)) return res.status(403).json({
+        if (!compareSync(password, user.password)) return res.status(403).json({
             msg: "Invalid password"
         });
         if (user.balance > 0) return res.status(403).json({
