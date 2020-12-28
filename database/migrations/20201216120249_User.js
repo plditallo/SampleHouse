@@ -1,6 +1,6 @@
 exports.up = function (knex) {
     return knex.schema.createTable("User", (tbl) => {
-        tbl.uuid("id").primary().unique(); //todo set tbl.uuid("id").primary().unique()
+        tbl.uuid("id").primary().unique();
         tbl.string("fname");
         tbl.string("lname");
         tbl.string("email").notNullable()

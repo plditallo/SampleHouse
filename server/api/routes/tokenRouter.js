@@ -74,7 +74,7 @@ router.get("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => 
     })
 })
 
-
+//todo post here from form w/ body containing email, newPass, and token
 router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
@@ -105,10 +105,9 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.passwordResetToken = null
                 user.passwordResetExpires = null
                 user.password = hashSync(password, 13)
-                // todo add link to msg to login in
                 return updateUser(user.id, user).then(() => res.status(200).send({
                     type: 'password-reset',
-                    msg: 'Password has been successfully been changed.'
+                    msg: 'Password has been successfully been changed. Click this link to login: http:\/\/' + req.headers.host + '\/api\/user\/login\/.'
                 }))
             }
             return res.status(400).send({
