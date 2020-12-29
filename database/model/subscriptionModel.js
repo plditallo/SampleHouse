@@ -11,13 +11,13 @@ function insertSubscription(data) {
 }
 
 function getSubscriberById(user_id) {
-    return db("subscription").where({
+    return db("Subscription").where({
         user_id
     })
 }
 
 function updateSubscription(data) {
-    return db("subscription").update(data).where(
+    return db("Subscription").update(data).where(
         data.user_id
     )
 }

@@ -1,6 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable("Plan", (tbl) => {
-        tbl.increments("id").primary().unique()
+        tbl.string("id").primary().unique()
+        tbl.string("name")
+        tbl.string("description")
         tbl.integer("tier")
         tbl.integer("credits").notNullable()
         tbl.integer("price")

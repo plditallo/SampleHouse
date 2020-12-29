@@ -1,5 +1,5 @@
 const {
-    getPlanByTier
+    getPlanById
 } = require("../../../database/model/planModel");
 
 module.exports = {
@@ -8,9 +8,9 @@ module.exports = {
 
 function validatePlan(req, res, next) {
     const {
-        tier
+        id
     } = req.body
-    getPlanByTier(tier).then(([plan]) => {
+    getPlanById(id).then(([plan]) => {
         if (!plan) return res.status(400).json({
             msg: "No Plan found.",
         })
