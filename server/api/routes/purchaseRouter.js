@@ -64,5 +64,5 @@ module.exports = router;
 function updateUserBalance(user, credits) {
     user.active = true
     user.balance += credits
-    updateUser(user.id, user).then(resp => console.log("null", "updateUserBalance", user, resp))
+    updateUser(user).then(resp => console.log("null", "updateUserBalance", user, resp))
 }

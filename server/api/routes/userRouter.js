@@ -116,7 +116,7 @@ router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, 
             user.password_reset_token = token.token
             user.password_reset_expires = Date.now() + 21600000 //6hrs
 
-            updateUser(user.id, user).then(() => res.status(200).send('A email as been sent with a link to reset your password.'))
+            updateUser(user).then(() => res.status(200).send('A email as been sent with a link to reset your password.'))
         })
 })
 
@@ -143,7 +143,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
             if (Date.now() - user.password_reset_expires >= 0) {
                 user.password_reset_token = null
                 user.password_reset_expires = null
-                return updateUser(user.id, user).then(() => res.status(400).send({
+                return updateUser(user).then(() => res.status(400).send({
                     type: 'token-expired',
                     msg: 'We were unable to find a valid token. Your token may have expired.'
                 }))
@@ -152,7 +152,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password_reset_token = null
                 user.password_reset_expires = null
                 user.password = hashSync(password, 13)
-                return updateUser(user.id, user).then(() => res.status(200).send({
+                return updateUser(user).then(() => res.status(200).send({
                     type: 'password-reset',
                     msg: 'Password has been successfully been changed. Click this link to login: http:\/\/' + req.headers.host + '\/api\/user\/login\/.'
                 }))

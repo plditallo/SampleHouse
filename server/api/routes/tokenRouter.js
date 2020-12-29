@@ -46,7 +46,7 @@ router.use("/confirmation/:token", (req, res) => {
 
             user.isVerified = true
 
-            updateUser(user.id, user).then(() => res.status(200).send("The account has been verified. Please log in.")).catch(err => res.status(500).send({
+            updateUser(user).then(() => res.status(200).send("The account has been verified. Please log in.")).catch(err => res.status(500).send({
                 msg: err.message
             }))
             //? why is the .then required to remove the token?
