@@ -2,16 +2,20 @@ const router = require("express").Router();
 const {
     validatePlan
 } = require("../middleware/planMiddleware");
+const {
+    getUserById
+} = require("../../../database/model/userModel")
 
 router.post("/subscribe", validatePlan, (req, res) => {
     const user_id = req.decodedToken.subject;
-    const {
-        plan_id
-    } = req
+    const plan = req.plan
 
-    console.log(user_id, plan_id)
-
-
+    if (paymentSuccess = true)
+        getUserById(user_id).then(([user]) => {
+            console.log(plan, user)
+            user.active = true
+            
+        })
 
     //     getUserByEmail(email).then(([user]) => {
     //         getPlanByTier(subscription).then(([sub]) => {

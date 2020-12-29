@@ -58,6 +58,7 @@ router.post("/register",
 
 //todo logging in from VST? (Header? HOST??) -> validateSubscription
 //todo use user.active for vst auth
+// todo check if active subscription or not (user.active)
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
         const errors = validationResult(req);
