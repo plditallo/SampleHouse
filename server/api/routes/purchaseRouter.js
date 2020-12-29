@@ -1,43 +1,32 @@
 const router = require("express").Router();
 const {
-    getUserByEmail
-} = require("../../../database/model/userModel");
-const {
-    getPlanByTier
-} = require('../../../database/model/planModel');
-
-const {
     validatePlan
 } = require("../middleware/planMiddleware");
-const {
-    body,
-    validationResult
-} = require('express-validator');
 
-router.post("/subscribe",
-    //  [body('email').isEmail().normalizeEmail()],
-    validatePlan, (req, res) => {
-        const {
-            email,
-            plan
-        } = req.body;
+router.post("/subscribe", validatePlan, (req, res) => {
+    const user_id = req.decodedToken.subject;
+    const {
+        plan_id
+    } = req
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) return res.status(400).send(errors.array());
-        console.log("subscription route", email)
-        //     getUserByEmail(email).then(([user]) => {
-        //         getPlanByTier(subscription).then(([sub]) => {
-        //             // console.log(user.subDate)
-        //             // todo check for current sub and add 30 days
-        //             const data = {
-        //                 "subDate": Date.now(),
-        //                 "balance": user.balance + sub.credits,
-        //                 "tier": sub.tier
-        //             }
-        //             userDb.updateUser(user.id, data).then(resp => res.status(201).json(resp)).catch(err => res.status(403).json(err))
-        //         })
-        //     })
-    });
+    console.log(user_id, plan_id)
+
+
+
+    //     getUserByEmail(email).then(([user]) => {
+    //         getPlanByTier(subscription).then(([sub]) => {
+    //             // console.log(user.subDate)
+    //             // todo check for current sub and add 30 days
+    //             const data = {
+    //                 "subDate": Date.now(),
+    //                 "balance": user.balance + sub.credits,
+    //                 "tier": sub.tier
+    //             }
+    //             userDb.updateUser(user.id, data).then(resp => res.status(201).json(resp)).catch(err => res.status(403).json(err))
+    //         })
+    //     })
+    res.status(200).json("token worked")
+});
 
 
 router.use("/", (req, res) => {
