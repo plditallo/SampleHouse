@@ -66,3 +66,11 @@ function updateUserBalance(user, credits) {
     user.balance += credits
     updateUser(user).then(resp => console.log("null", "updateUserBalance", user, resp))
 }
+
+// todo find different term for productl
+function createInvoice(user, product) {
+    const invoice = {
+        user_id: user.id,
+
+    }
+}

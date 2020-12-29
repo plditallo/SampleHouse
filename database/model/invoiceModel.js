@@ -5,5 +5,5 @@ module.exports = {
 }
 
 function insertInvoice(data) {
-    return db("User").insert(data)
+    return db("Invoice").insert(data)
 }

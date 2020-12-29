@@ -5,6 +5,7 @@ exports.up = function (knex) {
         tbl.integer("credits").notNullable()
         tbl.integer("cost")
         tbl.integer("day_length").default(30)
+        tbl.string("type").default("plan")
     })
 };
 
