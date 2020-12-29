@@ -5,15 +5,18 @@ exports.seed = function (knex) {
       // Inserts seed entries
       return knex('Offer').insert([{
           id: 1,
-          credits: 10
+          credits: 10,
+          price: 5.12
         },
         {
           id: 2,
-          credits: 50
+          credits: 50,
+          price: 12.30
         },
         {
           id: 3,
-          credits: 100
+          credits: 100,
+          price: 20.00
         }
       ]);
     });

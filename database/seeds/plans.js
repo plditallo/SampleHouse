@@ -7,19 +7,19 @@ exports.seed = function (knex) {
           id: 1,
           tier: 1,
           credits: 1,
-          cost: 5.00
+          price: 5.00
         },
         {
           id: 2,
           tier: 2,
           credits: 10,
-          cost: 15.26
+          price: 15.26
         },
         {
           id: 3,
           tier: 3,
           credits: 50,
-          cost: 29.99
+          price: 29.99
         }
       ]);
     });

@@ -10,9 +10,12 @@ const {
     insertSubscription,
     getSubscriberById,
     updateSubscription
-} = require("../../../database/model/subscriptionModel")
+} = require("../../../database/model/subscriptionModel");
+const {
+    insertInvoice
+} = require("../../../database/model/invoiceModel");
 const day = 86400000
-
+//todo purchase history, no duplicate downloads
 router.post("/subscribe", validatePlan, (req, res) => {
     const user_id = req.decodedToken.subject;
     const plan = req.plan
@@ -30,8 +33,10 @@ router.post("/subscribe", validatePlan, (req, res) => {
             }
             if (!subscriber) {
                 if (paymentResponse = true) insertSubscription(subscriptionData).then((resp) => {
-                    updateUserBalance(user, plan.credits)
-                    console.log("new subscription", resp)
+                    console.log("newSubscription")
+                    // todo return createInvoice
+                    createInvoice(user, plan).then(resp => console.log("new subscriptionInvoice", resp))
+
                 })
                 console.log("payment failed")
             }
@@ -42,8 +47,9 @@ router.post("/subscribe", validatePlan, (req, res) => {
                 })
             if (paymentResponse = true) {
                 updateSubscription(subscriptionData).then(resp => {
-                    updateUserBalance(user, plan.credits)
                     console.log("subscription updated", resp)
+                    // todo return createInvoice
+                    createInvoice(user, plan).then(resp => console.log("newSubscriptionInvoice", resp))
                 })
             }
             console.log("payment failed")
@@ -61,16 +67,28 @@ router.use("/", (req, res) => {
 
 module.exports = router;
 
-function updateUserBalance(user, credits) {
+function createInvoice(user, product) {
+    const user_id = user.id
+    const {
+        product_type,
+        product_id,
+        price,
+        credits
+    } = product
+
     user.active = true
     user.balance += credits
-    updateUser(user).then(resp => console.log("null", "updateUserBalance", user, resp))
-}
 
-// todo find different term for productl
-function createInvoice(user, product) {
-    const invoice = {
-        user_id: user.id,
+    updateUser(user).then(resp => {
+        console.log("null", "updateUser from invoice", user, resp)
+        insertInvoice({
+            user_id,
+            product_type,
+            product_id,
+            amount: price
+        }).then(resp1 => console.log("invoice created", resp1))
+        //todo return res.status(200).send({msg: "Invoice Created"})
+    })
 
-    }
+
 }
