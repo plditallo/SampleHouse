@@ -25,8 +25,8 @@ function getUserByEmail(email) {
 }
 
 
-function updateUser(id, data) {
-    return db("User").update(data)
+function updateUser(id, user) {
+    return db("User").update(user)
         .where({
             id
         })

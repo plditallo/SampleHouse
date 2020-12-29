@@ -18,7 +18,7 @@ const {
     getUserByEmail
 } = require("../../../database/model/userModel");
 
-
+//todo all login responses give link to login from header host
 router.use("/confirmation/:token", (req, res) => {
     const {
         token

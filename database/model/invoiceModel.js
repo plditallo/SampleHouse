@@ -1,9 +1,9 @@
 const db = require("../database-config");
 
 module.exports = {
-    insertSubscription,
+    insertInvoice,
 }
 
-function insertSubscription(data) {
+function insertInvoice(data) {
     return db("User").insert(data)
 }
