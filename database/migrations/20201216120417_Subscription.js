@@ -3,7 +3,7 @@ exports.up = function (knex) {
         tbl.increments("id").primary().unique()
         tbl.uuid("user_id").references("User.id").notNullable();
         tbl.integer("plan_id").references("Plan.id")
-        tbl.date("subscribe_start")
+        tbl.date("subscribe_start").default(Date.now())
         tbl.date("subscribe_end")
         tbl.date("trial_start")
         tbl.date("trial_end")
@@ -12,5 +12,4 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return knex.schema.dropTableIfExists("Subscription")
-
 };

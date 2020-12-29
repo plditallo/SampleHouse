@@ -1,14 +1,21 @@
 const db = require("../database-config");
 
 module.exports = {
-    insertSub,
+    insertPlan,
+    getPlanById,
     getPlanByTier,
-    updateSub,
-    removeSub
+    updatePlan,
+    removePlan
 }
 
-function insertSub(data) {
+function insertPlan(data) {
     return db("Plan").insert(data)
+}
+
+function getPlanById(id) {
+    return db("Plan").where({
+        id
+    })
 }
 
 function getPlanByTier(tier) {
@@ -17,16 +24,15 @@ function getPlanByTier(tier) {
     })
 }
 
-function updateSub(tier, data) {
+function updatePlan(tier, data) {
     return db("Plan").update(data)
         .where({
             tier
         })
-
 }
 
-function removeSub(tier) {
+function removePlan(id) {
     return db("Plan").where({
-        tier
+        id
     }).del();
 }

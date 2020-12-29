@@ -12,17 +12,18 @@ function insertUser(data) {
     return db("User").insert(data)
 }
 
+function getUserById(id) {
+    return db("User").where({
+        id
+    })
+}
+
 function getUserByEmail(email) {
     return db("User").where({
         email
     })
 }
 
-function getUserById(id) {
-    return db("User").where({
-        id
-    })
-}
 
 function updateUser(id, data) {
     return db("User").update(data)

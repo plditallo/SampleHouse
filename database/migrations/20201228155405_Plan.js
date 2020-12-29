@@ -3,11 +3,11 @@ exports.up = function (knex) {
         tbl.increments("id").primary().unique()
         tbl.integer("tier")
         tbl.integer("credits").notNullable()
+        tbl.integer("cost")
         tbl.integer("length").default(30)
     })
 };
 
 exports.down = function (knex) {
     return knex.schema.dropTableIfExists("Plan")
-
 };

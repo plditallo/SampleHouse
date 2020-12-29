@@ -1,4 +1,3 @@
-const userDb = require("../../../database/model/userModel");
 const {
     getPlanByTier
 } = require("../../../database/model/planModel");
@@ -7,20 +6,15 @@ module.exports = {
     validatePlan
 };
 
-
 function validatePlan(req, res, next) {
-    const tier = req.body.plan
-    getPlanByTier(tier).then(([sub]) => {
-        if (sub) next()
-        else {
-            res.status(400).json({
-                msg: "No Plan found.",
-            })
-        }
+    const {
+        tier
+    } = req.body
+    getPlanByTier(tier).then(([plan]) => {
+        if (!plan) return res.status(400).json({
+            msg: "No Plan found.",
+        })
+        req.plan_id = plan.id
+        next()
     })
-}
-
-function validateHeaders(req, res, next) {
-    console.log(req.body)
-    next()
 }
