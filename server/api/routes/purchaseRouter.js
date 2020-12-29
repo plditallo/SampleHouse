@@ -24,7 +24,7 @@ router.post("/subscribe", validatePlan, (req, res) => {
         if (!user) return res.status(403).json({
             msg: 'The user ID: ' + user_id + ' is not associated with any account.'
         });
-        getSubscriberById(user_id).then(subscriber => {
+        getSubscriberById(user_id).then(([subscriber]) => {
             const subscriptionData = {
                 user_id: user.id,
                 plan_id: plan.id,
@@ -32,14 +32,15 @@ router.post("/subscribe", validatePlan, (req, res) => {
                 subscribe_end: Date.now() + (day * plan.day_length)
             }
             if (!subscriber) {
-                if (paymentResponse = true) insertSubscription(subscriptionData).then((resp) => {
-                    console.log("newSubscription")
-                    // todo return createInvoice
-                    createInvoice(user, plan).then(resp => console.log("new subscriptionInvoice", resp))
-
+                if (paymentResponse = true) return insertSubscription(subscriptionData).then(() => {
+                    createInvoice(user, plan)
+                    res.status(200).send({
+                        msg: "Subscription to: " + plan.name + " was successful."
+                    })
                 })
-                console.log("payment failed")
+                console.log("payment failed at new subscriber")
             }
+            console.log("subscriber")
             //* user has active subscription
             if ((subscriber.subscribe_end - Date.now()) > 0)
                 return res.status(200).send({
@@ -51,11 +52,9 @@ router.post("/subscribe", validatePlan, (req, res) => {
                     // todo return createInvoice
                     createInvoice(user, plan).then(resp => console.log("newSubscriptionInvoice", resp))
                 })
-            }
-            console.log("payment failed")
+            } else console.log("payment failed update subscriber")
         })
     })
-    res.status(200).json("token worked")
 });
 
 
@@ -79,16 +78,12 @@ function createInvoice(user, product) {
     user.active = true
     user.balance += credits
 
-    updateUser(user).then(resp => {
-        console.log("null", "updateUser from invoice", user, resp)
-        insertInvoice({
-            user_id,
-            product_type,
-            product_id,
-            amount: price
-        }).then(resp1 => console.log("invoice created", resp1))
-        //todo return res.status(200).send({msg: "Invoice Created"})
-    })
-
-
+    updateUser(user).then(() => null)
+    insertInvoice({
+        user_id,
+        product_type,
+        product_id,
+        amount: price
+    }).then(() => null)
+    return true
 }

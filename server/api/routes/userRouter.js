@@ -40,11 +40,10 @@ router.post("/register",
             email,
             password
         } = req.body;
-        const hash = hashSync(password, 13);
         const user = {
             id: uuidv1(),
-            email: email,
-            password: hash,
+            email,
+            password: hashSync(password, 13),
         }
 
         insertUser(user)
