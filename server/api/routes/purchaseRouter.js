@@ -1,10 +1,8 @@
 const router = require("express").Router();
-// const {
-//     toLocaleDateString
-// } = require("datejs")
 const {
-    validatePlan
-} = require("../middleware/planMiddleware");
+    validatePlan,
+    validateOffer
+} = require("../middleware/purchaseMiddleware");
 const {
     getUserById,
     updateUser
@@ -12,14 +10,13 @@ const {
 const {
     insertSubscription,
     getSubscriberById,
-    updateSubscription,
     removeSubscription
 } = require("../../../database/model/subscriptionModel");
 const {
     insertInvoice
 } = require("../../../database/model/invoiceModel");
-// const day = 86400000
-const day = 500
+const day = 86400000
+// const day = 500
 //todo purchase history, no duplicate downloads
 router.post("/subscribe", validatePlan, (req, res) => {
     const user_id = req.decodedToken.subject;
@@ -36,12 +33,12 @@ router.post("/subscribe", validatePlan, (req, res) => {
                 subscribe_start: Date.now(),
                 subscribe_end: Date.now() + (day * plan.day_length)
             }
-            console.log((subscriber && (subscriber.subscribe_end - Date.now()) > day / 2))
-            if (subscriber && (subscriber.subscribe_end - Date.now()) > day / 2)
+            // console.log((subscriber && (subscriber.subscribe_end - Date.now()) > day / 2))
+            if (subscriber && (subscriber.subscribe_end - Date.now()) > day)
                 return res.status(200).send({
                     msg: "User already has an active subscription. Subscription expires on: " + new Date(subscriber.subscribe_end).toLocaleDateString() + "."
                 })
-            else if (subscriber) removeSubscription(subscriber.id).then(() => null)
+            else if (subscriber) removeSubscription(subscriber.id).then(null)
 
             if (paymentResponse = true) return insertSubscription(subscriptionData).then(() => {
                 createInvoice(user, plan)
@@ -54,7 +51,12 @@ router.post("/subscribe", validatePlan, (req, res) => {
     })
 });
 
-router.post("/")
+router.post("/currency", validateOffer, (req, res) => {
+    res.status(200).send({
+        msg: "currency route",
+        offer: req.offer
+    })
+})
 
 
 router.use("/", (req, res) => {
@@ -67,7 +69,6 @@ module.exports = router;
 
 function createInvoice(user, product) {
     const user_id = user.id
-    console.log(product)
     const {
         id,
         product_type,
@@ -78,12 +79,13 @@ function createInvoice(user, product) {
     user.active_subscription = true
     user.balance += credits
 
-    updateUser(user).then(() => null)
+    updateUser(user).then(null)
     insertInvoice({
         user_id,
         product_type,
         product_id: id,
         amount: price,
-        created: Date.now()
-    }).then(() => null)
+        created: Date.now(),
+        // description: 
+    }).then(null)
 }

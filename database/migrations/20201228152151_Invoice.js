@@ -4,6 +4,7 @@ exports.up = function (knex) {
         tbl.uuid("user_id").references("User.id").notNullable();
         tbl.string("product_type")
         tbl.integer("product_id")
+        tbl.sting("description")
         tbl.integer("amount")
         tbl.date("created")
     })

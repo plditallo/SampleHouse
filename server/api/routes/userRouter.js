@@ -81,8 +81,9 @@ router.post("/login",
                     type: 'not-verified',
                     msg: 'Your account has not been verified.'
                 });
-                //* Login successful, write token, and send back user
                 user.last_login = Date.now()
+                updateUser(user).then(null)
+                //* Login successful, write token, and send back user
                 user.token = generateToken(user);
                 res.status(200).json(user);
             })
