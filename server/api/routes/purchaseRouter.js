@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const stripe = require("stripe")(process.env.STRIPE_API_SECRET_KEY)
+const {
+    STRIPE_API_SECRET_KEY,
+    API_ADDRESS
+} = process.env;
+const stripe = require("stripe")(STRIPE_API_SECRET_KEY)
 const {
     validatePlan,
     validateOffer
@@ -15,6 +19,9 @@ const {
 const {
     insertInvoice
 } = require("../../../database/model/invoiceModel");
+const {
+    off
+} = require("../../../database/database-config");
 // const day = 1000
 const day = 86400000
 // todo change all "" + "" to `${}`
@@ -54,28 +61,40 @@ router.post("/credits", validateOffer, async (req, res) => {
         user,
         offer
     } = req;
-    if (!user.stripe_id) {
-        const customer = await stripe.customers.create({
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            description: 'My First Test Customer (created for API docs)'
-        });
-        user.stripe_id = customer.id
-    }
-    const invoiceItem = await stripe.invoiceItems.create({
-        customer: user.stripe_id,
-        price: offer.stripe_price_id,
-    });
-    const invoice = await stripe.invoices.create({
-        customer: user.stripe_id,
-        auto_advance: true, // auto-finalize this draft after ~1 hour
-    });
+    // const invoiceItem = await stripe.invoiceItems.create({
+    //     customer: user.stripe_id,
+    //     price: offer.stripe_price_id,
+    // });
+    // const invoice = await stripe.invoices.create({
+    //     customer: user.stripe_id,
+    //     auto_advance: true, // auto-finalize this draft after ~1 hour
+    // });
 
-    console.log({
-        invoiceItem
-    }, {
-        invoice
-    })
+    // console.log({
+    //     invoiceItem
+    // }, {
+    //     invoice
+    // })
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        client_reference_id: user.stripe_id,
+        customer: user.stripe_id,
+        line_items: [{
+            price_data: {
+                currency: user.currency,
+                product_data: {
+                    name: offer.name,
+                    images: ['https://i.imgur.com/EHyR2nP.png'],
+                },
+                unit_amount: offer.price.toString().replace(".", ""),
+            },
+            quantity: 1,
+        }, ],
+        mode: 'payment',
+        success_url: `https://localhost:3000/success.html`,
+        cancel_url: `https://localhost:3000/cancel.html`,
+    });
+    console.log(session.id)
 
 
     getSubscriberById(user.id).then(([subscriber]) => {
@@ -122,7 +141,7 @@ function createInvoice(user, product) {
         user_id,
         product_type,
         product_id: id,
-        amount: price,
+        amount: price, //? does this save as int or str
         created: Date.now(),
         // description: 
     }).then(null)

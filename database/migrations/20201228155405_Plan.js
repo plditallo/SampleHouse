@@ -7,7 +7,7 @@ exports.up = function (knex) {
         tbl.string("description")
         tbl.integer("tier")
         tbl.integer("credits").notNullable()
-        tbl.integer("price")
+        tbl.string("price")
         tbl.integer("day_length").default(30)
         tbl.string("product_type").default("plan")
     })
