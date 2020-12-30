@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const stripe = require("stripe")(process.env.STRIPE_API_SECRET_KEY)
 const {
     validatePlan,
     validateOffer
@@ -16,6 +17,7 @@ const {
 } = require("../../../database/model/invoiceModel");
 // const day = 1000
 const day = 86400000
+// todo change all "" + "" to `${}`
 //todo purchase history, no duplicate downloads
 router.post("/subscribe", validatePlan, (req, res) => {
     const {
@@ -47,11 +49,34 @@ router.post("/subscribe", validatePlan, (req, res) => {
     })
 });
 
-router.post("/currency", validateOffer, (req, res) => {
+router.post("/credits", validateOffer, async (req, res) => {
     const {
         user,
         offer
     } = req;
+    if (!user.stripe_id) {
+        const customer = await stripe.customers.create({
+            name: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            description: 'My First Test Customer (created for API docs)'
+        });
+        user.stripe_id = customer.id
+    }
+    const invoiceItem = await stripe.invoiceItems.create({
+        customer: user.stripe_id,
+        price: offer.stripe_price_id,
+    });
+    const invoice = await stripe.invoices.create({
+        customer: user.stripe_id,
+        auto_advance: true, // auto-finalize this draft after ~1 hour
+    });
+
+    console.log({
+        invoiceItem
+    }, {
+        invoice
+    })
+
 
     getSubscriberById(user.id).then(([subscriber]) => {
         //* check if subscriber has LESS than 24 hours left on subscription
@@ -63,8 +88,8 @@ router.post("/currency", validateOffer, (req, res) => {
         }
         if (paymentResponse = true) {
             createInvoice(user, offer)
-            res.status(200).send({
-                msg: "Purchase of: " + offer.name + " was successful. " + offer.credits + "tokens have been added to your account. Your new balance is: " + user.balance + " ."
+            return res.status(200).send({
+                msg: `Purchase of: ${offer.name} was successful. ${offer.credits} tokens have been added to your account. Your balance is: ${user.balance}.`
             })
         }
         console.log("payment failed at new subscriber")

@@ -2,6 +2,7 @@ exports.up = function (knex) {
     // todo last logged in
     return knex.schema.createTable("User", (tbl) => {
         tbl.uuid("id").primary().unique();
+        tbl.string("stripe_id")
         tbl.string("first_name");
         tbl.string("last_name");
         tbl.string("email").notNullable()
@@ -15,6 +16,7 @@ exports.up = function (knex) {
         tbl.date('last_login')
         tbl.string('role').default("user")
         tbl.boolean("auto_subscribe").default(true)
+        tbl.string("currency").default("usd")
     })
 };
 

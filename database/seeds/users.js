@@ -14,7 +14,9 @@ exports.seed = function (knex) {
         id: uuidv1(),
         email: 'services@bluesmokemedia.net',
         password: hashSync('password', 13),
-        isVerified: true
+        isVerified: true,
+        first_name: "Jack",
+        last_name: "Barry",
       }]);
     });
 };
