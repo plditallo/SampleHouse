@@ -3,7 +3,8 @@ const db = require("../database-config");
 module.exports = {
     insertSubscription,
     getSubscriberById,
-    updateSubscription
+    updateSubscription,
+    removeSubscription
 }
 
 function insertSubscription(data) {
@@ -20,4 +21,10 @@ function updateSubscription(data) {
     return db("Subscription").update(data).where(
         data.user_id
     )
+}
+
+function removeSubscription(id) {
+    return db("Subscription").where({
+        id
+    }).del()
 }

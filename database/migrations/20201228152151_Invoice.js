@@ -5,7 +5,7 @@ exports.up = function (knex) {
         tbl.string("product_type")
         tbl.integer("product_id")
         tbl.integer("amount")
-        tbl.date("created").default(Date.now())
+        tbl.date("created")
     })
 };
 
