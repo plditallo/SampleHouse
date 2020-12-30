@@ -14,8 +14,8 @@ const {
 const {
     insertInvoice
 } = require("../../../database/model/invoiceModel");
-// const day = 86400000
-const day = 1000
+// const day = 1000
+const day = 86400000
 //todo purchase history, no duplicate downloads
 router.post("/subscribe", validatePlan, (req, res) => {
     const {
@@ -30,7 +30,6 @@ router.post("/subscribe", validatePlan, (req, res) => {
             subscribe_start: Date.now(),
             subscribe_end: Date.now() + (day * plan.day_length)
         }
-        // console.log((subscriber && (subscriber.subscribe_end - Date.now()) > day / 2))
         //* check if subscriber has MORE than 24 hours left on subscription
         if (subscriber && (subscriber.subscribe_end - Date.now()) > day)
             return res.status(200).send({
@@ -53,6 +52,7 @@ router.post("/currency", validateOffer, (req, res) => {
         user,
         offer
     } = req;
+
     getSubscriberById(user.id).then(([subscriber]) => {
         //* check if subscriber has LESS than 24 hours left on subscription
         if (!subscriber || (subscriber && (subscriber.subscribe_end - Date.now()) < day)) {
