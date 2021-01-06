@@ -56,8 +56,7 @@ router.post("/register",
 // https://stackoverflow.com/questions/23507200/good-practices-for-designing-monthly-subscription-system-in-database
 
 //todo logging in from VST? (Header? HOST??) -> validateSubscription
-//todo use user.active for vst auth
-// todo check if active subscription or not (user.active)
+//todo use user.active for vst auth as well as user.lastLogin
 // todo login VST include tier 2+
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
@@ -118,7 +117,7 @@ router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, 
             user.password_reset_token = token.token
             user.password_reset_expires = Date.now() + 21600000 //6hrs
 
-            updateUser(user).then(() => res.status(200).send('A email as been sent with a link to reset your password.'))
+            updateUser(user).then(() => res.status(200).send(`A email as been sent to ${req.body.email} with a link to reset your password. This link will expire in 6 hours.`))
         })
 })
 
@@ -154,6 +153,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password_reset_token = null
                 user.password_reset_expires = null
                 user.password = hashSync(password, 13)
+                //todo  change link here from req.headers.host to correct endpoint
                 return updateUser(user).then(() => res.status(200).send({
                     type: 'password-reset',
                     msg: `Password has been successfully been changed. Click this link to login: http:\/\/${req.headers.host}\/api\/user\/login\/.`
