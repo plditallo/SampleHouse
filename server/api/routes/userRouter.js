@@ -44,6 +44,7 @@ router.post("/register",
             id: uuidv1(),
             email,
             password: hashSync(password, 13),
+            created: Date.now()
         }
 
         insertUser(user)
@@ -58,6 +59,7 @@ router.post("/register",
 //todo logging in from VST? (Header? HOST??) -> validateSubscription
 //todo use user.active for vst auth
 // todo check if active subscription or not (user.active)
+// todo login VST include tier 2+
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
         const errors = validationResult(req);
@@ -213,3 +215,31 @@ function generateToken(user) {
     };
     return jwt.sign(payload, JWT_SECRET, options);
 }
+
+
+
+const sound1 = {
+    type: "loop",
+    exclusive: "false",
+    duration: "12",
+    tempo: "120",
+    instrument_type: "guitar,electric guitar,",
+    genre: "pop,punk,edm",
+    key: "c#",
+    pack: "packName",
+    tag9: "value",
+    tag10: "value",
+}
+const sound2 = {
+    type: "drum",
+    premium: "true",
+    duration: "15",
+    tempo: "150",
+    tag5: "value",
+    tag6: "value",
+    tag7: "value",
+    tag8: "value",
+    tag9: "value",
+    tag10: "value",
+}
+// todo check aws s3 bucket for number of downloads per object

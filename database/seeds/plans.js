@@ -9,8 +9,8 @@ exports.seed = function (knex) {
           stripe_prod_id: "prod_IfTNk2pqpjBIyz",
           stripe_price_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
           tier: 1,
-          credits: 1,
-          price: "5.00"
+          credits: 100,
+          price: "5.99" //.0599
         },
         {
           id: 2,
@@ -18,8 +18,8 @@ exports.seed = function (knex) {
           stripe_prod_id: "prod_IfTOi1zKnjEKsL",
           stripe_price_id: "price_1I48RIBPBM0JAFXGmk4lEPOD",
           tier: 2,
-          credits: 10,
-          price: "15.26"
+          credits: 250,
+          price: "10.99" //0.04396
         },
         {
           id: 3,
@@ -27,8 +27,8 @@ exports.seed = function (knex) {
           stripe_prod_id: "prod_IfTO4fowW2Xgtx",
           stripe_price_id: "price_1I48RvBPBM0JAFXG5XSFHyq6",
           tier: 3,
-          credits: 50,
-          price: "29.99"
+          credits: 500,
+          price: "19.99" //0.03998
         }
       ]);
     });

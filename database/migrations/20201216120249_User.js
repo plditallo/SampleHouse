@@ -11,7 +11,7 @@ exports.up = function (knex) {
         tbl.string("password_reset_token")
         tbl.date("password_reset_expires")
         tbl.integer("balance").default(0);
-        tbl.date("created").default(Date.now()); //knex.fn.now()
+        tbl.date("created") //knex.fn.now()
         tbl.boolean("active_subscription").default(false)
         tbl.date('last_login')
         tbl.string('role').default("user")

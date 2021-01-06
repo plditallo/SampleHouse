@@ -61,41 +61,44 @@ router.post("/credits", validateOffer, async (req, res) => {
         user,
         offer
     } = req;
-    // const invoiceItem = await stripe.invoiceItems.create({
-    //     customer: user.stripe_id,
-    //     price: offer.stripe_price_id,
-    // });
-    // const invoice = await stripe.invoices.create({
-    //     customer: user.stripe_id,
-    //     auto_advance: true, // auto-finalize this draft after ~1 hour
-    // });
+    //* stripe taken out of code temporarily
+    if (paymentTypeIsStripe = false) {
 
-    // console.log({
-    //     invoiceItem
-    // }, {
-    //     invoice
-    // })
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        client_reference_id: user.stripe_id,
-        customer: user.stripe_id,
-        line_items: [{
-            price_data: {
-                currency: user.currency,
-                product_data: {
-                    name: offer.name,
-                    images: ['https://i.imgur.com/EHyR2nP.png'],
+        // const invoiceItem = await stripe.invoiceItems.create({
+        //     customer: user.stripe_id,
+        //     price: offer.stripe_price_id,
+        // });
+        // const invoice = await stripe.invoices.create({
+        //     customer: user.stripe_id,
+        //     auto_advance: true, // auto-finalize this draft after ~1 hour
+        // });
+
+        // console.log({
+        //     invoiceItem
+        // }, {
+        //     invoice
+        // })
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            client_reference_id: user.stripe_id,
+            customer: user.stripe_id,
+            line_items: [{
+                price_data: {
+                    currency: user.currency,
+                    product_data: {
+                        name: offer.name,
+                        images: ['https://i.imgur.com/EHyR2nP.png'],
+                    },
+                    unit_amount: offer.price.toString().replace(".", ""),
                 },
-                unit_amount: offer.price.toString().replace(".", ""),
-            },
-            quantity: 1,
-        }, ],
-        mode: 'payment',
-        success_url: `https://localhost:3000/success.html`,
-        cancel_url: `https://localhost:3000/cancel.html`,
-    });
-    console.log(session.id)
-
+                quantity: 1,
+            }, ],
+            mode: 'payment',
+            success_url: `https://localhost:3000/success.html`,
+            cancel_url: `https://localhost:3000/cancel.html`,
+        });
+        console.log(session.id)
+    }
 
     getSubscriberById(user.id).then(([subscriber]) => {
         //* check if subscriber has LESS than 24 hours left on subscription
