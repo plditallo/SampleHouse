@@ -24,7 +24,6 @@ const {
 } = require("../../../database/database-config");
 // const day = 1000
 const day = 86400000
-// todo change all "" + "" to `${}`
 //todo purchase history, no duplicate downloads
 router.post("/subscribe", validatePlan, (req, res) => {
     const {
@@ -42,14 +41,14 @@ router.post("/subscribe", validatePlan, (req, res) => {
         //* check if subscriber has MORE than 24 hours left on subscription
         if (subscriber && (subscriber.subscribe_end - Date.now()) > day)
             return res.status(200).send({
-                msg: "User already has an active subscription. Subscription expires on: " + new Date(subscriber.subscribe_end).toLocaleDateString() + "."
+                msg: `User already has an active subscription. Subscription expires on: ${new Date(subscriber.subscribe_end).toLocaleDateString()}.`
             })
         else if (subscriber) removeSubscription(subscriber.id).then(null)
 
         if (paymentResponse = true) return insertSubscription(subscriptionData).then(() => {
             createInvoice(user, plan)
             res.status(200).send({
-                msg: "Subscription to: " + plan.name + " was successful."
+                msg: `Subscription to: ${plan.name} was successful.`
             })
         })
         console.log("payment failed at new subscriber")

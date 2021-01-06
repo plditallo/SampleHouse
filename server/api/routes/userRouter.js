@@ -53,7 +53,6 @@ router.post("/register",
                 res.status(500).json(err)
             );
     });
-//todo Make sure that you can't have 2 subscriptions for a client at the same time.
 // https://stackoverflow.com/questions/23507200/good-practices-for-designing-monthly-subscription-system-in-database
 
 //todo logging in from VST? (Header? HOST??) -> validateSubscription
@@ -72,7 +71,7 @@ router.post("/login",
         getUserByEmail(email)
             .then(([user]) => {
                 if (!user) return res.status(403).json({
-                    msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
+                    msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
                 });
                 //* Check password
                 if (!compareSync(password, user.password)) return res.status(403).json({
@@ -107,7 +106,7 @@ router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, 
     getUserByEmail(email)
         .then(([user]) => {
             if (!user) return res.status(403).json({
-                msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
+                msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
             });
             if (!user.isVerified) return res.status(401).send({
                 type: 'not-verified',
@@ -136,7 +135,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
     getUserByEmail(email)
         .then(([user]) => {
             if (!user) return res.status(403).json({
-                msg: 'The email address ' + req.body.email + ' is not associated with any account. Please double-check your email address and try again.'
+                msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
             });
             if (!user.isVerified) return res.status(401).send({
                 type: 'not-verified',
@@ -157,7 +156,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password = hashSync(password, 13)
                 return updateUser(user).then(() => res.status(200).send({
                     type: 'password-reset',
-                    msg: 'Password has been successfully been changed. Click this link to login: http:\/\/' + req.headers.host + '\/api\/user\/login\/.'
+                    msg: `Password has been successfully been changed. Click this link to login: http:\/\/${req.headers.host}\/api\/user\/login\/.`
                 }))
             }
             return res.status(400).send({
@@ -179,14 +178,14 @@ router.delete("/:id", (req, res) => {
 
     getUserById(id).then(([user]) => {
         if (!user) return res.status(403).json({
-            msg: 'The user id:' + id + ' is not associated with any account.'
+            msg: `The user id: ${id} is not associated with any account.`
         });
         //* Check password
         if (!compareSync(password, user.password)) return res.status(403).json({
             msg: "Invalid password"
         });
         if (user.balance > 0) return res.status(403).json({
-            msg: 'This account still has a balance of ' + user.balance + ' credits. Please spend remaining credits before deleting account.'
+            msg: `This account still has a balance of ${user.balance} credits. Please spend remaining credits before deleting account.`
         });
         removeUser(id).then(() => res.status(200).send({
             msg: "Successfully removed user"
@@ -202,7 +201,7 @@ router.use("/", (req, res) => {
 
 module.exports = router;
 
-
+//? send sub expiry time in payload for VST?
 function generateToken(user) {
     const {
         JWT_SECRET

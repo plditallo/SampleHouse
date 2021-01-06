@@ -1,8 +1,5 @@
 const router = require("express").Router();
 const {
-    hashSync
-} = require("bcryptjs");
-const {
     body,
     validationResult
 } = require('express-validator');

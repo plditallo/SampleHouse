@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   if (!authorization) return res.status(400).json({
     msg: "No authorization token provided"
   })
-  //todo check to be sure token is expiring
+
   verify(authorization, process.env.JWT_SECRET, (err, decodedToken) => {
     if (err) return res.status(401).json({
       msg: "Invalid token"
@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
 
     getUserById(user_id).then(async ([user]) => {
       if (!user) return res.status(403).json({
-        msg: 'The user ID: ' + user_id + ' is not associated with any account.'
+        msg: `The user ID: ${user_id} is not associated with any account.`
       })
       //* Stripe payment taken out of being ran fro now
       if (paymentTypeIsStripe = false && !user.stripe_id) {

@@ -1,4 +1,3 @@
-// todo setup database to track downloads for songs ()
 exports.seed = function (knex) {
   // Deletes ALL existing entries
   return knex('Offer').del()
