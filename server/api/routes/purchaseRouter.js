@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const {
-    STRIPE_API_SECRET_KEY,
-    API_ADDRESS
+    STRIPE_API_SECRET_KEY
 } = process.env;
 const stripe = require("stripe")(STRIPE_API_SECRET_KEY)
 const {
