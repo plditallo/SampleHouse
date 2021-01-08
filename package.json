@@ -25,7 +25,8 @@
   },
   "scripts": {
     "test": "knex seed: run --env testing && cross-env DB_ENV=testing jest --watchAll --verbose",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "jest": {
     "testEnvironment": "node",

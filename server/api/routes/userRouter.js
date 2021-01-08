@@ -84,8 +84,7 @@ router.post("/login",
                 user.last_login = Date.now()
                 updateUser(user).then(null)
                 //* Login successful, write token, and send back user
-                user.token = generateToken(user);
-                res.status(200).json(user);
+                res.status(200).json(generateToken(user));
             })
             .catch((err) => res.status(500).json({
                 msg: "unable to retrieve user",
@@ -210,7 +209,7 @@ function generateToken(user) {
         subject: user.id,
     };
     const options = {
-        expiresIn: "48h",
+        expiresIn: "72hr",
     };
     return jwt.sign(payload, JWT_SECRET, options);
 }
