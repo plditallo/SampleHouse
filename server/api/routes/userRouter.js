@@ -166,6 +166,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
 })
 
 router.delete("/:id", (req, res) => {
+    //todo check token to see if user is trying to delete (not someone else)
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
     const {

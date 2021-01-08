@@ -13,3 +13,5 @@ exports.up = function (knex) {
 exports.down = function (knex) {
     return knex.schema.dropTableIfExists("Subscription")
 };
+20201216120417
+PLAN=20201228155405
