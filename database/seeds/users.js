@@ -9,7 +9,7 @@ exports.seed = function (knex) {
       // Inserts seed entries
       return knex('User').insert([{
         id: "f0889260-4acf-11eb-91bb-4b49c1af32be",
-        email: 'services@bluesmokemedia.net',
+        email: 'jack@testing.com',
         password: hashSync('password', 13),
         isVerified: true,
         first_name: "Jack",

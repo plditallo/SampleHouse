@@ -42,7 +42,7 @@ router.use("/confirmation/:token", (req, res) => {
             });
 
             user.isVerified = true
-
+            // todo 'this page will automatically direct to login in: 5 seconds'
             updateUser(user).then(() => res.status(200).send("The account has been verified. Please log in.")).catch(err => res.status(500).send({
                 msg: err.message
             }))

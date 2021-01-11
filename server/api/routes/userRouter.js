@@ -7,6 +7,9 @@ const {
     removeUser
 } = require("../../../database/model/userModel");
 const {
+    getSubscriberById,
+} = require("../../../database/model/subscriptionModel");
+const {
     hashSync,
     compareSync
 } = require("bcryptjs");
@@ -42,11 +45,11 @@ router.post("/register",
         } = req.body;
         const user = {
             id: uuidv1(),
-            email,
+            email: email.toLowerCase(),
             password: hashSync(password, 13),
             created: Date.now()
         }
-
+        // todo check req.headers.host once live
         insertUser(user)
             .then(() => res.send(tokenEmailer(user, req.headers.host)))
             .catch((err) =>
@@ -81,10 +84,21 @@ router.post("/login",
                     type: 'not-verified',
                     msg: 'Your account has not been verified.'
                 });
-                user.last_login = Date.now()
-                updateUser(user).then(null)
-                //* Login successful, write token, and send back user
-                res.status(200).json(generateToken(user));
+                //* check active subscription
+                getSubscriberById(user.id).then(([subscriber]) => {
+                    if (subscriber && subscriber.subscribe_end - Date.now() > 0)
+                        user.active_subscription = true
+                    else user.active_subscription = false
+
+                    user.last_login = Date.now()
+                    updateUser(user).then(null)
+                    //* Login successful, write token, and send back user
+                    res.status(200).json({
+                        token: generateToken(user),
+                        subscribed: user.active_subscription, //* true/false
+                        subscriptionEnd: subscriber.subscribe_end
+                    });
+                })
             })
             .catch((err) => res.status(500).json({
                 msg: "unable to retrieve user",
@@ -94,6 +108,7 @@ router.post("/login",
 
 // todo I think tokens are stacking when double clicking here...
 router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
+    // todo send to frontend form to rest password w/ token
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
 
@@ -152,7 +167,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password_reset_token = null
                 user.password_reset_expires = null
                 user.password = hashSync(password, 13)
-                //todo  change link here from req.headers.host to correct endpoint
+                //todo  change link here from req.headers.host to correct endpoint FRONTEND NOT HOST
                 return updateUser(user).then(() => res.status(200).send({
                     type: 'password-reset',
                     msg: `Password has been successfully been changed. Click this link to login: http:\/\/${req.headers.host}\/api\/user\/login\/.`

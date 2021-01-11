@@ -18,9 +18,6 @@ const {
 const {
     insertInvoice
 } = require("../../../database/model/invoiceModel");
-const {
-    off
-} = require("../../../database/database-config");
 // const day = 1000
 const day = 86400000
 router.post("/subscribe", validatePlan, (req, res) => {
