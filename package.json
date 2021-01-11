@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4"
   },
@@ -25,8 +26,10 @@
   },
   "scripts": {
     "test": "knex seed: run --env testing && cross-env DB_ENV=testing jest --watchAll --verbose",
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "server": "nodemon index.js",
+    "start": "node index.js",
+    "dev": "concurrently 'yarn start' 'cd client && yarn start'",
+    "client": "cd client && yarn start"
   },
   "jest": {
     "testEnvironment": "node",
