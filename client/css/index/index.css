@@ -1,8 +1,21 @@
+h2,
+h3,
+h4,
+h5 {
+  color: #024052;
+}
+
+p {
+  color: #026986;
+  font-size: 1.18em;
+}
+
 .inspire {
   display: none;
   background-image: url("../../assets/man_wearing_headphones-flat.png");
-  background-repeat: none;
-  background-size: cover;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
   height: 50em;
   -webkit-box-shadow: #0d2233 0 3em 3.5em;
           box-shadow: #0d2233 0 3em 3.5em;
@@ -67,23 +80,118 @@
   font-size: 1.5em;
   text-align: center;
   margin-top: 1.25em;
-  color: #024052;
 }
 
 #products .product p {
-  font-size: 1.2em;
-  font-weight: 600;
+  font-weight: 500;
   width: 75%;
   margin: 0 auto;
-  color: #026986;
+}
+
+.about {
+  display: none;
+  width: 70%;
+  margin: auto;
 }
 
 .about h3 {
+  color: white;
+  font-size: 1.8em;
   background: #13384f;
   border: 2px solid #707070;
+  border-radius: 0.5em;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 0.25em 0.75em;
+  margin: auto;
 }
 
 .about h3 span {
+  margin-left: 0.5em;
   color: #4abdf5;
+}
+
+.about p {
+  color: #026986;
+}
+
+.loops {
+  display: none !important;
+  width: 70%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-bottom: 6em;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 auto;
+}
+
+.loops h2 {
+  font-size: 2em;
+  text-align: center;
+}
+
+.loops img {
+  width: 90%;
+  height: 35em;
+  border-radius: 2em;
+  margin: 0 auto;
+  border: 2px solid #707070;
+  -webkit-box-shadow: #113048 0.35em 1em 2em;
+          box-shadow: #113048 0.35em 1em 2em;
+}
+
+.loops p {
+  font-weight: 500;
+  width: 75%;
+  margin: 2em auto;
+}
+
+.loops p span {
+  font-weight: 700;
+}
+
+.pricing {
+  text-align: center;
+}
+
+.pricing h2 {
+  font-size: 2em;
+}
+
+.pricing table {
+  display: none;
+  margin: auto;
+  width: 50%;
+  height: 20em;
+  color: white;
+  font-weight: 300;
+  border-radius: 1.5em;
+  background-image: url("../../assets/pricing_chart_bkgrnd.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-collapse: collapse;
+}
+
+.pricing table th {
+  border-bottom: 2px solid white;
+  font-weight: 700;
+}
+
+.pricing table tbody tr td {
+  border-right: 2px solid white;
+  font-weight: 900;
+}
+
+.pricing table tbody tr td:first-child {
+  font-weight: 700;
 }
 /*# sourceMappingURL=index.css.map */
