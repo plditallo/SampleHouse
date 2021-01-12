@@ -4,84 +4,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../style.css" text="text/css" />
-    <title>sample.House</title>
+    <link rel="stylesheet" href="../css/core.css" text="text/css" />
+    <link rel="stylesheet" href="../css/index/index.css" text="text/css" />
+    <title>Sample.House</title>
   </head>
   <body>
     <header id="header"></header>
-    <section class="about">
-      <h3>We Inspire. You Create!</h3>
-      <h4>ABOUT <span>Sample.House</span></h4>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut cumque,
-        temporibus iure facere asperiores illo, perspiciatis magni vitae,
-        excepturi alias cupiditate qui! Ipsum eaque est eveniet mollitia ipsam,
-        iste adipisci!
-      </p>
+    <section class="inspire">
+      <h2>We Inspire. You Create!</h2>
+      <ul>
+        <li>item1</li>
+        <li>item2</li>
+        <li>item3</li>
+        <li>item4</li>
+      </ul>
     </section>
-    <section id="products"></section>
-    <section class="pricing">
-      <table>
-        <thead>
-          <th>Features</th>
-          <th>Starter<br />$5.99/mo</th>
-          <th>Standard<br />$10.99/mo</th>
-          <th>Studio<br />$19.99/mo</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>VST Access</td>
-            <td>X</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Instructional Videos</td>
-            <td>X</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Samples (one shots)</td>
-            <td>C</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Loops</td>
-            <td>C</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Exclusive Loops</td>
-            <!-- todo ask Craig if he wants exclusive available to all -->
-            <td>X</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Midi Files</td>
-            <td>C</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Private Discord</td>
-            <td>C</td>
-            <td>C</td>
-            <td>C</td>
-          </tr>
-          <tr>
-            <td>Credits per month</td>
-            <td>100</td>
-            <td>200</td>
-            <td>500</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-    <section id="faq"></section>
+    <div class="wrapper">
+      <section id="products"></section>
+      <section class="about">
+        <h3>ABOUT <span>Sample.House</span></h3>
+        <p>
+          Sample.House is a team of producers, sound designers, & VST developers that works hard to bring unique sounds to producers, composers, & songwriters. All of our samples & loops are hand-crafted to bring a unique sound to your composition.
+        </p>
+      </section>
+      <section class="pricing">
+        <table>
+          <thead>
+            <th>Features</th>
+            <th>Starter<br />$5.99/mo</th>
+            <th>Standard<br />$10.99/mo</th>
+            <th>Studio<br />$19.99/mo</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VST Access</td>
+              <td>X</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Instructional Videos</td>
+              <td>X</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Samples (one shots)</td>
+              <td>C</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Loops</td>
+              <td>C</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Exclusive Loops</td>
+              <td>X</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Midi Files</td>
+              <td>C</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Private Discord</td>
+              <td>C</td>
+              <td>C</td>
+              <td>C</td>
+            </tr>
+            <tr>
+              <td>Credits per month</td>
+              <td>100</td>
+              <td>200</td>
+              <td>500</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="faq"></section>
+    </wrapper>
     <footer id="footer"></footer>
 
     <!--* Load React. -->
@@ -96,9 +103,9 @@
     ></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!--* Load React components -->
-    <script type="text/babel" src="../scripts/header.jsx"></script>
-    <script type="text/babel" src="../scripts/product.jsx"></script>
-    <script type="text/babel" src="../scripts/faq.jsx"></script>
-    <script type="text/babel" src="../scripts/footer.jsx"></script>
+    <script type="text/babel" src="../js/header.jsx"></script>
+    <script type="text/babel" src="../js/product.jsx"></script>
+    <script type="text/babel" src="../js/faq.jsx"></script>
+    <script type="text/babel" src="../js/footer.jsx"></script>
   </body>
 </html>

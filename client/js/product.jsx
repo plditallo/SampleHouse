@@ -11,6 +11,7 @@ class Product extends React.Component {
       {
         img: "../assets/music_recording_studio_closeup.png",
         alt: "img alt",
+        title: "Inspiring Creativity",
         text:
           "Royalty-free loops,samples, and MIDI files to start your projects. State-of-the-art VST instruments. Exclusive loops limited to one user and then removed from the site.",
       },
@@ -49,19 +50,18 @@ class Product extends React.Component {
         text:
           "Watch our demonstration videos & courses to discover the best production tips& tricks to make a better composition.",
       },
-      {
-        img: "../assets/exclusive_loops.png",
-        alt: "img alt",
-        //todo span bold here
-        text:
-          "<span>No more duplicate samples</span> used on hundreds of songs. Once a loop is downloaded,it is removed from the site.You will be the only person with that loop!Search our exclusive loops library with new loops added every day!",
-      },
+      // {
+      //   img: "../assets/exclusive_loops.png",
+      //   alt: "img alt",
+      //   //todo span bold here
+      //   text:
+      //     "<span>No more duplicate samples</span> used on hundreds of songs. Once a loop is downloaded,it is removed from the site.You will be the only person with that loop!Search our exclusive loops library with new loops added every day!",
+      // },
     ];
     return data.map((e, i) => (
       <div className="product" key={i}>
-        {i === 5 ? <h5>{e.title}</h5> : null}
         <img src={e.img} alt={e.alt} />
-        {i !== 5 ? <h5>{e.title ? e.title : null}</h5> : null}
+        <h3>{e.title}</h3>
         <p>{e.text}</p>
       </div>
     ));

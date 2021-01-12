@@ -12,45 +12,46 @@ class Header extends React.Component {
     }
     return (
       <div>
-        <div>
-          <img src="../assets/logo.png" alt="sample.House Logo" />
-          <h5>Sample House</h5>
+        <div className="logo">
+          <img src="../assets/sample_house_logo.png" alt="sample.House Logo" />
+          <h1>Sample House</h1>
         </div>
-
-        <div>
-          <a>
-            {/* //todo change to icon? */}
-            <img src="../assets/envelope-square.png" alt="" />
-            support@sample.house
-          </a>
-          <div>
-            <a href="#login.html">Login</a>
-            <a href="register.html">Sign Up</a>
+        <div className="right">
+          <div className="top-actions">
+            <a className="email">
+              {/* //todo change to icon? */}
+              <img src="../assets/envelope-square.png" alt="" />
+              support@sample.house
+            </a>
+            <div className="buttons">
+              <a href="login.html">LOGIN</a>
+              <a href="register.html">SIGN UP</a>
+            </div>
           </div>
-        </div>
 
-        <nav>
-          <ul>
-            <li>
-              <a href="#Home">Home</a>
-            </li>
-            <li>
-              <a href="#About">About</a>
-            </li>
-            <li>
-              <a href="#Products">Products</a>
-            </li>
-            <li>
-              <a href="#Pricing">Pricing</a>
-            </li>
-            <li>
-              <a href="#FAQ">FAQ's</a>
-            </li>
-            <li>
-              <a href="#Contact">Contact</a>
-            </li>
-          </ul>
-        </nav>
+          <nav>
+            <ul>
+              <li>
+                <a href="#Home">HOME</a>
+              </li>
+              <li>
+                <a href="#About">ABOUT</a>
+              </li>
+              <li>
+                <a href="#Products">PRODUCTS</a>
+              </li>
+              <li>
+                <a href="#Pricing">PRICING</a>
+              </li>
+              <li>
+                <a href="#FAQ">FAQ's</a>
+              </li>
+              <li>
+                <a href="contact.html">CONTACT</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     );
   }
