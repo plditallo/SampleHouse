@@ -95,8 +95,7 @@ router.post("/login",
                     //* Login successful, write token, and send back user
                     res.status(200).json({
                         token: generateToken(user),
-                        subscribed: user.active_subscription, //* true/false
-                        subscriptionEnd: subscriber.subscribe_end
+                        subscribed: user.active_subscription,
                     });
                 })
             })
