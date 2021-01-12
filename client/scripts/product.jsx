@@ -37,8 +37,8 @@ class Product extends React.Component {
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut cumque,temporibus iure facere asperiores illo,",
       },
     ];
-    return data.map((e) => (
-      <div class="product">
+    return data.map((e, i) => (
+      <div class="product" key={i}>
         <img src={e.img} alt={e.alt} />
         <h5>{e.title}</h5>
         <p>{e.text}</p>

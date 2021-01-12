@@ -4,6 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style.css" text="text/css" />
+    <!-- <link href="./style.css" rel="stylesheet" type="text/css" /> -->
     <title>sample.House</title>
   </head>
   <body>
@@ -19,9 +21,72 @@
       </p>
     </section>
     <section id="products" />
+    <section class="pricing">
+      <table>
+        <thead>
+          <th>Features</th>
+          <th>Starter<br />$5.99/mo</th>
+          <th>Standard<br />$10.99/mo</th>
+          <th>Studio<br />$19.99/mo</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VST Access</td>
+            <td>X</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Instructional Videos</td>
+            <td>X</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Samples (one shots)</td>
+            <td>C</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Loops</td>
+            <td>C</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Exclusive Loops</td>
+            <!-- todo ask Craig if he wants exclusive available to all -->
+            <td>X</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Midi Files</td>
+            <td>C</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Private Discord</td>
+            <td>C</td>
+            <td>C</td>
+            <td>C</td>
+          </tr>
+          <tr>
+            <td>Credits per month</td>
+            <td>100</td>
+            <td>200</td>
+            <td>500</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="faq"></section>
+    <footer id="footer"></footer>
 
-    <!-- Load React. -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js" -->
+    <!--* Load React. -->
+    <!--! Note: when deploying, replace "development.js" with "production.min.js" -->
     <script
       src="https://unpkg.com/react@17/umd/react.development.js"
       crossorigin
@@ -30,10 +95,11 @@
       src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
       crossorigin
     ></script>
-    <!--* for JSX -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <!-- Load our React component. -->
-    <script type="text/babel" src="../scripts/header.js"></script>
-    <script type="text/babel" src="../scripts/product.js"></script>
+    <!--* Load React components -->
+    <script type="text/babel" src="../scripts/header.jsx"></script>
+    <!-- <script type="text/babel" src="../scripts/product.jsx"></script> -->
+    <script type="text/babel" src="../scripts/faq.jsx"></script>
+    <script type="text/babel" src="../scripts/footer.jsx"></script>
   </body>
 </html>

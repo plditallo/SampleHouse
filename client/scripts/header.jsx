@@ -13,21 +13,14 @@ class Header extends React.Component {
     return (
       <div>
         <div>
-          <img
-            src="../assets/logo.png"
-            alt="sample.House Logo"
-            style={{ width: "2em", height: "2em" }}
-          />
+          <img src="../assets/logo.png" alt="sample.House Logo" />
           <h5>Sample House</h5>
         </div>
 
         <div>
           <a>
             {/* //todo change to icon? */}
-            <img
-              src="../assets/logo.png"
-              style={{ width: "2em", height: "2em" }}
-            />{" "}
+            <img src="../assets/logo.png" alt="" />
             support@sample.house
           </a>
           <div>
