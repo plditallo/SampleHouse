@@ -20,7 +20,7 @@ class Header extends React.Component {
         <div>
           <a>
             {/* //todo change to icon? */}
-            <img src="../assets/logo.png" alt="" />
+            <img src="../assets/envelope-square.png" alt="" />
             support@sample.house
           </a>
           <div>
