@@ -25,7 +25,7 @@ class Header extends React.Component {
           </a>
           <div>
             <a href="#login.html">Login</a>
-            <a href="#register.html">Sign Up</a>
+            <a href="register.html">Sign Up</a>
           </div>
         </div>
 
