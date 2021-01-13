@@ -5,13 +5,13 @@ Header
 #C3C1C1 - Silver/Gray color for ALL text except for the logo text.
 Hero Image - #FFFFFF - text.
 Drop Shadow - #0D2233 - 73% opacity - 0px 34px 44pxBlur
-Images - #707070 - 2px border around ALL images between header and footer.
+Images - $darkGrey - 2px border around ALL images between header and footer.
 Drop Shadow - #113048 - 62% opacity - 14px 24px 34pxBlur
 Text between Header and Footer
 Headings: #024052
 Paragraphs: #026986
 About SampleHouse (btn for lack of a better word).
-Shape - #13384F - Border 2 px - #707070
+Shape - #13384F - Border 2 px - $darkGrey
 About is in white - #ffffff  SampleHouse is in #4ABDF5
 FOOTER
 #00BDF5 -  SampleHouse; Contact Form; email address

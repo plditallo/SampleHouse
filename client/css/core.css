@@ -1,5 +1,10 @@
 html {
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+html a {
+  text-decoration: none;
 }
 
 html body {
@@ -40,7 +45,6 @@ header {
 }
 
 header a {
-  text-decoration: none;
   color: #c3c1c1;
 }
 
@@ -59,7 +63,6 @@ header div {
       -ms-flex-direction: row;
           flex-direction: row;
   background: black;
-  color: #c3c1c1;
   text-align: center;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -143,6 +146,36 @@ header div .right nav ul li {
   font-size: 1.5em;
 }
 
+#sticky-nav {
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  display: none;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: black;
+}
+
+#sticky-nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  list-style: none;
+  margin: 0;
+  padding: 0.75em 0;
+}
+
+#sticky-nav ul li {
+  font-size: 1.5em;
+}
+
+#sticky-nav ul li a {
+  color: #c3c1c1;
+}
+
 footer {
   background: black;
   padding-top: 1em;
@@ -194,7 +227,6 @@ footer div .top .right p {
 }
 
 footer div .top .right p a {
-  text-decoration: none;
   color: #00bdf5;
 }
 

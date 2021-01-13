@@ -18,9 +18,8 @@ class Header extends React.Component {
         </div>
         <div className="right">
           <div className="top-actions">
-            <a className="email">
-              {/* //todo change to icon? */}
-              <img src="../assets/envelope-square.png" alt="" />
+            <a className="email" href="mailto:support@sample.house">
+              <img src="../assets/envelope-square.png" alt="Square Envelope" />
               support@sample.house
             </a>
             <div className="buttons">
@@ -32,19 +31,19 @@ class Header extends React.Component {
           <nav>
             <ul>
               <li>
-                <a href="#Home">HOME</a>
+                <a href="index.html">HOME</a>
               </li>
               <li>
-                <a href="#About">ABOUT</a>
+                <a href="#about">ABOUT</a>
               </li>
               <li>
-                <a href="#Products">PRODUCTS</a>
+                <a href="#products">PRODUCTS</a>
               </li>
               <li>
-                <a href="#Pricing">PRICING</a>
+                <a href="#pricing">PRICING</a>
               </li>
               <li>
-                <a href="#FAQ">FAQ's</a>
+                <a href="#faq">FAQ's</a>
               </li>
               <li>
                 <a href="contact.html">CONTACT</a>

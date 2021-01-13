@@ -87,12 +87,12 @@ p {
   margin: 0 auto;
 }
 
-.about {
+#about {
   width: 70%;
   margin: auto;
 }
 
-.about h3 {
+#about h3 {
   color: white;
   font-size: 1.8em;
   background: #13384f;
@@ -105,12 +105,12 @@ p {
   margin: auto;
 }
 
-.about h3 span {
+#about h3 span {
   margin-left: 0.5em;
   color: #4abdf5;
 }
 
-.about p {
+#about p {
   color: #026986;
 }
 
@@ -155,18 +155,18 @@ p {
   font-weight: 700;
 }
 
-.pricing {
+#pricing {
   text-align: center;
 }
 
-.pricing h2 {
+#pricing h2 {
   font-size: 2em;
 }
 
-.pricing table {
+#pricing table {
   margin: auto;
-  width: 50%;
-  height: 20em;
+  width: 70%;
+  height: 25em;
   color: white;
   font-weight: 300;
   border-radius: 1.5em;
@@ -177,17 +177,17 @@ p {
   border-collapse: collapse;
 }
 
-.pricing table th {
+#pricing table th {
   border-bottom: 2px solid white;
   font-weight: 700;
 }
 
-.pricing table tbody tr td {
+#pricing table tbody tr td {
   border-right: 2px solid white;
   font-weight: 900;
 }
 
-.pricing table tbody tr td:first-child {
+#pricing table tbody tr td:first-child {
   font-weight: 700;
 }
 
