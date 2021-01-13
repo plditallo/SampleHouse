@@ -194,4 +194,33 @@ p {
 .pricing table tbody tr td:first-child {
   font-weight: 700;
 }
+
+#faq h2 {
+  text-align: center;
+}
+
+#faq .question,
+#faq .answer span {
+  font-weight: 700;
+  color: #024052;
+}
+
+#faq .question {
+  cursor: pointer;
+}
+
+#faq .active {
+  background: grey;
+}
+
+#faq .answer {
+  -webkit-transition: max-height 0.35s ease-out;
+  transition: max-height 0.35s ease-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+#faq .hide {
+  display: none;
+}
 /*# sourceMappingURL=index.css.map */

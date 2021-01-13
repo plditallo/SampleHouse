@@ -9,33 +9,46 @@ class Faq extends React.Component {
   render() {
     const data = [
       {
-        question: "question 1",
+        question: "What is royalty free?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat possimus amet magnam nulla nihil velit dolore sequi soluta fuga omnis dolores.",
+          "Royalty free means a licensee can use a work without owning the copyright or paying royalties on a per use basis.",
       },
       {
-        question: "question 2",
+        question: "Are Sample.House’s loops & sounds royalty free?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat possimus amet magnam nulla nihil velit dolore sequi soluta fuga omnis dolores.",
+          "Yes. All of our samples are royalty-free & do not require royalty payments for commercial use.",
       },
       {
-        question: "question 3",
+        question: "What are “Exclusive Loops” on Sample.House?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat possimus amet magnam nulla nihil velit dolore sequi soluta fuga omnis dolores.",
+          "Exclusive loops are available for one download, one user. This means that once the loops is downloaded, it is removed from the website and cannot be downloaded by anyone else ever again.",
       },
       {
-        question: "question 4",
+        question:
+          "What if I do not use all of my monthly credits, will they expire?",
         answer:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat possimus amet magnam nulla nihil velit dolore sequi soluta fuga omnis dolores.",
+          "No. Your unused monthly credits will roll over into the following month.",
+      },
+      {
+        question: "Is my subscription auto-renewed?",
+        answer:
+          "Yes, by default. If you do not want auto-renewal for your subscription, you can adjust the settings to reflect a manual monthly renewal that is manually paid for by the user each month.",
       },
     ];
     return (
       <div>
         <h2>FAQ's</h2>
         {data.map((e, i) => (
-          <div className="question" key={i}>
-            <p>{e.question}</p>
-            <p>{e.answer}</p>
+          <div key={i}>
+            <p
+              className="question"
+              onClick={({ target }) => toggleAnswer(target)}
+            >
+              Q: {e.question}
+            </p>
+            <p className="answer hide">
+              <span>A:</span> {e.answer}
+            </p>
           </div>
         ))}
       </div>
@@ -45,3 +58,11 @@ class Faq extends React.Component {
 
 const domContainer = document.querySelector("#faq");
 ReactDOM.render(React.createElement(Faq), domContainer);
+
+function toggleAnswer(q) {
+  const a = q.nextElementSibling;
+  q.classList.toggle("active");
+  a.classList.toggle("hide");
+  if (a.style.maxHeight) a.style.maxHeight = null;
+  else a.style.maxHeight = a.scrollHeight + "px";
+}
