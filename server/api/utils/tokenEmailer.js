@@ -20,13 +20,13 @@ function tokenEmailer(user, host, type) {
         expiresAt: Date.now() + 43200000 //12hrs
     } //todo check all ${host} to be sure it is working properly
     const emailTemplate = {
-        from: 'no-reply@sound.house',
+        from: 'no-reply@Sample.House',
         to: user.email,
-        subject: 'Sound.House Account Verification Token',
+        subject: 'Sample.House Account Verification Token',
         text: `Hello,\n\n Please verify your account by clicking the link: \nhttp:\/\/${host}\/api\/token\/confirmation\/${token.token}. This token will expire in 12 hours.`
     };
     if (type === "password") {
-        emailTemplate.subject = "Sound.House Account Reset Password";
+        emailTemplate.subject = "Sample.House Account Reset Password";
         // todo SEND EMAIL W/ LINK TO FORM TO REST PASSWORD THEN POST REQUEST
         emailTemplate.text = `Hello,\n\n Please reset your password by clicking the link: \nhttp:\/\/${host}\/api\/user\/resetPassword\/${token.token}. This will expire in 6 hours.`
     }
