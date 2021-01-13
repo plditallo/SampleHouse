@@ -2,17 +2,37 @@ html {
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
-body {
+html body {
   margin: 0;
 }
 
-.wrapper {
+html body .wrapper {
   margin: 1em;
 }
 
-img {
-  width: 2em;
-  height: 2em;
+html body .logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 1.2em 0em 0.5em 1.25em;
+}
+
+html body .logo img {
+  width: 9em;
+  height: 8em;
+}
+
+html body .logo h1 {
+  color: #00bdf5;
+  margin: 0.25em auto;
+  white-space: nowrap;
 }
 
 header {
@@ -44,31 +64,6 @@ header div {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-}
-
-header div .logo {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 1.2em 0em 0.5em 1.25em;
-}
-
-header div .logo img {
-  width: 9em;
-  height: 8em;
-}
-
-header div .logo h1 {
-  color: #00bdf5;
-  margin: 0.25em auto;
-  white-space: nowrap;
 }
 
 header div .right {
@@ -146,5 +141,100 @@ header div .right nav ul {
 
 header div .right nav ul li {
   font-size: 1.5em;
+}
+
+footer {
+  background: black;
+  padding-top: 1em;
+}
+
+footer div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+footer div .top {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-bottom: 2px solid white;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+footer div .top .logo {
+  padding-left: 2em;
+}
+
+footer div .top .right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 40%;
+  margin-right: 3em;
+  margin: 0 3em 1em 0;
+}
+
+footer div .top .right p {
+  color: white;
+}
+
+footer div .top .right p a {
+  text-decoration: none;
+  color: #00bdf5;
+}
+
+footer div .top .right .sm {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+footer div .top .right .sm a {
+  margin-right: 1em;
+}
+
+footer div .top .right .sm a:last-child {
+  margin-right: 0;
+}
+
+footer div .top .right .sm a img {
+  width: 2em;
+}
+
+footer div .bottom p {
+  text-align: center;
+  color: #c3c1c1;
+  font-size: 0.8em;
+}
+
+footer div .bottom p:last-child {
+  margin: 0.5em 0 0.75em;
+}
+
+footer div .bottom img {
+  width: 10em;
+  margin: 0 auto;
 }
 /*# sourceMappingURL=core.css.map */

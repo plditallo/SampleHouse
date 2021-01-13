@@ -11,14 +11,14 @@ p {
 }
 
 .inspire {
-  display: none;
   background-image: url("../../assets/man_wearing_headphones-flat.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
   height: 50em;
-  -webkit-box-shadow: #0d2233 0 3em 3.5em;
-          box-shadow: #0d2233 0 3em 3.5em;
+  -webkit-box-shadow: #0d22339e 2em 3em 3.5em;
+          box-shadow: #0d22339e 2em 3em 3.5em;
+  margin-bottom: 8em;
 }
 
 .inspire h2 {
@@ -40,7 +40,6 @@ p {
 }
 
 #products {
-  display: none !important;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -89,7 +88,6 @@ p {
 }
 
 .about {
-  display: none;
   width: 70%;
   margin: auto;
 }
@@ -117,7 +115,6 @@ p {
 }
 
 .loops {
-  display: none !important;
   width: 70%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -167,7 +164,6 @@ p {
 }
 
 .pricing table {
-  display: none;
   margin: auto;
   width: 50%;
   height: 20em;
@@ -209,15 +205,17 @@ p {
   cursor: pointer;
 }
 
-#faq .active {
-  background: grey;
-}
-
 #faq .answer {
   -webkit-transition: max-height 0.35s ease-out;
   transition: max-height 0.35s ease-out;
   max-height: 0;
   overflow: hidden;
+  margin-top: 0.125em;
+}
+
+#faq .active {
+  background: grey;
+  margin-bottom: 0;
 }
 
 #faq .hide {

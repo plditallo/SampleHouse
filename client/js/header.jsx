@@ -14,7 +14,7 @@ class Header extends React.Component {
       <div>
         <div className="logo">
           <img src="../assets/sample_house_logo.png" alt="sample.House Logo" />
-          <h1>Sample House</h1>
+          <h1>SampleHouse</h1>
         </div>
         <div className="right">
           <div className="top-actions">
