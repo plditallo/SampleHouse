@@ -47,12 +47,17 @@ html {
 
       img {
         width: 9em;
-        height: 8em;
+        @include breakpoint(xxs, xs, s) {
+          width: 5em;
+        }
       }
       h1 {
-        color: blue;
+        color: $lightBlue;
         margin: 0.25em auto;
         white-space: nowrap;
+        @include breakpoint(xxs, xs, s) {
+          font-size: 1.5em;
+        }
       }
     }
   }
@@ -67,7 +72,7 @@ header {
   a {
     color: $lightGrey;
     &:hover {
-      color: blue;
+      color: $lightBlue;
       transition: ease-in 0.23s;
     }
   }
@@ -85,7 +90,7 @@ header {
       justify-content: space-evenly;
       // align-items: center;
       .top-actions {
-        border-bottom: 0.4em solid blue;
+        border-bottom: 0.4em solid $lightBlue;
         flex-direction: row;
         padding-bottom: 1.4em;
         align-items: center;
@@ -151,7 +156,7 @@ header {
       a {
         color: $lightGrey;
         &:hover {
-          color: blue;
+          color: $lightBlue;
           transition: ease-in 0.23s;
         }
       }
@@ -167,7 +172,7 @@ header {
   // position: absolute;
   position: -webkit-sticky;
   position: sticky;
-  opacity: 97%; //?
+  opacity: 97%;
   top: 0;
   width: 100%;
   background: black;
@@ -202,6 +207,7 @@ header {
     user-select: none;
     a {
       color: $lightGrey;
+      font-size: 1.25em;
     }
     input {
       display: block;
@@ -251,7 +257,7 @@ header {
         color: $darkGrey;
         &:hover {
           color: $lightBlue;
-          text-shadow: 1px 1px 1px $darkGrey;
+          text-shadow: 2px 2px $darkGrey;
           transition: ease-in 0.2s;
         }
       }
@@ -262,29 +268,51 @@ header {
 footer {
   background: black;
   padding-top: 1em;
-  margin-top: 4em;
+  margin-top: 6em;
   div {
     display: flex;
     flex-direction: column;
     .top {
       flex-direction: row;
-      border-bottom: 2px solid white;
+      border-bottom: 2px solid $lightBlue;
       justify-content: space-between;
+      align-items: center;
+      @include breakpoint(xxs, xs) {
+        flex-direction: column;
+      }
+
       .logo {
         padding-left: 2em;
+        @include breakpoint(xxs, xs) {
+          padding-left: 0;
+        }
       }
       .right {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         width: 40%;
-        margin-right: 3em;
         margin: 0 5em 1em 0;
+        @include breakpoint(xxs, xs, s, m) {
+          margin-right: 1em;
+        }
+        @include breakpoint(xxs, xs) {
+          width: 60%;
+        }
+
         p {
           color: white;
-          margin-right: 1em;
+          // margin-right: 1em;
+          @include breakpoint(xxs, xs, s) {
+            font-size: 1em;
+          }
+          @include breakpoint(xxs, xs) {
+            text-align: center;
+          }
+
           a {
-            color: blue;
+            color: $lightBlue;
+            padding: 0 0.25em;
           }
         }
         .sm {
@@ -292,13 +320,21 @@ footer {
           flex-direction: row;
           justify-content: flex-end;
           // width: 10em;
+          @include breakpoint(xxs, xs) {
+            margin: 1em auto 0.75em;
+          }
+
           a {
             margin-right: 1em;
+
             &:last-child {
               margin-right: 0;
             }
             img {
               width: 2em;
+              @include breakpoint(xxs, xs, s) {
+                width: 1.5em;
+              }
             }
           }
         }
@@ -309,8 +345,14 @@ footer {
         text-align: center;
         color: $lightGrey;
         font-size: 0.8em;
+        &:first-child {
+          margin-bottom: 0.125em;
+          @include breakpoint(xxs, xs) {
+            padding: 0 0.3em;
+          }
+        }
         &:last-child {
-          margin: 0.5em 0 0.75em;
+          margin: 1em 0 0.75em;
         }
       }
       img {

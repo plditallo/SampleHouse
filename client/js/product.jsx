@@ -25,9 +25,9 @@ class Product extends React.Component {
       {
         img: "../assets/vst_sound_mixing_board.png",
         alt: "img alt",
-        title: "VST's & Virtual Instruments",
+        title: "Plugins",
         text:
-          "We develop customized VST’s & VSTi’s that provide unique sounds for any genre of music. Best of all, every plugin is free with our Standard & Studio plans!",
+          "We develop customized Plugins and VST’s that provide unique sounds for any genre of music. Best of all, every plugin is free with our Standard and Studio plans!",
       },
       {
         img: "../assets/blue_sound_wave_form.png",
@@ -39,9 +39,9 @@ class Product extends React.Component {
       {
         img: "../assets/blue_sound_wave_form.png",
         alt: "img alt",
-        title: "Loops & MIDI Files",
+        title: "LOOPS & MIDI Files",
         text:
-          "Our unique loops & MIDI files are composed with the modern producer in mind. We upload the highest quality of sounds to get your projects started.",
+          "Our unique loops and MIDI files are composed with the modern producer in mind. We upload the highest quality sounds to get your projects started.",
       },
       {
         img: "../assets/demos_videos_courses.png",

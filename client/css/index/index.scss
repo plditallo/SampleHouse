@@ -33,6 +33,7 @@ p {
   ul {
     margin-top: 8em;
     margin-left: 7em;
+    list-style-image: url("../../assets/music_icon.png");
     li {
       color: white;
       font-size: 2em;
@@ -51,7 +52,7 @@ p {
     margin-bottom: 6em;
     align-items: center;
     @include breakpoint(xxs, xs, s) {
-      width: 80%;
+      width: 90%;
     }
 
     img {
@@ -76,6 +77,7 @@ p {
       font-weight: 500;
       width: 75%;
       margin: 0 auto;
+      font-size: 1.15em;
       //   color: #026986;
       @include breakpoint(xxs, xs, s, m) {
         font-size: 1em;
@@ -86,6 +88,10 @@ p {
 #about {
   width: 70%;
   margin: 1.5em auto 5em;
+  @include breakpoint(xxs, xs) {
+    width: 90%;
+  }
+
   h3 {
     color: white;
     font-size: 1.8em;
@@ -97,6 +103,10 @@ p {
     width: max-content;
     padding: 0.25em 0.75em;
     margin: auto;
+    @include breakpoint(xxs, xs) {
+      padding: 0.25em;
+    }
+
     span {
       margin-left: 0.5em;
       color: #4abdf5;
@@ -104,6 +114,9 @@ p {
   }
   p {
     color: #026986;
+    @include breakpoint(xxs, xs) {
+      text-align: center;
+    }
   }
 }
 .loops {
@@ -113,6 +126,10 @@ p {
   margin-bottom: 6em;
   align-items: center;
   margin: 0 auto;
+  @include breakpoint(xxs, xs, s, m) {
+    width: 85%;
+  }
+
   h2 {
     font-size: 2em;
     text-align: center;
@@ -138,22 +155,33 @@ p {
     //   color: #026986;
     text-align: justify;
     span {
-      font-weight: 700;
+      font-weight: 900;
     }
   }
 }
 #pricing {
   text-align: center;
-  margin: 2em auto 6em;
+  margin: 2em auto 10em;
   h2 {
-    font-size: 2em;
+    font-size: 3em;
+    line-height: 0.75em;
+    @include breakpoint(xxs, xs, s) {
+      font-size: 2.5em;
+    }
+    span {
+      font-size: 0.4em;
+      margin-top: 0;
+    }
   }
+  // todo xxs/xs
+  //todo add padding to bottom of table
   table {
     margin: auto;
-    width: 70%;
+    width: 75%;
     height: 25em;
     color: white;
     font-weight: 300;
+    font-size: 1.15em;
     border-radius: 1.5em;
     background-image: url("../../assets/pricing_chart_bkgrnd.png");
     background-size: 100% 100%;
@@ -161,7 +189,13 @@ p {
     background-repeat: no-repeat;
     border-collapse: collapse;
     @include breakpoint(xxs, xs, s) {
-      width: 90%;
+      // todo new background-image for these sizes
+      width: 100%;
+      font-size: 1em;
+    }
+    @include breakpoint(xxl) {
+      height: 30em;
+      font-size: 1.25em;
     }
 
     th {
@@ -184,8 +218,14 @@ p {
   }
 }
 #faq {
+  width: 85%;
+  margin: auto;
   h2 {
     text-align: center;
+    font-size: 3em;
+    @include breakpoint(xxs, xs, s, m) {
+      font-size: 2.4em;
+    }
   }
   .question,
   .answer span {
@@ -194,16 +234,25 @@ p {
   }
   .question {
     cursor: pointer;
+    font-size: 1.6em;
+    @include breakpoint(xxs, xs, s, m) {
+      font-size: 1.4em;
+    }
   }
   .answer {
     transition: max-height 0.35s ease-out;
     max-height: 0;
     overflow: hidden;
     margin-top: 0.125em;
+    font-size: 1.35em;
+    @include breakpoint(xxs, xs, s, m) {
+      font-size: 1.15em;
+    }
   }
   .active {
     color: $darkGrey;
     margin-bottom: 0;
+    // font-style: italic;
   }
   .hide {
     display: none;

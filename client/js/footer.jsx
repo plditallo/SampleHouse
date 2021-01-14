@@ -20,9 +20,9 @@ class Footer extends React.Component {
           <div className="right">
             <p>
               If you should need to contact us, please do so by filling out our
-              <a href="#contact"> CONTACT FORM </a>
+              <a href="#contact">CONTACT FORM</a>
               or by dropping us an E-mail at:
-              <a href="mailto:support@sample.house"> support@sample.house</a>.
+              <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
             <div className="sm">
               <a href="#youtubeLink">
@@ -38,14 +38,21 @@ class Footer extends React.Component {
           </div>
         </div>
         <div className="bottom">
-          <p>
-            Organic SEO, Web Design and Development by Blue Smoke Digital and
-            Printed Media
-          </p>
-          <img
-            src="../assets/blue_smoke_media_graphic_link.png"
-            alt="Blue Smoke Logo"
-          />
+          <a href="https://www.bluesmokedigitalandprintedmedia.com">
+            <p>
+              Organic SEO, Web Design and Development by Blue Smoke Digital and
+              Printed Media
+            </p>
+          </a>
+          <a
+            href="https://www.bluesmokedigitalandprintedmedia.com"
+            style={{ margin: "auto" }}
+          >
+            <img
+              src="../assets/blue_smoke_media_graphic_link.png"
+              alt="Blue Smoke Logo"
+            />
+          </a>
           {/* todo sample.house? legal branding */}
           <p>© Copyright 2021 SampleHouse</p>
         </div>

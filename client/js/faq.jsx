@@ -40,12 +40,12 @@ class Faq extends React.Component {
         <h2>FAQ's</h2>
         {data.map((e, i) => (
           <div key={i}>
-            <p
+            <h3
               className="question"
               onClick={({ target }) => toggleAnswer(target)}
             >
               Q: {e.question}
-            </p>
+            </h3>
             <p className="answer hide">
               <span>A:</span> {e.answer}
             </p>
