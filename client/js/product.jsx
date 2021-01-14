@@ -19,8 +19,8 @@ class Product extends React.Component {
         img: "../assets/subscription.png",
         alt: "img alt",
         title: "Subscription",
-        text: `Your monthly subscription plan includes pre-loaded credits that allow you to download Sample.House products. If you don’t use all of your credits, they will roll over into the next month. Choose from one of our three <a href='#subscription.html'>subscription plans</a> (Pricing link)`,
-        // todo get anchor tag working here
+        text: `Your monthly subscription plan includes pre-loaded credits that allow you to download Sample.House products. If you don’t use all of your credits, they will roll over into the next month. Choose from one of our three subscription plans.`,
+        // todo get anchor tag working here for subscription plans
       },
       {
         img: "../assets/vst_sound_mixing_board.png",
