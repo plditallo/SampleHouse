@@ -38,6 +38,7 @@ class RegisterForm extends React.Component {
           password: this.state.regPassword,
         })
       );
+      //todo redirect after submit or don't refresh and pass "msg": "verification email"
       // return false;
     };
     const onChangeHandler = (evt) => {

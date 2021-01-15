@@ -32,10 +32,6 @@ html {
 
   body {
     margin: 0;
-    @include breakpoint(xl) {
-      display: none !important;
-    }
-
     .wrapper {
       margin: 1em;
     }
@@ -151,8 +147,17 @@ header {
     list-style: none;
     margin: 0;
     padding: 0.75em 0;
+    align-items: center;
+    img {
+      width: 2em;
+      margin-right: 0;
+    }
     li {
       font-size: 1.5em;
+      &:first-child {
+        margin-left: 0;
+        padding-left: 0;
+      }
       a {
         color: $lightGrey;
         &:hover {
@@ -185,9 +190,25 @@ header {
     position: relative;
     align-items: center;
     padding: 0.5em;
-    img {
-      height: 3.5em;
-      width: 3.5em;
+    .right {
+      display: flex;
+      align-items: center;
+      img {
+        height: 3.5em;
+        width: 3.5em;
+      }
+      .actions {
+        margin-right: 0.5em;
+        a {
+          color: $lightGrey;
+          font-size: 1.35em;
+          margin-right: 0.75em;
+          &:hover {
+            color: $lightBlue;
+            transition: ease-in 0.23s;
+          }
+        }
+      }
     }
   }
 
@@ -229,6 +250,12 @@ header {
       background: $lightGrey;
       border-radius: 3px;
       z-index: 1;
+    }
+    &:hover {
+      span {
+        background: $lightBlue;
+        transition: ease-in-out 0.25s;
+      }
     }
   }
   #menu {

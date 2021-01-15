@@ -37,7 +37,7 @@ html a {
   }
 }
 
-@media (min-width: 1281) and (max-width: 1680px) {
+@media (min-width: 1281px) and (max-width: 1680px) {
   html nav {
     background: purple !important;
   }
@@ -51,12 +51,6 @@ html a {
 
 html body {
   margin: 0;
-}
-
-@media (min-width: 1281) and (max-width: 1680px) {
-  html body {
-    display: none !important;
-  }
 }
 
 html body .wrapper {
@@ -297,10 +291,23 @@ header div .right nav ul li {
   list-style: none;
   margin: 0;
   padding: 0.75em 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#sticky-nav ul img {
+  width: 2em;
+  margin-right: 0;
 }
 
 #sticky-nav ul li {
   font-size: 1.5em;
+}
+
+#sticky-nav ul li:first-child {
+  margin-left: 0;
+  padding-left: 0;
 }
 
 #sticky-nav ul li a {
@@ -331,7 +338,7 @@ header div .right nav ul li {
   }
 }
 
-@media (min-width: 1281) and (max-width: 1680px) {
+@media (min-width: 1281px) and (max-width: 1680px) {
   #hamburger-menu {
     display: none;
   }
@@ -357,9 +364,34 @@ header div .right nav ul li {
   padding: 0.5em;
 }
 
-#hamburger-menu .menu-wrapper img {
+#hamburger-menu .menu-wrapper .right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#hamburger-menu .menu-wrapper .right img {
   height: 3.5em;
   width: 3.5em;
+}
+
+#hamburger-menu .menu-wrapper .right .actions {
+  margin-right: 0.5em;
+}
+
+#hamburger-menu .menu-wrapper .right .actions a {
+  color: #c3c1c1;
+  font-size: 1.35em;
+  margin-right: 0.75em;
+}
+
+#hamburger-menu .menu-wrapper .right .actions a:hover {
+  color: #00bdf5;
+  -webkit-transition: ease-in 0.23s;
+  transition: ease-in 0.23s;
 }
 
 #hamburger-menu #menuToggle {
@@ -403,6 +435,12 @@ header div .right nav ul li {
   background: #c3c1c1;
   border-radius: 3px;
   z-index: 1;
+}
+
+#hamburger-menu #menuToggle:hover span {
+  background: #00bdf5;
+  -webkit-transition: ease-in-out 0.25s;
+  transition: ease-in-out 0.25s;
 }
 
 #hamburger-menu #menu {
