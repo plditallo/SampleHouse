@@ -7,3 +7,4 @@ server.use("/api", apiRouter);
 
 
 module.exports = server;
+//todo create a docs for the API

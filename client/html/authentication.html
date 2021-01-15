@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/auth/auth.css" />
+    <title>Login/Register</title>
+  </head>
+  <body>
+    <header id="header"></header>
+
+    <h1>Authentication</h1>
+    <div class="register">
+      <h2>CREATE AN ACCOUNT</h2>
+      <p>
+        Please enter your Email address and a password to create an account.
+      </p>
+      <span>Email Address</span>
+      <!-- todo change localhost to heroku api -->
+      <!-- action="localhost:5000/api/user/register" -->
+      <div id="register-wrapper"></div>
+    </div>
+    <div class="login">
+      <h2>ALREADY REGISTERED?</h2>
+      <span>Email Address</span>
+      <!-- //todo forgot password -->
+      <div id="login-wrapper"></div>
+      </form>
+    </div>
+
+    <footer id="footer"></footer>
+    <!--* Load React. -->
+    <script
+      src="https://unpkg.com/react@17/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!--* Load React components -->
+    <script type="text/babel" src="../js/header.jsx"></script>
+    <script type="text/babel" src="../js/footer.jsx"></script>
+    <script type="text/babel" src="../js/registerForm.jsx"></script>
+    <script type="text/babel" src="../js/loginForm.jsx"></script>
+    <!-- <script
+      type="application/javascript"
+      src="../js/registerSubmit.js"
+    ></script> -->
+  </body>
+</html>

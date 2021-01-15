@@ -1,0 +1,11 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "auth.scss",
+        "../utils/mixins.scss",
+        "../utils/BreakPoints.scss"
+    ],
+    "names": [],
+    "file": "auth.css"
+}

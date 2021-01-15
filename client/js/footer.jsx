@@ -21,7 +21,7 @@ class Footer extends React.Component {
             <p>
               If you should need to contact us, please do so by filling out our
               <a href="#contact">CONTACT FORM</a>
-              or by dropping us an E-mail at:
+              or by dropping us an Email at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
             <div className="sm">

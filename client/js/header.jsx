@@ -23,8 +23,8 @@ class Header extends React.Component {
               support@sample.house
             </a>
             <div className="buttons">
-              <a href="login.html">LOGIN</a>
-              <a href="register.html">SIGN UP</a>
+              <a href="authentication.html">LOGIN</a>
+              <a href="authentication.html">SIGN UP</a>
             </div>
           </div>
 
