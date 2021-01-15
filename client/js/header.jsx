@@ -12,10 +12,15 @@ class Header extends React.Component {
     }
     return (
       <div>
-        <div className="logo">
-          <img src="../assets/sample_house_logo.png" alt="sample.House Logo" />
-          <h1>SampleHouse</h1>
-        </div>
+        <a href="index.html">
+          <div className="logo">
+            <img
+              src="../assets/sample_house_logo.png"
+              alt="sample.House Logo"
+            />
+            <h1>SampleHouse</h1>
+          </div>
+        </a>
         <div className="right">
           <div className="top-actions">
             <a className="email" href="mailto:support@sample.house">

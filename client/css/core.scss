@@ -294,9 +294,8 @@ header {
 
 footer {
   background: black;
-  padding-top: 2em;
-  // margin-top: 6em;
-  border-top: 2px solid $darkGrey;
+  padding-top: 0.6em;
+  border-top: 1px solid $darkGrey;
   div {
     display: flex;
     flex-direction: column;
@@ -375,6 +374,9 @@ footer {
         font-size: 0.8em;
         &:first-child {
           margin-bottom: 0.125em;
+          &:hover {
+            color: #fb3400;
+          }
           @include breakpoint(xxs, xs) {
             padding: 0 0.3em;
           }

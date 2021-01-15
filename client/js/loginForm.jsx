@@ -24,7 +24,9 @@ class LoginForm extends React.Component {
         <label htmlFor="logPassword">Password</label>
         <input type="password" name="logPassword" onChange={onChangeHandler} />
         <a href="forgot-password.html">Forgot Password?</a>
-        <button type="submit">SIGN IN</button>
+        <button type="submit">
+          <img src="../assets/lock.png" alt="lock"></img>SIGN IN
+        </button>
       </form>
     );
   }

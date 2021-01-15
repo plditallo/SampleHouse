@@ -10,13 +10,15 @@ class Footer extends React.Component {
     return (
       <div>
         <div className="top">
-          <div className="logo">
-            <img
-              src="../assets/sample_house_logo.png"
-              alt="Sample.House Logo"
-            />
-            <h1>SampleHouse</h1>
-          </div>
+          <a href="index.html">
+            <div className="logo">
+              <img
+                src="../assets/sample_house_logo.png"
+                alt="Sample.House Logo"
+              />
+              <h1>SampleHouse</h1>
+            </div>
+          </a>
           <div className="right">
             <p>
               If you should need to contact us, please do so by filling out our
