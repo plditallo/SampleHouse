@@ -52,19 +52,23 @@ class RegisterForm extends React.Component {
       <form name="registerForm" id="registerForm" onSubmit={onSubmitHandler}>
         {/* <span>{this.state.errorEmail}</span>
         <span>{this.state.errorPassword}</span> */}
-        <input type="text" name="regEmail" onChange={onChangeHandler} />
-        <input type="password" name="regPassword" onChange={onChangeHandler} />
-        <button type="submit">Create An Account</button>
-        <div>
-          errors
+        <p>
+          Please enter your Email address and a password to create an account.
+        </p>
+        <div className="errors">
           {this.state.errors.map((e, i) => (
             <p key={i}>{e}</p>
           ))}
         </div>
+        <label htmlFor="regEmail">Email Address</label>
+        <input type="text" name="regEmail" onChange={onChangeHandler} />
+        <label htmlFor="regPassword">Password</label>
+        <input type="password" name="regPassword" onChange={onChangeHandler} />
+        <button type="submit">Create An Account</button>
       </form>
     );
   }
 }
 
-const domContainer = document.querySelector("#register-wrapper");
+const domContainer = document.querySelector("#register");
 ReactDOM.render(React.createElement(RegisterForm), domContainer);

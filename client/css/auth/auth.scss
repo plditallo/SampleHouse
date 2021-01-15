@@ -1,5 +1,98 @@
 @import "../utils/mixins.scss";
 
-h1 {
-  color: red;
+.auth-wrapper {
+  background: black;
+  color: $lightGrey;
+  padding-bottom: 4em;
+  @include breakpoint(xxs, xs, s) {
+    h1,
+    h2 {
+      text-align: center;
+    }
+  }
+  h1 {
+    font-size: 2.75em;
+    border-bottom: 1px solid $darkGrey;
+    margin-top: 0;
+    padding: 0.75em 0 0.75em 1em;
+  }
+  .forms {
+    display: flex;
+    justify-content: space-evenly;
+    @include breakpoint(xxs, xs, s) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form {
+      border: 1px solid $darkGrey;
+      width: 45%;
+      @include breakpoint(xxs, xs, s) {
+        width: 90%;
+        &:first-child {
+          margin-bottom: 4em;
+        }
+      }
+
+      h2 {
+        margin: 0;
+        padding: 0.5em;
+        border-bottom: 1px solid $darkGrey;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        padding: 1em 1em 5em 1em;
+        @include breakpoint(xxs, xs, s) {
+          padding-bottom: 3em;
+        }
+
+        p {
+          font-size: 0.8em;
+          margin: 0.8em 0 2.2em;
+        }
+        label {
+          color: $darkGrey;
+          // margin: 1em 0 0.8em;
+          margin-bottom: 0.25em;
+          font-size: 0.85em;
+        }
+        input {
+          background: $teal;
+          border: none;
+          height: 2em;
+          margin-bottom: 1.5em;
+          color: $lightGrey;
+          font-size: 1.2em;
+          &:last-of-type {
+            margin-bottom: 0.5em;
+          }
+        }
+        button {
+          border: none;
+          background: black;
+          color: $lightBlue;
+          width: -webkit-max-content;
+          width: -moz-max-content;
+          width: max-content;
+          cursor: pointer;
+          padding: 0;
+        }
+      }
+      #register {
+      }
+      #login {
+        a {
+          font-size: 0.8em;
+          color: $lightBlue;
+        }
+        button {
+          font-size: 1em;
+          align-self: flex-end;
+          margin-top: 1em;
+          font-weight: 700;
+        }
+      }
+    }
+  }
 }

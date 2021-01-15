@@ -432,6 +432,7 @@ p {
 #faq {
   width: 85%;
   margin: auto;
+  margin-bottom: 6em;
 }
 
 #faq h2 {

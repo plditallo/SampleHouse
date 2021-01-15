@@ -19,13 +19,16 @@ class LoginForm extends React.Component {
     };
     return (
       <form name="loginForm" id="loginForm" onSubmit={onSubmitHandler}>
+        <label htmlFor="logEmail">Email Address</label>
         <input type="text" name="logEmail" onChange={onChangeHandler} />
+        <label htmlFor="logPassword">Password</label>
         <input type="password" name="logPassword" onChange={onChangeHandler} />
-        <button type="submit">Create An Account</button>
+        <a href="forgot-password.html">Forgot Password?</a>
+        <button type="submit">SIGN IN</button>
       </form>
     );
   }
 }
 
-const domContainer = document.querySelector("#login-wrapper");
+const domContainer = document.querySelector("#login");
 ReactDOM.render(React.createElement(LoginForm), domContainer);

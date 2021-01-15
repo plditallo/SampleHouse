@@ -11,26 +11,21 @@
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
+    <section class="auth-wrapper">
+      <h1>Authentication</h1>
+      <section class="forms">
+        <div class="form">
+          <h2>CREATE AN ACCOUNT</h2>
+          <div id="register"></div>
+        </div>
 
-    <h1>Authentication</h1>
-    <div class="register">
-      <h2>CREATE AN ACCOUNT</h2>
-      <p>
-        Please enter your Email address and a password to create an account.
-      </p>
-      <span>Email Address</span>
-      <!-- todo change localhost to heroku api -->
-      <!-- action="localhost:5000/api/user/register" -->
-      <div id="register-wrapper"></div>
-    </div>
-    <div class="login">
-      <h2>ALREADY REGISTERED?</h2>
-      <span>Email Address</span>
-      <!-- //todo forgot password -->
-      <div id="login-wrapper"></div>
-      </form>
-    </div>
-
+        <!-- //todo forgot password -->
+        <div class="form">
+          <h2>ALREADY REGISTERED?</h2>
+          <div id="login"></div>
+        </div>
+      </section>
+    </section>
     <footer id="footer"></footer>
     <!--* Load React. -->
     <script

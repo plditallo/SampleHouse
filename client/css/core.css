@@ -479,8 +479,8 @@ header div .right nav ul li {
 
 footer {
   background: black;
-  padding-top: 1em;
-  margin-top: 6em;
+  padding-top: 2em;
+  border-top: 2px solid #707070;
 }
 
 footer div {
