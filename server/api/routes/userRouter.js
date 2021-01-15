@@ -62,9 +62,9 @@ router.post("/register",
 // todo login VST include tier 2+
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
+        console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
-        console.log(req.body)
         const {
             email,
             password
