@@ -87,7 +87,10 @@ router.post("/login",
                 getSubscriberById(user.id).then(([subscriber]) => {
                     if (subscriber && subscriber.subscribe_end - Date.now() > 0)
                         user.active_subscription = true
-                    else user.active_subscription = false
+                    else {
+                        user.active_subscription = false
+                        user.vst_access = false
+                    }
 
                     user.last_login = Date.now()
                     updateUser(user).then(null)
@@ -223,6 +226,7 @@ function generateToken(user) {
     } = process.env
     const payload = {
         subject: user.id,
+        access: user.vst_access
     };
     const options = {
         expiresIn: "72hr",

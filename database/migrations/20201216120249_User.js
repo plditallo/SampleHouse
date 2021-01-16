@@ -16,6 +16,7 @@ exports.up = function (knex) {
         tbl.string('role').default("user")
         tbl.boolean("auto_subscribe").default(true)
         tbl.string("currency").default("usd")
+        tbl.string("vst_access").default(false)
     })
 };
 
