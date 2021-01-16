@@ -39,16 +39,16 @@ class Header extends React.Component {
                 <a href="index.html">HOME</a>
               </li>
               <li>
-                <a href="#about">ABOUT</a>
+                <a href="index.html#about">ABOUT</a>
               </li>
               <li>
-                <a href="#products">PRODUCTS</a>
+                <a href="index.html#products">PRODUCTS</a>
               </li>
               <li>
-                <a href="#pricing">PRICING</a>
+                <a href="index.html#pricing">PRICING</a>
               </li>
               <li>
-                <a href="#faq">FAQ's</a>
+                <a href="index.html#faq">FAQ's</a>
               </li>
               <li>
                 <a href="contact.html">CONTACT</a>

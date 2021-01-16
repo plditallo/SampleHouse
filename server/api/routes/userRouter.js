@@ -40,15 +40,21 @@ router.post("/register",
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         const {
             email,
-            password
+            password,
+            first_name,
+            last_name
         } = req.body;
+        console.log(req.body)
         const user = {
             id: uuidv1(),
+            first_name,
+            last_name,
             email: email.toLowerCase(),
             password: hashSync(password, 13),
             created: Date.now()
         }
         // todo check req.headers.host once live
+        console.log(user)
         insertUser(user)
             .then(() => res.send(tokenEmailer(user, req.headers.host)))
             .catch((err) =>

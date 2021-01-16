@@ -6,6 +6,8 @@ class RegisterForm extends React.Component {
     this.state = {
       regEmail: "",
       regPassword: "",
+      fName: null,
+      lName: null,
       errors: [],
     };
   }
@@ -38,6 +40,8 @@ class RegisterForm extends React.Component {
         JSON.stringify({
           email: this.state.regEmail,
           password: this.state.regPassword,
+          first_name: this.state.fname,
+          last_name: this.state.lName,
         })
       );
       //todo redirect after submit or don't refresh and pass "msg": "verification email"

@@ -22,10 +22,11 @@ class Footer extends React.Component {
           <div className="right">
             <p>
               If you should need to contact us, please do so by filling out our
-              <a href="#contact">CONTACT FORM</a>
+              <a href="contact.html">CONTACT FORM</a>
               or by dropping us an Email at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
+            {/* //todo links */}
             <div className="sm">
               <a href="#youtubeLink">
                 <img src="../assets/youtube_icon.png" alt="Youtube Icon" />
