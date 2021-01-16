@@ -54,7 +54,6 @@ router.post("/register",
             created: Date.now()
         }
         // todo check req.headers.host once live
-        console.log(user)
         insertUser(user)
             .then(() => res.send(tokenEmailer(user, req.headers.host)))
             .catch((err) =>

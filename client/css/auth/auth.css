@@ -202,6 +202,33 @@
   margin-bottom: 1em;
 }
 
+@media (max-width: 360px) {
+  .auth-wrapper .forms .form #register .name {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .auth-wrapper .forms .form #register .name {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .auth-wrapper .forms .form #register .name {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
 .auth-wrapper .forms .form #register .name div {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -211,6 +238,24 @@
       -ms-flex-direction: column;
           flex-direction: column;
   width: 45%;
+}
+
+@media (max-width: 360px) {
+  .auth-wrapper .forms .form #register .name div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .auth-wrapper .forms .form #register .name div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .auth-wrapper .forms .form #register .name div {
+    width: 100%;
+  }
 }
 
 .auth-wrapper .forms .form #login a {

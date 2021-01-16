@@ -74,9 +74,9 @@ class RegisterForm extends React.Component {
             <input type="text" name="lname" onChange={onChangeHandler} />
           </div>
         </div>
-        <label htmlFor="regEmail">Email Address</label>
+        <label htmlFor="regEmail">&#42;Email Address</label>
         <input type="text" name="regEmail" onChange={onChangeHandler} />
-        <label htmlFor="regPassword">Password</label>
+        <label htmlFor="regPassword">&#42;Password</label>
         <input type="password" name="regPassword" onChange={onChangeHandler} />
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />

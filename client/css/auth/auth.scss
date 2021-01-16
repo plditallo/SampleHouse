@@ -93,10 +93,17 @@
           display: flex;
           justify-content: space-between;
           margin-bottom: 1em;
+          @include breakpoint(xxs, xs, s) {
+            flex-direction: column;
+          }
+
           div {
             display: flex;
             flex-direction: column;
             width: 45%;
+            @include breakpoint(xxs, xs, s) {
+              width: 100%;
+            }
           }
         }
       }
