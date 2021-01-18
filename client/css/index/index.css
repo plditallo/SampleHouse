@@ -20,24 +20,6 @@ p {
           box-shadow: #0d22339e 2em 3em 3.5em;
 }
 
-@media (max-width: 360px) {
-  .inspire {
-    background-size: 130% 100%;
-  }
-}
-
-@media (min-width: 361px) and (max-width: 480px) {
-  .inspire {
-    background-size: 130% 100%;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 736px) {
-  .inspire {
-    background-size: 130% 100%;
-  }
-}
-
 @media (min-width: 737px) and (max-width: 980px) {
   .inspire {
     background-size: 130% 100%;
@@ -47,6 +29,24 @@ p {
 @media (min-width: 981px) and (max-width: 1280px) {
   .inspire {
     background-size: 130% 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .inspire {
+    background-image: url("../../assets/man_wearing_headphones-flat-mobile.png");
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .inspire {
+    background-image: url("../../assets/man_wearing_headphones-flat-mobile.png");
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .inspire {
+    background-image: url("../../assets/man_wearing_headphones-flat-mobile.png");
   }
 }
 
@@ -74,11 +74,59 @@ p {
   margin-bottom: 1em;
 }
 
+@media (max-width: 360px) {
+  .inspire ul li {
+    color: #00bdf5;
+    text-shadow: 2px 2px #0f495f;
+    font-weight: 700;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .inspire ul li {
+    color: #00bdf5;
+    text-shadow: 2px 2px #0f495f;
+    font-weight: 700;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .inspire ul li {
+    color: #00bdf5;
+    text-shadow: 2px 2px #0f495f;
+    font-weight: 700;
+  }
+}
+
 .inspire ul li p {
   color: white;
   font-size: 0.7em;
   margin-left: 3.75em;
   margin-top: 0;
+}
+
+@media (max-width: 360px) {
+  .inspire ul li p {
+    color: #f956ff;
+    font-size: 0.8em;
+    font-weight: 500;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .inspire ul li p {
+    color: #f956ff;
+    font-size: 0.8em;
+    font-weight: 500;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .inspire ul li p {
+    color: #f956ff;
+    font-size: 0.8em;
+    font-weight: 500;
+  }
 }
 
 .inspire ul li::before {

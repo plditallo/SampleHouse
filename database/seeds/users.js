@@ -14,6 +14,7 @@ exports.seed = function (knex) {
         isVerified: true,
         first_name: "Jack",
         last_name: "Barry",
+        role: "testing"
       }]);
     });
 };

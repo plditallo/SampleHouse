@@ -16,6 +16,7 @@ class RegisterForm extends React.Component {
   }
   render() {
     // const form = document.getElementById("registerForm");
+    // todo require first name
     const onSubmitHandler = (evt) => {
       evt.preventDefault();
 
@@ -28,6 +29,8 @@ class RegisterForm extends React.Component {
           ...errState.errors,
           "Password must have a minimum of 6 characters.",
         ];
+      if (this.state.fname.length < 3)
+        errState.errors = [...errState.errors, "Please enter your first name."];
       if (errState.errors.length) return this.setState(errState);
       const submitFetch = async () =>
         //todo change url
@@ -40,7 +43,7 @@ class RegisterForm extends React.Component {
           body: JSON.stringify({
             email: this.state.regEmail,
             password: this.state.regPassword,
-            first_name: this.state.fname.length ? this.state.fname : null,
+            first_name: this.state.fname,
             last_name: this.state.lname.length ? this.state.lname : null,
           }),
         });
@@ -77,12 +80,13 @@ class RegisterForm extends React.Component {
         </div>
         <div className="name">
           <div>
-            <label htmlFor="fname">First Name</label>
+            <label htmlFor="fname">&#42;First Name</label>
             <input
               type="text"
               name="fname"
               onChange={onChangeHandler}
               value={this.state.fname}
+              required="true"
             />
           </div>
           <div>
@@ -101,6 +105,7 @@ class RegisterForm extends React.Component {
           name="regEmail"
           onChange={onChangeHandler}
           value={this.state.regEmail}
+          required="true"
         />
         <label htmlFor="regPassword">&#42;Password</label>
         <input
@@ -108,10 +113,11 @@ class RegisterForm extends React.Component {
           name="regPassword"
           onChange={onChangeHandler}
           value={this.state.regPassword}
+          required="true"
         />
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />
-          Create Your Account
+          CREATE YOUR ACCOUNT
         </button>
       </form>
     );

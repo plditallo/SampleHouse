@@ -197,6 +197,11 @@
   width: max-content;
   cursor: pointer;
   padding: 0;
+  font-size: 1em;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  margin-top: 1em;
+  font-weight: 700;
 }
 
 .auth-wrapper .forms .form form button img {
@@ -272,13 +277,5 @@
 .auth-wrapper .forms .form #login a {
   font-size: 0.8em;
   color: #00bdf5;
-}
-
-.auth-wrapper .forms .form #login button {
-  font-size: 1em;
-  -ms-flex-item-align: end;
-      align-self: flex-end;
-  margin-top: 1em;
-  font-weight: 700;
 }
 /*# sourceMappingURL=auth.css.map */
