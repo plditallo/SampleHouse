@@ -16,9 +16,12 @@ class RegisterForm extends React.Component {
   }
   render() {
     // const form = document.getElementById("registerForm");
+    // if (form) form.onsubmit = onSubmitHandler;
+    // if (form) console.log(form.onsubmit);
     // todo require first name
     const onSubmitHandler = (evt) => {
       evt.preventDefault();
+      console.log(evt);
 
       const errState = { ...this.state, errors: [] };
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -86,7 +89,7 @@ class RegisterForm extends React.Component {
               name="fname"
               onChange={onChangeHandler}
               value={this.state.fname}
-              required="true"
+              required={true}
             />
           </div>
           <div>
@@ -105,7 +108,7 @@ class RegisterForm extends React.Component {
           name="regEmail"
           onChange={onChangeHandler}
           value={this.state.regEmail}
-          required="true"
+          required={true}
         />
         <label htmlFor="regPassword">&#42;Password</label>
         <input
@@ -113,7 +116,7 @@ class RegisterForm extends React.Component {
           name="regPassword"
           onChange={onChangeHandler}
           value={this.state.regPassword}
-          required="true"
+          required={true}
         />
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />

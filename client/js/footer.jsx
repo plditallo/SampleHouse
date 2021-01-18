@@ -20,10 +20,11 @@ class Footer extends React.Component {
             </div>
           </a>
           <div className="right">
+            //todo change all email to E-mail
             <p>
-              If you should need to contact us, please do so by filling out our
+              Contact us through our
               <a href="contact.html">CONTACT FORM</a>
-              or by dropping us an Email at:
+              or Email at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
             {/* //todo links */}

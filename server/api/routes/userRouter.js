@@ -244,12 +244,11 @@ const sound1 = {
     exclusive: "false",
     duration: "12",
     tempo: "120",
-    instrument_type: "guitar,electric guitar,",
-    genre: "pop,punk,edm",
+    instrument_type: "guitar+electric guitar,",
+    genre: "pop+punk+edm",
     key: "c#",
     pack: "packName",
-    tag9: "value",
-    tag10: "value",
+    tags: "value1+value2",
 }
 const sound2 = {
     type: "drum",

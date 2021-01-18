@@ -15,6 +15,16 @@ exports.seed = function (knex) {
         first_name: "Jack",
         last_name: "Barry",
         role: "testing"
+      }, {
+        id: "de4fc280-59d4-11eb-aff7-07250d070e64",
+        email: "craigfechtermusic@gmail.com",
+        password: hashSync('password', 13),
+        isVerified: true,
+        first_name: "Craig",
+        last_name: "Fechter",
+        role: "admin",
+        balance: 1000000,
+        vst_access: true,
       }]);
     });
 };
