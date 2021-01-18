@@ -40,7 +40,7 @@ class HamburgerMenu extends React.Component {
 
           <ul id="menu">
             <li>
-              <a href="index.html">HOME</a>
+              <a href="index.html#">HOME</a>
             </li>
             <li>
               <a href="index.html#about">ABOUT</a>

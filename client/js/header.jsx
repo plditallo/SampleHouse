@@ -12,7 +12,7 @@ class Header extends React.Component {
     }
     return (
       <div>
-        <a href="index.html">
+        <a href="index.html#">
           <div className="logo">
             <img
               src="../assets/sample_house_logo.png"
@@ -36,7 +36,7 @@ class Header extends React.Component {
           <nav>
             <ul>
               <li>
-                <a href="index.html">HOME</a>
+                <a href="index.html#">HOME</a>
               </li>
               <li>
                 <a href="index.html#about">ABOUT</a>

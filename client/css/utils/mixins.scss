@@ -4,3 +4,13 @@ $lightBlue: #00bdf5;
 $lightGrey: #c3c1c1;
 $darkGrey: #707070;
 $teal: #0f495f;
+@mixin navSpace($size) {
+  &::before {
+    display: block;
+    content: " ";
+    margin-top: $size;
+    height: $size;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

@@ -18,7 +18,6 @@ p {
   background-position: center;
   height: 50em;
   box-shadow: #0d22339e 2em 3em 3.5em;
-  margin-bottom: 8em;
   @include breakpoint(xxs, xs, s, m, l) {
     background-size: 130% 100%;
   }
@@ -65,6 +64,9 @@ p {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  padding-top: 6em;
+  margin-top: 2em;
+  @include navSpace(6em);
 
   .product {
     width: 45%;
@@ -107,6 +109,7 @@ p {
   }
 }
 #about {
+  @include navSpace(6em);
   width: 70%;
   margin: 1.5em auto 5em;
   @include breakpoint(xxs, xs) {
@@ -183,6 +186,7 @@ p {
 #pricing {
   text-align: center;
   margin: 2em auto 10em;
+  @include navSpace(6em);
   h2 {
     font-size: 3em;
     line-height: 0.75em;
@@ -239,6 +243,7 @@ p {
   }
 }
 #faq {
+  @include navSpace(3.65em);
   width: 85%;
   margin: auto;
   margin-bottom: 6em;

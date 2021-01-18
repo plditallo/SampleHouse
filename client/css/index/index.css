@@ -18,7 +18,6 @@ p {
   height: 50em;
   -webkit-box-shadow: #0d22339e 2em 3em 3.5em;
           box-shadow: #0d22339e 2em 3em 3.5em;
-  margin-bottom: 8em;
 }
 
 @media (max-width: 360px) {
@@ -101,6 +100,17 @@ p {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  padding-top: 6em;
+  margin-top: 2em;
+}
+
+#products::before {
+  display: block;
+  content: " ";
+  margin-top: 6em;
+  height: 6em;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 #products .product {
@@ -192,6 +202,15 @@ p {
 #about {
   width: 70%;
   margin: 1.5em auto 5em;
+}
+
+#about::before {
+  display: block;
+  content: " ";
+  margin-top: 6em;
+  height: 6em;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 @media (max-width: 360px) {
@@ -344,6 +363,15 @@ p {
   margin: 2em auto 10em;
 }
 
+#pricing::before {
+  display: block;
+  content: " ";
+  margin-top: 6em;
+  height: 6em;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 #pricing h2 {
   font-size: 3em;
   line-height: 0.75em;
@@ -433,6 +461,15 @@ p {
   width: 85%;
   margin: auto;
   margin-bottom: 6em;
+}
+
+#faq::before {
+  display: block;
+  content: " ";
+  margin-top: 3.65em;
+  height: 3.65em;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 #faq h2 {

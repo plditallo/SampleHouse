@@ -9,11 +9,11 @@ class StickyNav extends React.Component {
   render() {
     return (
       <ul>
-        <a href="index.html">
+        <a href="index.html#">
           <img src="../assets/sample_house_logo.png" alt="SoundHouse Logo" />
         </a>
         <li>
-          <a href="index.html">HOME</a>
+          <a href="index.html#">HOME</a>
         </li>
         <li>
           <a href="index.html#about">ABOUT</a>
