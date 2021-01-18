@@ -158,6 +158,12 @@
   color: #f12538;
 }
 
+.auth-wrapper .forms .form form .success {
+  margin-top: 0;
+  font-size: 1em;
+  color: lawngreen;
+}
+
 .auth-wrapper .forms .form form label {
   color: #707070;
   margin-bottom: 0.25em;
@@ -237,7 +243,7 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 45%;
+  width: 47%;
 }
 
 @media (max-width: 360px) {

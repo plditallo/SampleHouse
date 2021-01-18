@@ -44,7 +44,6 @@ router.post("/register",
             first_name,
             last_name
         } = req.body;
-        console.log(req.body)
         const user = {
             id: uuidv1(),
             first_name,

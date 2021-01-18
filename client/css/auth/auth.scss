@@ -57,6 +57,12 @@
             color: #f12538;
           }
         }
+        // todo change color
+        .success {
+          margin-top: 0;
+          font-size: 1em;
+          color: lawngreen;
+        }
         label {
           color: $darkGrey;
           // margin: 1em 0 0.8em;
@@ -100,7 +106,7 @@
           div {
             display: flex;
             flex-direction: column;
-            width: 45%;
+            width: 47%;
             @include breakpoint(xxs, xs, s) {
               width: 100%;
             }

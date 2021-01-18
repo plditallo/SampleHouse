@@ -3,19 +3,21 @@
 class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
+    // todo remove state
     this.state = {
-      regEmail: "",
-      regPassword: "",
-      fName: null,
-      lName: null,
+      // regEmail: `${Math.random().toString(32)}@testing.com`,
+      regEmail: "0.joddme99oko@testing.com",
+      regPassword: "password",
+      fname: "",
+      lname: "",
       errors: [],
+      successMsg: null,
     };
   }
   render() {
     const onSubmitHandler = (evt) => {
       evt.preventDefault();
-      //todo check backend for taking fname and lname
-      console.log("click");
+
       const errState = { ...this.state, errors: [] };
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!re.test(this.state.regEmail.toLowerCase()))
@@ -26,26 +28,34 @@ class RegisterForm extends React.Component {
           "Password must have a minimum of 6 characters.",
         ];
       if (errState.errors.length) return this.setState(errState);
+      const submitFetch = async () =>
+        //todo change url
+        await fetch("http://localhost:5000/api/user/register", {
+          method: "POST",
+          type: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.state.regEmail,
+            password: this.state.regPassword,
+            first_name: this.state.fname.length ? this.state.fname : null,
+            last_name: this.state.lname.length ? this.state.lname : null,
+          }),
+        });
 
-      const Http = new XMLHttpRequest();
-      Http.open("POST", "http://localhost:5000/api/user/register", false); //todo change url
-      Http.setRequestHeader("Content-Type", "application/json");
-      Http.onreadystatechange = (e) => {
-        // if (this.readyState === XMLHttpRequest.DONE && this.status === 200)
-        // if (this.readyState === XMLHttpRequest.DONE && this.status === 400)
-        console.log(Http.responseText);
-        alert(Http.responseText);
-      };
-      Http.send(
-        JSON.stringify({
-          email: this.state.regEmail,
-          password: this.state.regPassword,
-          first_name: this.state.fname,
-          last_name: this.state.lName,
+      submitFetch()
+        .then(async (resp) => {
+          return { status: resp.status, data: await resp.json() };
         })
-      );
-      //todo redirect after submit or don't refresh and pass "msg": "verification email"
-      // return false;
+        .then(({ status, data }) => {
+          if (status !== 200)
+            this.setState({ ...this.state, errors: [data.msg] });
+          else
+            this.setState({ ...this.state, successMsg: data.msg, errors: [] });
+          // window.location.href = "#login";
+        })
+        .catch((err) => console.log({ err }));
     };
     const onChangeHandler = (evt) => {
       this.setState({
@@ -59,6 +69,7 @@ class RegisterForm extends React.Component {
         <p>
           Please enter your Email address and a password to create an account.
         </p>
+        <span className="success">{this.state.successMsg}</span>
         <div className="errors">
           {this.state.errors.map((e, i) => (
             <p key={i}>&#42;{e}</p>
@@ -67,17 +78,37 @@ class RegisterForm extends React.Component {
         <div className="name">
           <div>
             <label htmlFor="fname">First Name</label>
-            <input type="text" name="fname" onChange={onChangeHandler} />
+            <input
+              type="text"
+              name="fname"
+              onChange={onChangeHandler}
+              value={this.state.fname}
+            />
           </div>
           <div>
             <label htmlFor="lname">Last Name</label>
-            <input type="text" name="lname" onChange={onChangeHandler} />
+            <input
+              type="text"
+              name="lname"
+              onChange={onChangeHandler}
+              value={this.state.lname}
+            />
           </div>
         </div>
         <label htmlFor="regEmail">&#42;Email Address</label>
-        <input type="text" name="regEmail" onChange={onChangeHandler} />
+        <input
+          type="text"
+          name="regEmail"
+          onChange={onChangeHandler}
+          value={this.state.regEmail}
+        />
         <label htmlFor="regPassword">&#42;Password</label>
-        <input type="password" name="regPassword" onChange={onChangeHandler} />
+        <input
+          type="password"
+          name="regPassword"
+          onChange={onChangeHandler}
+          value={this.state.regPassword}
+        />
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />
           Create Your Account

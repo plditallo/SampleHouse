@@ -60,8 +60,8 @@ class HamburgerMenu extends React.Component {
         </div>
         <div className="right">
           <div className="actions">
-            <a href="authentication.html">LOGIN</a>
-            <a href="authentication.html">SIGN UP</a>
+            <a href="authentication.html#">LOGIN</a>
+            <a href="authentication.html#">SIGN UP</a>
           </div>
           <a href="index.html#">
             <img src="../assets/sample_house_logo.png" alt="SampleHouse Logo" />
