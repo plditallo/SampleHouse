@@ -10,16 +10,15 @@ class HamburgerMenu extends React.Component {
 
   render() {
     const menu = document.querySelector("#menu");
-    const spans = document.querySelectorAll(".hamburger-span");
-    console.log(spans);
-    if (this.state.open) {
-      menu.style.display = "block";
-      // console.log(spans[1].style.display);
-      // spans.forEach((e) => (e.style.display = "none"));
-    } else if (!this.state.open && menu) {
-      menu.style.display = "none";
-      // spans.forEach((e) => (e.style.display = "block"));
-    }
+    const links = document.querySelectorAll("#menu a");
+
+    //* On click of link, close navigation
+    if (links.length && !links[0].onclick)
+      links.forEach((l) => (l.onclick = () => this.setState({ open: false })));
+
+    if (this.state.open) menu.style.display = "block";
+    else if (!this.state.open && menu) menu.style.display = "none";
+
     // document.addEventListener("click");
     return (
       <div className="menu-wrapper">
@@ -64,7 +63,9 @@ class HamburgerMenu extends React.Component {
             <a href="authentication.html">LOGIN</a>
             <a href="authentication.html">SIGN UP</a>
           </div>
-          <img src="../assets/sample_house_logo.png" alt="SampleHouse Logo" />
+          <a href="index.html#">
+            <img src="../assets/sample_house_logo.png" alt="SampleHouse Logo" />
+          </a>
         </div>
       </div>
     );
@@ -73,16 +74,3 @@ class HamburgerMenu extends React.Component {
 
 const domContainer = document.querySelector("#hamburger-menu");
 ReactDOM.render(React.createElement(HamburgerMenu), domContainer);
-
-// const observer = new IntersectionObserver(
-//   (entries) => {
-//     const nav = document.querySelector("#sticky-nav").style;
-//     // isIntersecting is true when element and viewport are overlapping
-//     // isIntersecting is false when element and viewport don't overlap
-//     if (entries[0].isIntersecting === false) nav.display = "block";
-//     else nav.display = "none";
-//   },
-//   { threshold: [0] }
-// );
-
-// observer.observe(document.querySelector("#header"));
