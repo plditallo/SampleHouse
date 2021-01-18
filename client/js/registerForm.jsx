@@ -70,7 +70,9 @@ class RegisterForm extends React.Component {
         <span className="success">{this.state.successMsg}</span>
         <div className="errors">
           {this.state.errors.map((e, i) => (
-            <p key={i}>&#42;{e}</p>
+            <p key={i} className="error">
+              &#42;{e}
+            </p>
           ))}
         </div>
         <div className="name">

@@ -52,9 +52,13 @@
         }
         .errors {
           margin-bottom: 0.5em;
-          p {
+          .error {
             margin: 0 0 0.5em;
             color: #f12538;
+          }
+          span {
+            cursor: pointer;
+            text-decoration: underline;
           }
         }
         // todo change color

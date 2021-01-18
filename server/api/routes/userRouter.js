@@ -66,7 +66,6 @@ router.post("/register",
 // todo login VST include tier 2+
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
-        console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         const {
@@ -80,7 +79,7 @@ router.post("/login",
                 });
                 //* Check password
                 if (!compareSync(password, user.password)) return res.status(403).json({
-                    msg: "Invalid credentials"
+                    msg: "Incorrect Password."
                 });
                 //* Check user has verified email
                 if (!user.isVerified) return res.status(401).send({

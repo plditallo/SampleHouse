@@ -16,7 +16,7 @@ const {
 } = require("../../../database/model/userModel");
 
 //todo all login responses give link to login from header host
-router.use("/confirmation/:token", (req, res) => {
+router.get("/confirmation/:token", (req, res) => {
     const {
         token
     } = req.params;
@@ -52,7 +52,7 @@ router.use("/confirmation/:token", (req, res) => {
     })
 })
 
-router.get("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => {
+router.post("/resend", [body('email').isEmail().normalizeEmail()], (req, res) => {
     //* check for active tokens first and remove
     const {
         email

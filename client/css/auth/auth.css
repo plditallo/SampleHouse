@@ -153,9 +153,14 @@
   margin-bottom: 0.5em;
 }
 
-.auth-wrapper .forms .form form .errors p {
+.auth-wrapper .forms .form form .errors .error {
   margin: 0 0 0.5em;
   color: #f12538;
+}
+
+.auth-wrapper .forms .form form .errors span {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .auth-wrapper .forms .form form .success {
