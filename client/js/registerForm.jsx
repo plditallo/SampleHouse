@@ -15,6 +15,7 @@ class RegisterForm extends React.Component {
     };
   }
   render() {
+    // const form = document.getElementById("registerForm");
     const onSubmitHandler = (evt) => {
       evt.preventDefault();
 
@@ -45,17 +46,14 @@ class RegisterForm extends React.Component {
         });
 
       submitFetch()
-        .then(async (resp) => {
-          return { status: resp.status, data: await resp.json() };
-        })
+        .then(async (res) => ({ status: res.status, data: await res.json() }))
         .then(({ status, data }) => {
           if (status !== 200)
             this.setState({ ...this.state, errors: [data.msg] });
-          else
-            this.setState({ ...this.state, successMsg: data.msg, errors: [] });
+          else this.setState({ successMsg: data.msg, errors: [] });
           // window.location.href = "#login";
-        })
-        .catch((err) => console.log({ err }));
+        });
+      //todo prevent window from refreshing on successful register
     };
     const onChangeHandler = (evt) => {
       this.setState({
