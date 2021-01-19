@@ -7,9 +7,6 @@ class Header extends React.Component {
   }
 
   render() {
-    if (this.state.liked) {
-      return "You liked this.";
-    }
     return (
       <div>
         <a href="index.html#">

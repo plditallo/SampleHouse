@@ -8,68 +8,68 @@ class RegisterForm extends React.Component {
       // regEmail: `${Math.random().toString(32)}@testing.com`,
       regEmail: "0.joddme99oko@testing.com",
       regPassword: "password",
-      fname: "",
-      lname: "",
+      fname: "Jack",
+      lname: "Barry",
       errors: [],
       successMsg: null,
     };
   }
-  render() {
-    // const form = document.getElementById("registerForm");
-    // if (form) form.onsubmit = onSubmitHandler;
-    // if (form) console.log(form.onsubmit);
-    // todo require first name
-    const onSubmitHandler = (evt) => {
-      evt.preventDefault();
-      console.log(evt);
 
-      const errState = { ...this.state, errors: [] };
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!re.test(this.state.regEmail.toLowerCase()))
-        errState.errors = ["Please enter a valid Email address."];
-      if (this.state.regPassword.length < 7)
-        errState.errors = [
-          ...errState.errors,
-          "Password must have a minimum of 6 characters.",
-        ];
-      if (this.state.fname.length < 3)
-        errState.errors = [...errState.errors, "Please enter your first name."];
-      if (errState.errors.length) return this.setState(errState);
-      const submitFetch = async () =>
-        //todo change url
-        await fetch("http://localhost:5000/api/user/register", {
-          method: "POST",
-          type: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: this.state.regEmail,
-            password: this.state.regPassword,
-            first_name: this.state.fname,
-            last_name: this.state.lname.length ? this.state.lname : null,
-          }),
-        });
+  onSubmitHandler = (evt) => {
+    evt.preventDefault();
+    console.log(evt);
 
-      submitFetch()
-        .then(async (res) => ({ status: res.status, data: await res.json() }))
-        .then(({ status, data }) => {
-          if (status !== 200)
-            this.setState({ ...this.state, errors: [data.msg] });
-          else this.setState({ successMsg: data.msg, errors: [] });
-          // window.location.href = "#login";
-        });
-      //todo prevent window from refreshing on successful register
-    };
-    const onChangeHandler = (evt) => {
-      this.setState({
-        ...this.state,
-        [evt.target.name]: evt.target.value,
+    const errState = { ...this.state, errors: [] };
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(this.state.regEmail.toLowerCase()))
+      errState.errors = ["Please enter a valid Email address."];
+    if (this.state.regPassword.length < 7)
+      errState.errors = [
+        ...errState.errors,
+        "Password must have a minimum of 6 characters.",
+      ];
+    if (this.state.fname.length < 3)
+      errState.errors = [...errState.errors, "Please enter your first name."];
+    if (errState.errors.length) return this.setState(errState);
+    const submitFetch = async () =>
+      //todo change url
+      await fetch("http://localhost:5000/api/user/register", {
+        method: "POST",
+        type: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: this.state.regEmail,
+          password: this.state.regPassword,
+          first_name: this.state.fname,
+          last_name: this.state.lname.length ? this.state.lname : null,
+        }),
       });
-    };
 
+    submitFetch()
+      .then(async (res) => ({ status: res.status, data: await res.json() }))
+      .then(({ status, data }) => {
+        if (status !== 200)
+          this.setState({ ...this.state, errors: [data.msg] });
+        else this.setState({ successMsg: data.msg, errors: [] });
+        // window.location.href = "#login";
+      });
+    //todo prevent window from refreshing on successful register
+  };
+  onChangeHandler = (evt) => {
+    this.setState({
+      ...this.state,
+      [evt.target.name]: evt.target.value,
+    });
+  };
+  render() {
     return (
-      <form name="registerForm" id="registerForm" onSubmit={onSubmitHandler}>
+      <form
+        name="registerForm"
+        id="registerForm"
+        onSubmit={this.onSubmitHandler}
+      >
         <p>
           Please enter your Email address and a password to create an account.
         </p>
@@ -87,7 +87,7 @@ class RegisterForm extends React.Component {
             <input
               type="text"
               name="fname"
-              onChange={onChangeHandler}
+              onChange={this.onChangeHandler}
               value={this.state.fname}
               required={true}
             />
@@ -97,7 +97,7 @@ class RegisterForm extends React.Component {
             <input
               type="text"
               name="lname"
-              onChange={onChangeHandler}
+              onChange={this.onChangeHandler}
               value={this.state.lname}
             />
           </div>
@@ -106,7 +106,7 @@ class RegisterForm extends React.Component {
         <input
           type="text"
           name="regEmail"
-          onChange={onChangeHandler}
+          onChange={this.onChangeHandler}
           value={this.state.regEmail}
           required={true}
         />
@@ -114,7 +114,7 @@ class RegisterForm extends React.Component {
         <input
           type="password"
           name="regPassword"
-          onChange={onChangeHandler}
+          onChange={this.onChangeHandler}
           value={this.state.regPassword}
           required={true}
         />

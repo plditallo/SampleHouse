@@ -3,16 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/core.css" />
     <title>Home</title>
   </head>
   <body>
-    <div id="header" class="header-test"></div>
+    <header id="header"></header>
+    <nav id="sticky-nav"></nav>
+    <nav id="hamburger-menu"></nav>
+
     <h1>Home</h1>
     <p>Logged In</p>
     <a href="index.html">click me</a>
+    <section id="sounds"></section>
 
-    <!-- Load React. -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js" -->
+    <footer id="footer"></footer>
+    <!--* Load React. -->
     <script
       src="https://unpkg.com/react@17/umd/react.development.js"
       crossorigin
@@ -21,9 +26,12 @@
       src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
       crossorigin
     ></script>
-    <!--* for JSX -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <!-- Load our React component. -->
-    <script type="text/babel" src="../js/header.js"></script>
+    <!--* Load React components -->
+    <script type="text/babel" src="../js/header.jsx"></script>
+    <script type="text/babel" src="../js/sticky-nav.jsx"></script>
+    <script type="text/babel" src="../js/hamburgerMenu.jsx"></script>
+    <script type="text/babel" src="../js/footer.jsx"></script>
+    <script type="text/babel" src="../js/sounds.jsx"></script>
   </body>
 </html>
