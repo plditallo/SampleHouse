@@ -65,7 +65,6 @@ class Sounds extends React.Component {
             coverList.push(cover);
           }
         });
-        console.log({ coverList });
         coverList.forEach((e) => this.fetchCover(e));
       });
 
@@ -92,9 +91,6 @@ class Sounds extends React.Component {
   }
 
   async fetchCover(cover) {
-    // path = "SH Essential Drums/SH_Essential_Hat_04.wav"; //! testing
-    // const cover = getCover(path);
-    // cover = "SH Essential Drums";
     await fetch(
       `http://localhost:5000/api/audio/cover/${encodeURIComponent(cover)}`,
       {
@@ -124,12 +120,6 @@ class Sounds extends React.Component {
   }
 
   render() {
-    console.log(
-      "stateCovers",
-      "SH Essential Drums" in this.state.covers,
-      this.state.covers,
-      this.state.covers.length
-    );
     return (
       <div>
         {this.state.isTruncated ? (

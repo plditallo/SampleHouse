@@ -50,7 +50,7 @@ router.get("/", (req, res) => {
 router.get("/:key", (req, res) => {
     const downloadStream = s3Client.downloadStream({
         Bucket: 'samplehouse',
-        Key: req.params.key
+        Key: `packs/${req.params.key}`
     });
     downloadStream.on('error', () => res.status(404).send('Not Found'))
     downloadStream.on('httpHeaders',
