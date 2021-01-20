@@ -2,6 +2,7 @@ module.exports = tokenEmailer
 
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+//todo crypto build in? yarn upgrade
 const {
     EMAIL_HOST,
     EMAIL_USERNAME,

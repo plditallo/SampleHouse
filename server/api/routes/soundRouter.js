@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const s3Client = require("s3")
 // Load the SDK for JavaScript
 const AWS = require('aws-sdk');
 // Set the Region 
@@ -59,20 +59,37 @@ router.get("/", (req, res) => {
     });
 })
 
+const client = s3Client.createClient({
+    s3Options: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    }
+})
 router.get("/:path", (req, res) => {
     const {
         path
     } = req.params;
 
-    s3.getObject({
+
+
+    const downloadStream = client.downloadStream({
         Bucket: 'samplehouse',
         Key: path
-    }, (err, data) => {
-        if (err) console.log("error", err)
-        else console.log("success", data)
-
-        res.status(200).json(data)
     })
+    downloadStream.on('httpHeaders', (statusCode, headers, resp) => res.set({
+        'Content-Type': headers['content-type']
+    }))
+    downloadStream.pipe(res)
+
+    // s3.getObject({
+    //     Bucket: 'samplehouse',
+    //     Key: path
+    // }, (err, data) => {
+    //     if (err) console.log("error", err)
+    //     else console.log("success", data)
+
+    //     res.status(200).json(data)
+    // })
 
 })
 
