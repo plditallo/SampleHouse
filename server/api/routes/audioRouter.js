@@ -14,7 +14,6 @@ router.get("/", (req, res) => {
         limit = 25,
             ContinuationToken
     } = req.query;
-    // console.log(req.query)
 
     s3.listObjectsV2({
         Bucket: 'samplehouse',
@@ -36,10 +35,10 @@ router.get("/", (req, res) => {
         Contents.forEach(({
             Key
         }) => {
-            if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key)
+            if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key.replace(Prefix, ""))
         })
         // console.log(Sounds)
-        res.status(200).json({
+        if (data) res.status(200).json({
             IsTruncated,
             sounds,
             NextContinuationToken,
@@ -49,24 +48,32 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:key", (req, res) => {
-    const {
-        key
-    } = req.params;
     const downloadStream = s3Client.downloadStream({
         Bucket: 'samplehouse',
-        Key: key
+        Key: req.params.key
     });
     downloadStream.on('error', () => res.status(404).send('Not Found'))
-
     downloadStream.on('httpHeaders',
         (statusCode, headers, resp) =>
         res.set({
             'Content-Type': headers['content-type']
         }));
+    downloadStream.pipe(res); // Pipe download stream to response
+})
 
-    // Pipe download stream to response
-    downloadStream.pipe(res);
+router.get("/cover/:key", (req, res) => {
+    let {
+        key
+    } = req.params
 
+    s3.getObject({
+        Bucket: 'samplehouse',
+        Key: `covers/${key}.png`,
+    }, (err, data) => {
+        if (err) console.log("error", err)
+        // else console.log("success", data.Body)
+        if (data) res.status(200).json(data.Body)
+    })
 })
 
 
@@ -78,24 +85,9 @@ router.use("/", (req, res) => {
 
 module.exports = router;
 
-const allKeys = [];
-// listAllKeys();
-
-function listAllKeys() {
-    s3.listObjectsV2(params, (err, data) => {
-        if (err) {
-            console.log(err, err.stack); // an error occurred
-        } else {
-            const contents = data.Contents;
-            contents.forEach(function (content) {
-                allKeys.push(content.Key);
-            });
-
-            if (data.IsTruncated) {
-                params.ContinuationToken = data.NextContinuationToken;
-                console.log("get further list...");
-                listAllKeys();
-            }
-        }
-    });
+function encode(data) {
+    var str = data.reduce(function (a, b) {
+        return a + String.fromCharCode(b);
+    }, "");
+    return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
 }

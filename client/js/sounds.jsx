@@ -10,8 +10,7 @@ class Sounds extends React.Component {
       soundsList: [],
       nextContinuationToken: "",
       isTruncated: false,
-      soundPlaying: null,
-      soundUrl: null,
+      covers: {},
     };
   }
 
@@ -47,17 +46,27 @@ class Sounds extends React.Component {
       }
     )
       .then(async (resp) => await resp.json())
-      .then((res) => {
-        console.log(res);
-        const { IsTruncated, sounds, NextContinuationToken } = res;
-
-        // console.log({ Sounds });
+      .then(({ IsTruncated, sounds, NextContinuationToken }) => {
+        // console.log({ sounds });
         this.setState({
           ...this.state,
           soundsList: [...this.state.soundsList, ...sounds],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
         });
+        return sounds;
+      })
+      .then((sounds) => {
+        // console.log({ sounds });
+        const coverList = [];
+        sounds.forEach((e) => {
+          const cover = getCover(e);
+          if (!coverList.includes(cover)) {
+            coverList.push(cover);
+          }
+        });
+        console.log({ coverList });
+        coverList.forEach((e) => this.fetchCover(e));
       });
 
   async fetchSound(path) {
@@ -73,11 +82,38 @@ class Sounds extends React.Component {
       .then((Data) => {
         // spinner.hide()
         const context = new AudioContext();
-        const source = context.createBufferSource(); // Create Sound Source
+        const source = context.createBufferSource(); //Create Sound Source
         context.decodeAudioData(Data, (buffer) => {
           source.buffer = buffer;
           source.connect(context.destination);
           source.start(context.currentTime);
+        });
+      });
+  }
+
+  async fetchCover(cover) {
+    // path = "SH Essential Drums/SH_Essential_Hat_04.wav"; //! testing
+    // const cover = getCover(path);
+    // cover = "SH Essential Drums";
+    await fetch(
+      `http://localhost:5000/api/audio/cover/${encodeURIComponent(cover)}`,
+      {
+        method: "GET",
+        type: "cors",
+        headers: {
+          "Content-Type": "image/png", //? application/json?
+        },
+      }
+    )
+      .then(async (resp) => await resp.json())
+      .then(({ data }) => {
+        const url = "data:image/png;base64," + encode(data);
+        this.setState({
+          ...this.state,
+          covers: {
+            ...this.state.covers,
+            [cover]: url,
+          },
         });
       });
   }
@@ -88,8 +124,12 @@ class Sounds extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
-
+    console.log(
+      "stateCovers",
+      "SH Essential Drums" in this.state.covers,
+      this.state.covers,
+      this.state.covers.length
+    );
     return (
       <div>
         {this.state.isTruncated ? (
@@ -104,16 +144,9 @@ class Sounds extends React.Component {
           </audio>
         ) : null}
         {this.state.soundsList.map((sound, i) => (
-          <div className="sound" key={i}>
-            {/* <img src="../assets/half-man.png" /> */}
-            <p
-              id={sound}
-              key={i}
-              onClick={() => {
-                return this.fetchSound(sound);
-                // this.fetchSoundObject(sound);
-              }}
-            >
+          <div className="sound" key={i} style={{ display: "flex" }}>
+            <img id="testImg" />
+            <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
               {sound.substring(sound.lastIndexOf("/") + 1)}
             </p>
           </div>
@@ -125,3 +158,14 @@ class Sounds extends React.Component {
 
 const domContainer = document.querySelector("#sounds");
 ReactDOM.render(React.createElement(Sounds), domContainer);
+
+function encode(data) {
+  var str = data.reduce(function (a, b) {
+    return a + String.fromCharCode(b);
+  }, "");
+  return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
+}
+
+function getCover(path) {
+  return path.slice(0, path.indexOf("/"));
+}
