@@ -71,21 +71,18 @@ class LoginForm extends React.Component {
         body: JSON.stringify({
           email: this.state.logEmail,
         }),
-      });
+      }).then(async (res) => ({ status: res.status, data: await res.json() }));
     // todo can't see response, reloading page
-    submitFetch()
-      .then(async (res) => ({ status: res.status, data: await res.json() }))
-      .then(({ status, data }) => {
-        console.log(status, data);
-        if (status !== 200)
-          this.setState({ ...this.state, errorMsg: data.msg });
-        else
-          this.setState({
-            ...this.state,
-            errorMsg: null,
-            resendMsg: data.msg,
-          });
-      });
+    submitFetch().then(({ status, data }) => {
+      console.log(status, data);
+      if (status !== 200) this.setState({ ...this.state, errorMsg: data.msg });
+      else
+        this.setState({
+          ...this.state,
+          errorMsg: null,
+          resendMsg: data.msg,
+        });
+    });
   };
 
   onChangeHandler = (evt) => {

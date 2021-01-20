@@ -45,16 +45,13 @@ class RegisterForm extends React.Component {
           first_name: this.state.fname,
           last_name: this.state.lname.length ? this.state.lname : null,
         }),
-      });
+      }).then(async (res) => await res.json());
 
-    submitFetch()
-      .then(async (res) => ({ status: res.status, data: await res.json() }))
-      .then(({ status, data }) => {
-        if (status !== 200)
-          this.setState({ ...this.state, errors: [data.msg] });
-        else this.setState({ successMsg: data.msg, errors: [] });
-        // window.location.href = "#login";
-      });
+    submitFetch().then(({ status, data }) => {
+      if (status !== 200) this.setState({ ...this.state, errors: [data.msg] });
+      else this.setState({ successMsg: data.msg, errors: [] });
+      // window.location.href = "#login";
+    });
     //todo prevent window from refreshing on successful register
   };
   onChangeHandler = (evt) => {
