@@ -60,60 +60,27 @@ class Sounds extends React.Component {
         });
       });
 
-  fetchSound(path) {
-    const request = new XMLHttpRequest();
-    request.open(
-      "GET",
-      `http://localhost:5000/api/audio/${encodeURIComponent(path)}`,
-      true
-    );
-    request.responseType = "arraybuffer";
-    // spinner.show();
-    request.onload = () => {
-      // spinner.hide();
-      const Data = request.response;
-      const context = new AudioContext();
-      const source = context.createBufferSource(); // Create Sound Source
-      context.decodeAudioData(Data, (buffer) => {
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(context.currentTime);
+  async fetchSound(path) {
+    // spinner.show()
+    await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    })
+      .then(async (resp) => await resp.arrayBuffer())
+      .then((Data) => {
+        // spinner.hide()
+        const context = new AudioContext();
+        const source = context.createBufferSource(); // Create Sound Source
+        context.decodeAudioData(Data, (buffer) => {
+          source.buffer = buffer;
+          source.connect(context.destination);
+          source.start(context.currentTime);
+        });
       });
-    };
-    request.send();
   }
-
-  // fetchSoundObject = async (path) =>
-  //   await fetch(
-  //     `http://localhost:5000/api/audio/${encodeURIComponent(path)}`,
-  //     {
-  //       method: "GET",
-  //       type: "cors",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   )
-  //     // .then(async (resp) => await resp.json())
-  //     .then((data) => {
-  //       console.log({ data });
-  //       source = this.context.createBufferSource();
-  //       this.context.decodeAudioData(data, (buffer) => {
-  //         source.buffer = buffer;
-  //         source.connect(this.context.destination);
-  //         source.start(this.context.currentTime);
-  //       });
-  //     });
-  // ).then(async (resp) => console.log(resp));
-  //     .then(async (resp) => await resp.json())
-  //     .then((res) => {
-  //       // console.log(res.Body.data);
-  //       // this.setState({ ...this.state, soundPlaying: res.Body.data });
-  //       // const blob = new Blob([res.Body.data], { type: "audio/wav" });
-  //       // const url = window.URL.createObjectURL(blob);
-  //       // this.setState({ ...this.state, soundUrl: url });
-  //       // audioElement.src = url;
-  // });
 
   componentDidMount() {
     this.fetchSoundList();
