@@ -1,24 +1,13 @@
 const router = require("express").Router();
-const s3Client = require("s3")
-// Load the SDK for JavaScript
-const AWS = require('aws-sdk');
-// Set the Region 
+const s3Client = require("s3").createClient()
+const AWS = require('aws-sdk')
 AWS.config.update({
     region: 'us-west-1'
-});
+})
 // Create S3 service object
 const s3 = new AWS.S3({
     apiVersion: '2006-03-01'
 });
-const bucketParams = {
-    Bucket: 'samplehouse',
-    // Delimiter: "/",
-    // Prefix: "covers/"
-};
-const objectParams = {
-    Bucket: 'samplehouse',
-    Key: "packs/SH Essential Drums/SH_Essential_Hat_01.wav"
-}
 
 router.get("/", (req, res) => {
     const {
@@ -43,53 +32,40 @@ router.get("/", (req, res) => {
             IsTruncated,
             Prefix
         } = data;
-        const Sounds = [];
+        const sounds = [];
         Contents.forEach(({
             Key
         }) => {
-            if ((Key.includes(".wav")) || Key.includes(".mid")) Sounds.push(Key)
+            if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key)
         })
         // console.log(Sounds)
         res.status(200).json({
             IsTruncated,
-            Sounds,
+            sounds,
             NextContinuationToken,
             Prefix
         })
     });
 })
 
-const client = s3Client.createClient({
-    s3Options: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    }
-})
-router.get("/:path", (req, res) => {
+router.get("/:key", (req, res) => {
     const {
-        path
+        key
     } = req.params;
-
-
-
-    const downloadStream = client.downloadStream({
+    const downloadStream = s3Client.downloadStream({
         Bucket: 'samplehouse',
-        Key: path
-    })
-    downloadStream.on('httpHeaders', (statusCode, headers, resp) => res.set({
-        'Content-Type': headers['content-type']
-    }))
-    downloadStream.pipe(res)
+        Key: key
+    });
+    downloadStream.on('error', () => res.status(404).send('Not Found'))
 
-    // s3.getObject({
-    //     Bucket: 'samplehouse',
-    //     Key: path
-    // }, (err, data) => {
-    //     if (err) console.log("error", err)
-    //     else console.log("success", data)
+    downloadStream.on('httpHeaders',
+        (statusCode, headers, resp) =>
+        res.set({
+            'Content-Type': headers['content-type']
+        }));
 
-    //     res.status(200).json(data)
-    // })
+    // Pipe download stream to response
+    downloadStream.pipe(res);
 
 })
 

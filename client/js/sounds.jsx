@@ -1,5 +1,5 @@
 "use strict";
-
+// todo add spinner
 class Sounds extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +35,7 @@ class Sounds extends React.Component {
   //todo check if Continuation Token works
   fetchSoundList = async () =>
     await fetch(
-      `http://localhost:5000/api/sounds?limit=${
+      `http://localhost:5000/api/audio?limit=${
         this.state.limit + 1
       }&ContinuationToken=${this.state.nextContinuationToken}`,
       {
@@ -49,20 +49,43 @@ class Sounds extends React.Component {
       .then(async (resp) => await resp.json())
       .then((res) => {
         console.log(res);
-        const { IsTruncated, Sounds, NextContinuationToken } = res;
+        const { IsTruncated, sounds, NextContinuationToken } = res;
 
-        console.log({ Sounds });
+        // console.log({ Sounds });
         this.setState({
           ...this.state,
-          soundsList: [...this.state.soundsList, ...Sounds],
+          soundsList: [...this.state.soundsList, ...sounds],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
         });
       });
 
+  fetchSound(path) {
+    const request = new XMLHttpRequest();
+    request.open(
+      "GET",
+      `http://localhost:5000/api/audio/${encodeURIComponent(path)}`,
+      true
+    );
+    request.responseType = "arraybuffer";
+    // spinner.show();
+    request.onload = () => {
+      // spinner.hide();
+      const Data = request.response;
+      const context = new AudioContext();
+      const source = context.createBufferSource(); // Create Sound Source
+      context.decodeAudioData(Data, (buffer) => {
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(context.currentTime);
+      });
+    };
+    request.send();
+  }
+
   // fetchSoundObject = async (path) =>
   //   await fetch(
-  //     `http://localhost:5000/api/sounds/${encodeURIComponent(path)}`,
+  //     `http://localhost:5000/api/audio/${encodeURIComponent(path)}`,
   //     {
   //       method: "GET",
   //       type: "cors",
@@ -90,45 +113,15 @@ class Sounds extends React.Component {
   //       // const url = window.URL.createObjectURL(blob);
   //       // this.setState({ ...this.state, soundUrl: url });
   //       // audioElement.src = url;
-  //     });
+  // });
 
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
-  componentWillUnmount() {
-    window.URL.revokeObjectURL(this.state.soundUrl);
-  }
 
   render() {
     // console.log(this.state);
-
-    let context = new AudioContext();
-
-    function processData(data) {
-      var source = context.createBufferSource(); // Create Sound Source
-      context.decodeAudioData(data, function (buffer) {
-        source.buffer = buffer;
-        source.connect(this.context.destination);
-        source.start(this.context.currentTime);
-      });
-    }
-
-    function playTunes(path) {
-      var request = new XMLHttpRequest();
-      request.open(
-        "GET",
-        `http://localhost:5000/api/sounds/${encodeURIComponent(path)}`,
-        true
-      );
-      request.responseType = "arraybuffer";
-
-      request.onload = () => {
-        var Data = request.response;
-        processData(Data);
-      };
-      request.send();
-    }
 
     return (
       <div>
@@ -150,7 +143,7 @@ class Sounds extends React.Component {
               id={sound}
               key={i}
               onClick={() => {
-                return playTunes(sound);
+                return this.fetchSound(sound);
                 // this.fetchSoundObject(sound);
               }}
             >
