@@ -55,4 +55,5 @@ function tokenEmailer(user, host, type) {
     return {
         msg: `A confirmation email has been sent to ${user.email}.`
     }
+
 }

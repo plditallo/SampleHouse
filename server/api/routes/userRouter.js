@@ -36,6 +36,7 @@ router.post("/register",
         })
     ],
     checkExistingUsers, (req, res) => {
+        console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         const {
@@ -54,7 +55,7 @@ router.post("/register",
         }
         // todo check req.headers.host once live
         insertUser(user)
-            .then(() => res.send(tokenEmailer(user, req.headers.host)))
+            .then(() => res.status(200).json(tokenEmailer(user, req.headers.host)))
             .catch((err) =>
                 res.status(500).json(err)
             );

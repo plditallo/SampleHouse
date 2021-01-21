@@ -6,10 +6,10 @@ class RegisterForm extends React.Component {
     // todo remove state
     this.state = {
       // regEmail: `${Math.random().toString(32)}@testing.com`,
-      regEmail: "0.joddme99oko@testing.com",
-      regPassword: "password",
-      fname: "Jack",
-      lname: "Barry",
+      regEmail: "",
+      regPassword: "",
+      fname: "",
+      lname: "",
       errors: [],
       successMsg: null,
     };
@@ -17,7 +17,7 @@ class RegisterForm extends React.Component {
 
   onSubmitHandler = (evt) => {
     evt.preventDefault();
-    console.log(evt);
+    // console.log(evt);
 
     const errState = { ...this.state, errors: [] };
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -31,6 +31,7 @@ class RegisterForm extends React.Component {
     if (this.state.fname.length < 3)
       errState.errors = [...errState.errors, "Please enter your first name."];
     if (errState.errors.length) return this.setState(errState);
+
     const submitFetch = async () =>
       //todo change url
       await fetch("http://localhost:5000/api/user/register", {
@@ -45,12 +46,14 @@ class RegisterForm extends React.Component {
           first_name: this.state.fname,
           last_name: this.state.lname.length ? this.state.lname : null,
         }),
-      }).then(async (res) => await res.json());
+      }).then(async (res) => ({ status: res.status, data: await res.json() }));
 
     submitFetch().then(({ status, data }) => {
-      if (status !== 200) this.setState({ ...this.state, errors: [data.msg] });
-      else this.setState({ successMsg: data.msg, errors: [] });
-      // window.location.href = "#login";
+      window.location.hash = "#";
+      if (status !== 200)
+        return this.setState({ ...this.state, errors: [data.msg] });
+      console.log(data.msg);
+      window.location.hash = this.state.regEmail;
     });
     //todo prevent window from refreshing on successful register
   };
@@ -60,6 +63,16 @@ class RegisterForm extends React.Component {
       [evt.target.name]: evt.target.value,
     });
   };
+
+  componentDidMount() {
+    const hash = window.location.hash.replace("#", "");
+    if (hash && !this.state.successMsg)
+      this.setState({
+        ...this.state,
+        successMsg: `A confirmation email has been sent to ${hash}.`,
+      });
+  }
+
   render() {
     return (
       <form

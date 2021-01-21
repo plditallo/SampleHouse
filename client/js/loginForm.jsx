@@ -4,8 +4,8 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      logEmail: "0.joddme99oko@testing.com",
-      logPassword: "password",
+      logEmail: "",
+      logPassword: "",
       errorMsg: null,
       resendMsg: null,
       verified: true,
@@ -25,6 +25,8 @@ class LoginForm extends React.Component {
 
   onSubmitHandler = (evt) => {
     evt.preventDefault();
+    const regSuccess = document.querySelector(".success");
+    if (regSuccess) regSuccess.style.display = "none";
     if (!this.verifyEmail()) return;
 
     const submitFetch = async () =>
@@ -44,6 +46,7 @@ class LoginForm extends React.Component {
     submitFetch()
       .then(async (res) => ({ status: res.status, data: await res.json() }))
       .then(({ status, data }) => {
+        // console.log(status, data);
         this.setState({ ...this.state, verified: true });
         if (status === 401) this.setState({ ...this.state, verified: false });
         if (status !== 200)
@@ -74,7 +77,6 @@ class LoginForm extends React.Component {
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
     // todo can't see response, reloading page
     submitFetch().then(({ status, data }) => {
-      console.log(status, data);
       if (status !== 200) this.setState({ ...this.state, errorMsg: data.msg });
       else
         this.setState({
@@ -91,6 +93,15 @@ class LoginForm extends React.Component {
       [evt.target.name]: evt.target.value,
     });
   };
+
+  componentDidMount() {
+    if (window.location.hash) {
+      const hash = window.location.hash.replace("#", "");
+      this.setState({ ...this.state, logEmail: hash });
+      window.location.hash = "#";
+    }
+  }
+
   render() {
     return (
       <form name="loginForm" id="loginForm" onSubmit={this.onSubmitHandler}>
