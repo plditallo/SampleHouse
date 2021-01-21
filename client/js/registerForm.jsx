@@ -52,8 +52,8 @@ class RegisterForm extends React.Component {
       window.location.hash = "#";
       if (status !== 200)
         return this.setState({ ...this.state, errors: [data.msg] });
-      console.log(data.msg);
-      window.location.hash = this.state.regEmail;
+      // console.log(data.msg);
+      window.location.hash = `email=${this.state.regEmail}`;
     });
     //todo prevent window from refreshing on successful register
   };
@@ -65,12 +65,14 @@ class RegisterForm extends React.Component {
   };
 
   componentDidMount() {
-    const hash = window.location.hash.replace("#", "");
-    if (hash && !this.state.successMsg)
-      this.setState({
-        ...this.state,
-        successMsg: `A confirmation email has been sent to ${hash}.`,
-      });
+    if (window.location.hash && !this.state.successMsg)
+      if (window.location.hash.includes("#email=")) {
+        const hash = window.location.hash.replace("#email=", "");
+        this.setState({
+          ...this.state,
+          successMsg: `A confirmation email has been sent to ${hash}.`,
+        });
+      }
   }
 
   render() {

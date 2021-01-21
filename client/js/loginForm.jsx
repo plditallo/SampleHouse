@@ -4,10 +4,10 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      logEmail: "",
-      logPassword: "",
+      logEmail: "test@test.com",
+      logPassword: "password",
       errorMsg: null,
-      resendMsg: null,
+      resendSuccessMsg: null,
       verified: true,
       validEmail: true,
     };
@@ -62,7 +62,7 @@ class LoginForm extends React.Component {
   resendVerification = (evt) => {
     evt.preventDefault();
     if (!this.verifyEmail()) return;
-
+    // todo add response to hash and do same as register to display message
     const submitFetch = async () =>
       //todo change url
       await fetch("http://localhost:5000/api/token/resend", {
@@ -77,13 +77,14 @@ class LoginForm extends React.Component {
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
     // todo can't see response, reloading page
     submitFetch().then(({ status, data }) => {
-      if (status !== 200) this.setState({ ...this.state, errorMsg: data.msg });
-      else
-        this.setState({
-          ...this.state,
-          errorMsg: null,
-          resendMsg: data.msg,
-        });
+      console.log(status, data.msg);
+      if (status !== 200)
+        return this.setState({ ...this.state, errorMsg: data.msg });
+      // this.setState({
+      //   ...this.state,
+      //   errorMsg: null,
+      // });
+      window.location.hash = `resend=${this.state.logEmail}`;
     });
   };
 
@@ -96,8 +97,17 @@ class LoginForm extends React.Component {
 
   componentDidMount() {
     if (window.location.hash) {
-      const hash = window.location.hash.replace("#", "");
-      this.setState({ ...this.state, logEmail: hash });
+      if (window.location.hash.includes("#email")) {
+        const emailHash = window.location.hash.replace("#email=", "");
+        this.setState({ ...this.state, logEmail: emailHash });
+      } else if (window.location.hash.includes("#resend")) {
+        const resendHash = window.location.hash.replace("#resend=", "");
+        console.log(resendHash);
+        this.setState({
+          ...this.state,
+          resendSuccessMsg: `A confirmation email has been sent to ${resendHash}.`,
+        });
+      }
       window.location.hash = "#";
     }
   }
@@ -107,7 +117,7 @@ class LoginForm extends React.Component {
       <form name="loginForm" id="loginForm" onSubmit={this.onSubmitHandler}>
         <div className="errors">
           <p className="error">
-            {this.state.errorMsg}{" "}
+            {this.state.errorMsg}
             {!this.state.verified ? (
               <span onClick={this.resendVerification}>
                 Click here to resend confirmation email.
@@ -115,6 +125,12 @@ class LoginForm extends React.Component {
             ) : null}
           </p>
         </div>
+        <p
+          className="success"
+          style={{ display: this.state.resendSuccessMsg ? "block" : "none" }}
+        >
+          {this.state.resendSuccessMsg}
+        </p>
         <label htmlFor="logEmail">Email Address</label>
         <input
           type="text"
