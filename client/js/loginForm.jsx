@@ -4,8 +4,8 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      logEmail: "test@test.com",
-      logPassword: "password",
+      logEmail: "",
+      logPassword: "",
       errorMsg: null,
       resendSuccessMsg: null,
       verified: true,
@@ -25,8 +25,7 @@ class LoginForm extends React.Component {
 
   onSubmitHandler = (evt) => {
     evt.preventDefault();
-    const regSuccess = document.querySelector(".success");
-    if (regSuccess) regSuccess.style.display = "none";
+    this.setState({ ...this.state, resendSuccessMsg: null });
     if (!this.verifyEmail()) return;
 
     const submitFetch = async () =>
@@ -61,6 +60,9 @@ class LoginForm extends React.Component {
 
   resendVerification = (evt) => {
     evt.preventDefault();
+    const regSuccess = document.querySelector(".success");
+    // console.log(regSuccess);
+    if (regSuccess) regSuccess.style.display = "none";
     if (!this.verifyEmail()) return;
     // todo add response to hash and do same as register to display message
     const submitFetch = async () =>
@@ -102,10 +104,11 @@ class LoginForm extends React.Component {
         this.setState({ ...this.state, logEmail: emailHash });
       } else if (window.location.hash.includes("#resend")) {
         const resendHash = window.location.hash.replace("#resend=", "");
-        console.log(resendHash);
+        // console.log(resendHash);
         this.setState({
           ...this.state,
           resendSuccessMsg: `A confirmation email has been sent to ${resendHash}.`,
+          logEmail: resendHash,
         });
       }
       window.location.hash = "#";
@@ -117,7 +120,7 @@ class LoginForm extends React.Component {
       <form name="loginForm" id="loginForm" onSubmit={this.onSubmitHandler}>
         <div className="errors">
           <p className="error">
-            {this.state.errorMsg}
+            {this.state.errorMsg}{" "}
             {!this.state.verified ? (
               <span onClick={this.resendVerification}>
                 Click here to resend confirmation email.

@@ -65,12 +65,13 @@ class RegisterForm extends React.Component {
   };
 
   componentDidMount() {
-    if (window.location.hash && !this.state.successMsg)
-      if (window.location.hash.includes("#email=")) {
-        const hash = window.location.hash.replace("#email=", "");
+    const hash = window.location.hash;
+    if (hash && !this.state.successMsg)
+      if (hash.includes("#email=")) {
+        const emailHash = hash.replace("#email=", "");
         this.setState({
           ...this.state,
-          successMsg: `A confirmation email has been sent to ${hash}.`,
+          successMsg: `A confirmation email has been sent to ${emailHash}.`,
         });
       }
   }

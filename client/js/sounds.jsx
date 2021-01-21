@@ -170,7 +170,7 @@ class Sounds extends React.Component {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
   }
-
+  // pagination btn still going up if no more pages
   render() {
     const { soundsList, covers, page, maxPage, offset, limit } = this.state;
     return (
