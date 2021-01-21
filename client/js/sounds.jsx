@@ -4,7 +4,7 @@ class Sounds extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      limit: 25,
+      limit: 5,
       offset: 0,
       page: 1,
       curMaxPage: 1,
@@ -39,10 +39,11 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList() {
+    const { limit, nextContinuationToken, soundsList, page } = this.state;
     await fetch(
       `http://localhost:5000/api/audio?limit=${
-        this.state.limit + 1
-      }&ContinuationToken=${this.state.nextContinuationToken}`,
+        limit + 1
+      }&ContinuationToken=${nextContinuationToken}`,
       {
         method: "GET",
         type: "cors",
@@ -54,34 +55,51 @@ class Sounds extends React.Component {
       .then(async (resp) => await resp.json())
       .then(({ IsTruncated, sounds, NextContinuationToken }) => {
         // console.log({ sounds });
+        // const newState = {
+        //   ...this.state,
+        //   // soundsList: [...soundsList, ...sounds],
+        //   soundsList: [...soundsList],
+        //   nextContinuationToken: IsTruncated ? NextContinuationToken : "",
+        //   isTruncated: IsTruncated,
+        //   maxPage: IsTruncated ? null : page,
+        // };
+        // sounds.forEach(async (e) =>
+        //   newState.soundsList.push({ [e]: await this.fetchTags(e) })
+        // );
         this.setState({
           ...this.state,
-          soundsList: [...this.state.soundsList, ...sounds],
+          soundsList: [...soundsList, ...sounds],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
-          maxPage: IsTruncated ? null : this.state.page,
+          maxPage: IsTruncated ? null : page,
         });
-        // console.log(sounds);
+        // console.log(newState);
+        // this.setState(newState);
         return sounds;
       })
       .then((sounds) => {
-        // console.log({ sounds });
         const coverList = [];
-        sounds.forEach((e) => {
+        sounds.forEach(async (e) => {
           const cover = getCoverName(e);
           if (!coverList.includes(cover)) {
             coverList.push(cover);
             this.fetchCover(cover);
           }
+          // console.log(this.fetchTags(e));
+          // newState.soundsList.push({
+          //   [getSoundName(e)]: this.fetchTags(e),
+          // });
+          // this.fetchTags(e);
         });
-      });
+        // console.log(newState);
+      })
+      .then(() => console.log(this.state));
   }
 
   async fetchSound(path) {
-    //todo set path/arrayBuffer in state to reuse w/ excess calls
-    const { soundSourceNode, soundFetchData } = this.state;
+    const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
-    console.log(soundSourceNode);
+    // console.log(soundSourceNode);
     // spinner.show()
     // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
@@ -129,9 +147,28 @@ class Sounds extends React.Component {
     }
   }
 
+  async fetchTags(path) {
+    await fetch(
+      `http://localhost:5000/api/audio/tag/${encodeURIComponent(path)}`,
+      {
+        method: "GET",
+        type: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then(async (resp) => await resp.json())
+      .then((tags) => {
+        // console.log(getSoundName(path), tags);
+        return tags;
+      });
+  }
+
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
   }
 
   render() {
@@ -153,8 +190,10 @@ class Sounds extends React.Component {
           </button>
         </div>
 
-        {soundsList.slice(offset, offset + limit).map((sound, i) =>
-          sound.endsWith(".wav") ? (
+        {soundsList.slice(offset, offset + limit).map((sound, i) => {
+          // console.log(Object.entries(sound)[0][0]);
+          // sound = Object.entries(sound)[0][0];
+          return sound.endsWith(".wav") ? (
             <div className="sound" key={i} style={{ display: "flex" }}>
               <img
                 id="testImg"
@@ -164,9 +203,15 @@ class Sounds extends React.Component {
               <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
                 {getSoundName(sound)}
               </p>
+              <p>BPM</p>
+              <p>KEY</p>
+              <p>Instrument_type</p>
+              <p>exclusive?(1/15 credits)</p>
+              <p>download btn</p>
+              <p>type (One Shot/Loop)</p>
             </div>
-          ) : null
-        )}
+          ) : null;
+        })}
       </div>
     );
   }

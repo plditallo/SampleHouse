@@ -52,7 +52,7 @@ router.get("/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `packs/${req.params.key}`
     });
-    downloadStream.on('error', () => res.status(404).send('Not Found'))
+    downloadStream.on('Error', () => res.status(404).send('Not Found'))
     downloadStream.on('httpHeaders',
         (statusCode, headers, resp) =>
         res.set({
@@ -62,7 +62,7 @@ router.get("/:key", (req, res) => {
 })
 
 router.get("/cover/:key", (req, res) => {
-    let {
+    const {
         key
     } = req.params
 
@@ -70,12 +70,25 @@ router.get("/cover/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `covers/${key}.png`,
     }, (err, data) => {
-        if (err) console.log("error /cover", err)
-        // else console.log("success", data.Body)
+        if (err) console.log("Error /cover", err)
+        // else console.log("Success", data.Body)
         if (data) res.status(200).json(data.Body)
     })
 })
 
+router.get("/tag/:key", (req, res) => {
+    const {
+        key
+    } = req.params;
+    s3.getObjectTagging({
+        Bucket: 'samplehouse',
+        Key: `packs/${key}`
+    }, (err, data) => {
+        if (err) console.log("Error /tag", err)
+        else console.log("Success", data)
+        if (data) res.status(200).json(data.TagSet)
+    })
+})
 
 router.use("/", (req, res) => {
     res.status(200).json({
