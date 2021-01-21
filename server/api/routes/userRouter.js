@@ -229,7 +229,7 @@ function generateToken(user) {
     } = process.env
     const payload = {
         subject: user.id,
-        access: user.vst_access
+        vst_access: user.vst_access
     };
     const options = {
         expiresIn: "72hr",

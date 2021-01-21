@@ -13,11 +13,11 @@ class Sounds extends React.Component {
       nextContinuationToken: "",
       isTruncated: false,
       covers: {},
+      soundSourceNode: null,
     };
   }
   nextBtnHandler = () => {
     const { limit, offset, page, curMaxPage, isTruncated } = this.state;
-    console.log("NEXT", page === curMaxPage && isTruncated);
     if (page === curMaxPage && isTruncated) this.fetchSoundList();
     this.setState({
       ...this.state,
@@ -28,15 +28,14 @@ class Sounds extends React.Component {
   };
 
   prevBtnHandler = () => {
-    console.log("BACK");
+    // console.log("BACK");
     const { limit, offset, page } = this.state;
-    if (page > 1) {
+    if (page > 1)
       this.setState({
         ...this.state,
         offset: offset - limit,
         page: page - 1,
       });
-    }
   };
 
   async fetchSoundList() {
@@ -80,7 +79,12 @@ class Sounds extends React.Component {
 
   async fetchSound(path) {
     //todo set path/arrayBuffer in state to reuse w/ excess calls
+    const { soundSourceNode, soundFetchData } = this.state;
+    if (soundSourceNode) soundSourceNode.stop(0);
+    console.log(soundSourceNode);
     // spinner.show()
+    // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
+
     await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {
       method: "GET",
       type: "cors",
@@ -88,11 +92,9 @@ class Sounds extends React.Component {
         "Content-Type": "application/octet-stream",
       },
     }).then(async (Data) => {
-      // spinner.hide()
-      // todo if sound is playing, stop sound and play next one, not overlap
-      // todo not able to play midi files yet...
       const context = new AudioContext();
       const source = context.createBufferSource(); //Create Sound Source
+      this.setState({ ...this.state, soundSourceNode: source });
       return context.decodeAudioData(await Data.arrayBuffer(), (buffer) => {
         source.buffer = buffer;
         source.connect(context.destination);
@@ -133,15 +135,7 @@ class Sounds extends React.Component {
   }
 
   render() {
-    const {
-      isTruncated,
-      soundsList,
-      covers,
-      page,
-      maxPage,
-      offset,
-      limit,
-    } = this.state;
+    const { soundsList, covers, page, maxPage, offset, limit } = this.state;
     return (
       <div>
         <div className="pagination">
@@ -159,18 +153,20 @@ class Sounds extends React.Component {
           </button>
         </div>
 
-        {soundsList.slice(offset, offset + limit).map((sound, i) => (
-          <div className="sound" key={i} style={{ display: "flex" }}>
-            <img
-              id="testImg"
-              src={covers[getCoverName(sound)]}
-              style={{ width: "3em", height: "3em" }}
-            />
-            <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
-              {getSoundName(sound)}
-            </p>
-          </div>
-        ))}
+        {soundsList.slice(offset, offset + limit).map((sound, i) =>
+          sound.endsWith(".wav") ? (
+            <div className="sound" key={i} style={{ display: "flex" }}>
+              <img
+                id="testImg"
+                src={covers[getCoverName(sound)]}
+                style={{ width: "3em", height: "3em" }}
+              />
+              <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
+                {getSoundName(sound)}
+              </p>
+            </div>
+          ) : null
+        )}
       </div>
     );
   }
@@ -190,5 +186,6 @@ function getCoverName(path) {
   return path.slice(0, path.indexOf("/"));
 }
 function getSoundName(path) {
+  // if (path.endsWith(".mid")) path = path.slice(0, path.length - 4) + ".wav";
   return path.substring(path.lastIndexOf("/") + 1);
 }
