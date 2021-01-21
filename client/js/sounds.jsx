@@ -7,32 +7,39 @@ class Sounds extends React.Component {
       limit: 25,
       offset: 0,
       page: 1,
+      curMaxPage: 1,
+      maxPage: null,
       soundsList: [],
       nextContinuationToken: "",
       isTruncated: false,
       covers: {},
     };
   }
-
-  previousBtnHandler = () => {
-    const { limit, offset, page } = this.state;
-    this.setState({
-      ...this.state,
-      offset: offset - limit,
-      page: page - 1,
-    });
-  };
-
   nextBtnHandler = () => {
-    const { limit, offset, page } = this.state;
+    const { limit, offset, page, curMaxPage, isTruncated } = this.state;
+    console.log("NEXT", page === curMaxPage && isTruncated);
+    if (page === curMaxPage && isTruncated) this.fetchSoundList();
     this.setState({
       ...this.state,
       offset: offset + limit,
       page: page + 1,
+      curMaxPage: page === curMaxPage ? curMaxPage + 1 : curMaxPage,
     });
   };
-  //todo check if Continuation Token works
-  fetchSoundList = async () =>
+
+  prevBtnHandler = () => {
+    console.log("BACK");
+    const { limit, offset, page } = this.state;
+    if (page > 1) {
+      this.setState({
+        ...this.state,
+        offset: offset - limit,
+        page: page - 1,
+      });
+    }
+  };
+
+  async fetchSoundList() {
     await fetch(
       `http://localhost:5000/api/audio?limit=${
         this.state.limit + 1
@@ -53,22 +60,26 @@ class Sounds extends React.Component {
           soundsList: [...this.state.soundsList, ...sounds],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
+          maxPage: IsTruncated ? null : this.state.page,
         });
+        // console.log(sounds);
         return sounds;
       })
       .then((sounds) => {
         // console.log({ sounds });
         const coverList = [];
         sounds.forEach((e) => {
-          const cover = getCover(e);
+          const cover = getCoverName(e);
           if (!coverList.includes(cover)) {
             coverList.push(cover);
+            this.fetchCover(cover);
           }
         });
-        coverList.forEach((e) => this.fetchCover(e));
       });
+  }
 
   async fetchSound(path) {
+    //todo set path/arrayBuffer in state to reuse w/ excess calls
     // spinner.show()
     await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {
       method: "GET",
@@ -76,42 +87,44 @@ class Sounds extends React.Component {
       headers: {
         "Content-Type": "application/octet-stream",
       },
-    })
-      .then(async (resp) => await resp.arrayBuffer())
-      .then((Data) => {
-        // spinner.hide()
-        const context = new AudioContext();
-        const source = context.createBufferSource(); //Create Sound Source
-        context.decodeAudioData(Data, (buffer) => {
-          source.buffer = buffer;
-          source.connect(context.destination);
-          source.start(context.currentTime);
-        });
+    }).then(async (Data) => {
+      // spinner.hide()
+      // todo if sound is playing, stop sound and play next one, not overlap
+      // todo not able to play midi files yet...
+      const context = new AudioContext();
+      const source = context.createBufferSource(); //Create Sound Source
+      return context.decodeAudioData(await Data.arrayBuffer(), (buffer) => {
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(context.currentTime);
       });
+    });
   }
 
   async fetchCover(cover) {
-    await fetch(
-      `http://localhost:5000/api/audio/cover/${encodeURIComponent(cover)}`,
-      {
-        method: "GET",
-        type: "cors",
-        headers: {
-          "Content-Type": "image/png", //? application/json?
-        },
-      }
-    )
-      .then(async (resp) => await resp.json())
-      .then(({ data }) => {
-        const url = "data:image/png;base64," + encode(data);
-        this.setState({
-          ...this.state,
-          covers: {
-            ...this.state.covers,
-            [cover]: url,
+    if (!(cover in this.state.covers)) {
+      await fetch(
+        `http://localhost:5000/api/audio/cover/${encodeURIComponent(cover)}`,
+        {
+          method: "GET",
+          type: "cors",
+          headers: {
+            "Content-Type": "image/png", //? application/json?
           },
+        }
+      )
+        .then(async (resp) => await resp.json())
+        .then(({ data }) => {
+          const url = "data:image/png;base64," + encode(data);
+          this.setState({
+            ...this.state,
+            covers: {
+              ...this.state.covers,
+              [cover]: url,
+            },
+          });
         });
-      });
+    }
   }
 
   componentDidMount() {
@@ -120,24 +133,41 @@ class Sounds extends React.Component {
   }
 
   render() {
+    const {
+      isTruncated,
+      soundsList,
+      covers,
+      page,
+      maxPage,
+      offset,
+      limit,
+    } = this.state;
     return (
       <div>
-        {this.state.isTruncated ? (
-          <button onClick={this.fetchSoundList}>Next</button>
-        ) : (
-          "no more"
-        )}
-        {this.state.soundUrl ? (
-          <audio controls>
-            <source src={this.state.soundUrl} type="audio/wav" />
-            Your browser does not support the audio element.
-          </audio>
-        ) : null}
-        {this.state.soundsList.map((sound, i) => (
+        <div className="pagination">
+          <button
+            onClick={page > 1 ? this.prevBtnHandler : null}
+            style={{ color: page === 1 ? "grey" : "red" }}
+          >
+            Back
+          </button>
+          <button
+            onClick={page === maxPage ? null : this.nextBtnHandler}
+            style={{ color: page === maxPage ? "grey" : "red" }}
+          >
+            Next
+          </button>
+        </div>
+
+        {soundsList.slice(offset, offset + limit).map((sound, i) => (
           <div className="sound" key={i} style={{ display: "flex" }}>
-            <img id="testImg" />
+            <img
+              id="testImg"
+              src={covers[getCoverName(sound)]}
+              style={{ width: "3em", height: "3em" }}
+            />
             <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
-              {sound.substring(sound.lastIndexOf("/") + 1)}
+              {getSoundName(sound)}
             </p>
           </div>
         ))}
@@ -156,6 +186,9 @@ function encode(data) {
   return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
 }
 
-function getCover(path) {
+function getCoverName(path) {
   return path.slice(0, path.indexOf("/"));
+}
+function getSoundName(path) {
+  return path.substring(path.lastIndexOf("/") + 1);
 }
