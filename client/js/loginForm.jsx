@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
     evt.preventDefault();
     this.setState({ ...this.state, resendSuccessMsg: null });
     if (!this.verifyEmail()) return;
-
+    // todo if confirmation email from register, remove
     const submitFetch = async () =>
       //todo change url
       await fetch("http://localhost:5000/api/user/login", {
@@ -79,14 +79,9 @@ class LoginForm extends React.Component {
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
     // todo can't see response, reloading page
     submitFetch().then(({ status, data }) => {
-      console.log(status, data.msg);
-      if (status !== 200)
-        return this.setState({ ...this.state, errorMsg: data.msg });
-      // this.setState({
-      //   ...this.state,
-      //   errorMsg: null,
-      // });
-      window.location.hash = `resend=${this.state.logEmail}`;
+      // console.log(status, data.msg);
+      if (status !== 200) this.setState({ ...this.state, errorMsg: data.msg });
+      else window.location.hash = `resend=${this.state.logEmail}`;
     });
   };
 
@@ -100,23 +95,29 @@ class LoginForm extends React.Component {
   componentDidMount() {
     // todo catch #reset/#forgot from successful reset
     if (window.location.hash) {
-      if (window.location.hash.includes("#email=")) {
-        const emailHash = window.location.hash.replace("#email=", "");
+      //* autofill email on successful register
+      if (window.location.hash.includes("#emailSucReg=")) {
+        const emailHash = window.location.hash.replace("#emailSucReg=", "");
         this.setState({ ...this.state, logEmail: emailHash });
-      } else if (window.location.hash.includes("#resend")) {
+      }
+      //* autofill email on successful verification resend
+      else if (window.location.hash.includes("#resend")) {
         const resendHash = window.location.hash.replace("#resend=", "");
-        // console.log(resendHash);
         this.setState({
           ...this.state,
-          resendSuccessMsg: `A confirmation email has been sent to ${resendHash}.`,
+          resendSuccessMsg: `A confirmation email has been re-sent to ${resendHash}. In case you did not receive the verification email, please be sure to check your spam folder.`,
           logEmail: resendHash,
         });
+      } else if (hash.includes("#emailSucReset=")) {
+        const emailSucResetHash = hash.replace("#emailSucReset=", "");
+        this.setState({ ...this.state, logEmail: emailSucResetHash });
       }
       window.location.hash = "#";
     }
   }
 
   render() {
+    const { logEmail } = this.state;
     return (
       <form name="loginForm" id="loginForm" onSubmit={this.onSubmitHandler}>
         <div className="errors">
@@ -151,7 +152,12 @@ class LoginForm extends React.Component {
           value={this.state.logPassword}
           required
         />
-        <a href="forgot-password.html">Forgot Password?</a>
+        {/* //todo check if all links are accessable via TAB */}
+        <a
+          href={`forgot-password.html${logEmail ? "#forgot=" + logEmail : ""}`}
+        >
+          Forgot Password?
+        </a>
         <button type="submit">
           <img src="../assets/lock.png" alt="lock"></img>SIGN IN
         </button>

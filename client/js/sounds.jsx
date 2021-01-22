@@ -170,7 +170,8 @@ class Sounds extends React.Component {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
   }
-  // pagination btn still going up if no more pages
+  //todo  pagination btn still going up if no more pages
+  // todo pagination button spammed causes getSounds not to work
   render() {
     const { soundsList, covers, page, maxPage, offset, limit } = this.state;
     return (
@@ -195,11 +196,13 @@ class Sounds extends React.Component {
           // sound = Object.entries(sound)[0][0];
           return sound.endsWith(".wav") ? (
             <div className="sound" key={i} style={{ display: "flex" }}>
-              <img
-                id="testImg"
-                src={covers[getCoverName(sound)]}
-                style={{ width: "3em", height: "3em" }}
-              />
+              <a href={`#${getCoverName(sound)}`}>
+                <img
+                  id="testImg"
+                  src={covers[getCoverName(sound)]}
+                  style={{ width: "3em", height: "3em" }}
+                />
+              </a>
               <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
                 {getSoundName(sound)}
               </p>

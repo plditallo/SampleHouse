@@ -14,7 +14,6 @@ class RegisterForm extends React.Component {
       successMsg: null,
     };
   }
-
   onSubmitHandler = (evt) => {
     evt.preventDefault();
     // console.log(evt);
@@ -53,7 +52,7 @@ class RegisterForm extends React.Component {
       if (status !== 200)
         return this.setState({ ...this.state, errors: [data.msg] });
       // console.log(data.msg);
-      window.location.hash = `email=${this.state.regEmail}`;
+      window.location.hash = `emailSucReg=${this.state.regEmail}`;
     });
   };
   onChangeHandler = (evt) => {
@@ -66,11 +65,11 @@ class RegisterForm extends React.Component {
   componentDidMount() {
     const hash = window.location.hash;
     if (hash && !this.state.successMsg)
-      if (hash.includes("#email=")) {
-        const emailHash = hash.replace("#email=", "");
+      if (hash.includes("#emailSucReg=")) {
+        const emailHash = hash.replace("#emailSucReg=", "");
         this.setState({
           ...this.state,
-          successMsg: `A confirmation email has been sent to ${emailHash}.`,
+          successMsg: `A confirmation email has been sent to ${emailHash}. In case you did not receive the verification email, please be sure to check your spam folder.`,
         });
       }
   }

@@ -36,7 +36,7 @@ router.post("/register",
         })
     ],
     checkExistingUsers, (req, res) => {
-        console.log("body", req.body)
+        // console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
         const {
@@ -111,9 +111,7 @@ router.post("/login",
             }))
     });
 
-// todo I think tokens are stacking when double clicking here...
 router.post("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
-    // todo send to frontend form to rest password w/ token
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
 
@@ -161,6 +159,8 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
             //     msg: 'Your account has not been verified.'
             // });
             //* Token expired
+            //? If I add && 
+            console.log(user.password_reset_token, token);
             if (Date.now() - user.password_reset_expires >= 0) {
                 user.password_reset_token = null
                 user.password_reset_expires = null
@@ -181,7 +181,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
             }
             return res.status(400).json({
                 type: 'wrong-token',
-                msg: 'We were unable to find a valid token. Your link may have expired.'
+                msg: 'We were unable to find a valid token. Please try the reset-password link again in your email.'
             })
         })
 })

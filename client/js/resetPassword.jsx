@@ -4,18 +4,23 @@ class resetPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "fish0859@gmail.com",
+      token: null,
+      email: "fish0859@gmail.co",
       newPassword: "password",
       confirmPassword: "password",
       errorMsg: null,
       successMsg: null,
       redirecting: false,
-      token: null,
+      redirectingPage: null,
+      redirectingUrl: null,
     };
   }
   verifyEmail = () => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (re.test(this.state.email.toLowerCase())) return true;
+    if (re.test(this.state.email.toLowerCase())) {
+      this.setState({ ...this.state, errorMsg: null });
+      return true;
+    }
     this.setState({
       ...this.state,
       errorMsg: "Please enter a valid Email address.",
@@ -25,9 +30,10 @@ class resetPassword extends React.Component {
 
   onSubmitHandler = (evt) => {
     evt.preventDefault();
+    //? evt.returnValue = false;
     // window.location.hash = "#";
     // // console.log(this.state);
-    this.setState({ ...this.state, errorMsg: null });
+    // this.setState({ ...this.state, errorMsg: null });
     const { email, newPassword, confirmPassword, token } = this.state;
     if (!this.verifyEmail()) return;
     if (newPassword.length < 7)
@@ -56,13 +62,20 @@ class resetPassword extends React.Component {
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
 
     submitFetch().then(({ status, data }) => {
-      console.log(status, data.msg);
-      if (status === 403)
-        return this.setState({ ...this.state, errMessage: data.msg });
-      if (status !== 200) return (window.location.hash = "#token=err");
-      // return this.setState({ ...this.state, errorMsg: data.msg });
-      else
-        window.location.hash = `authentication.html#forgot=${this.state.email}`;
+      console.log(status, data);
+      //? Same code, no changes, sometimes resets form, sometimes it doesn't
+      //? Does state have to change to be able to send correctly to API???
+      if (status === 403) this.setState({ ...this.state, errorMsg: data.msg });
+      else if (status !== 200) {
+        window.location.hash = `#errType=${data.type}`;
+        // console.log(data.msg);
+        //* this is here as catch if page doesn't refresh...
+        this.setState({ ...this.state, errorMsg: data.msg });
+      }
+      //* redirect to login page and autofill email
+      // ? Save as a hash and send over? (only if refresh on 200)
+      else window.location.hash = "#resetSuccess";
+      // window.location.hash = `authentication.html#forgot=${this.state.email}`;
     });
   };
 
@@ -74,32 +87,63 @@ class resetPassword extends React.Component {
   };
 
   componentDidMount() {
+    let localRedirectingState = false;
     // console.log(window.location.hash);
     //! Later implement userId in hash to remove need for email
-    if (window.location.hash && window.location.hash.includes("#token=")) {
-      const token = window.location.hash.replace("#token=", "");
-      if (token === "err") {
-        // todo check this
+    if (window.location.hash) {
+      console.log("hash", window.location.hash);
+      if (window.location.hash.includes("#token=")) {
+        const token = window.location.hash.replace("#token=", "");
+        this.setState({ ...this.state, token });
+        // if (token === "err") {
+        // return setTimeout(
+        //   () =>
+        //     (window.location = `forgot-password.html#reset=${this.state.email}`),
+        //   5000
+        // );
+      }
+      //* Page refreshes on submit, so use hash to set error
+      else if (window.location.hash.includes("#errType")) {
+        const errTypeHash = window.location.hash.replace("#errType=", "");
+        let errMsg = null;
+        if (errTypeHash === "token-expired") {
+          errMsg = "Your forgot password link has expired.";
+        } else if (errTypeHash === "wrong-token")
+          errMsg =
+            "We were unable to find a valid token. Please try the reset password link again in your email.";
+        localRedirectingState = errTypeHash === "token-expired" ? true : false;
         this.setState({
           ...this.state,
-          errorMsg:
-            "We were unable to find a valid token. Your link may have expired. You will be redirected in 5 seconds. If you are not redirected: 'click here'",
+          errorMsg: errMsg,
+          redirecting: errTypeHash === "token-expired" ? true : false,
+          redirectingPage: "forgot password",
+          redirectingUrl: `forgot-password.html#forgot=${this.state.email}`,
         });
-        return setTimeout(
-          () =>
-            (window.location = `forgot-password.html#reset=${this.state.email}`),
-          5000
-        );
+      } else if (window.location.hash.includes("#resetSuccess")) {
+        localRedirectingState = true;
+        this.setState({
+          ...this.state,
+          successMsg: "Password has been successfully been changed.",
+          redirecting: true,
+          redirectingPage: "login",
+          redirectingUrl: `authentication.html##emailSucReset=${this.state.email}`,
+        });
+        // todo add redirect w/ timeout
       }
-      this.setState({ ...this.state, token });
+      //* redirect to authentication form if no token
     } else window.location = "authentication.html";
-
+    if (localRedirectingState)
+      setTimeout(() => {
+        console.log("REDIRECT");
+        window.location = this.state.redirectingUrl;
+      }, 5000);
+    //   }
     // if (window.location.hash && window.location.hash.includes("forgot=")) {
     //   const hash = window.location.hash.replace("#forgot=", "");
     //   this.setState({
     //     ...this.state,
     //     successMsg: `A email as been sent to ${hash} with a link to reset your password. This link will expire in 6 hours.`,
-    //     redirecting: true,
+    //     redirectingForgot: true,
     //   });
     //   window.location.hash = "#";
     //   setTimeout(
@@ -111,7 +155,8 @@ class resetPassword extends React.Component {
 
   render() {
     //todo find out where this errorMsg from (no email associated with account) is being overridden
-    console.log(this.state.errorMsg);
+    console.log("state", this.state);
+    // console.log("errorMsg", this.state.errorMsg);
     return (
       <form
         name="resetPasswordForm"
@@ -127,8 +172,9 @@ class resetPassword extends React.Component {
         </p>
         {this.state.redirecting ? (
           <p className="redirect">
-            You will be redirected to the login page in 5 seconds. If not
-            redirected: <a href="authentication.html">click here</a>.
+            You will be redirected to the {this.state.redirectingPage} page in 5
+            seconds. If not redirected:{" "}
+            <a href={this.state.redirectingUrl}>click here</a>.
           </p>
         ) : null}
         <label htmlFor="email">Email Address</label>

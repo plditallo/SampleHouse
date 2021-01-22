@@ -25,6 +25,16 @@ exports.seed = function (knex) {
         role: "admin",
         balance: 1000000,
         vst_access: true,
+      }, {
+        id: "d6866bc0-5c1e-11eb-8322-950544e3bd28",
+        email: "beta@sample.house",
+        password: hashSync('tiger6381', 13),
+        isVerified: true,
+        first_name: "Beta Tester",
+        last_name: "",
+        role: "beta",
+        balance: 0,
+        vst_access: true,
       }]);
     });
 };
