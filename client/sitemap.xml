@@ -14,20 +14,7 @@
       <priority>0.5</priority>
    </url>
    <url>
-   <!--* sounds vs studio -->
-      <loc>https://www.sample.house/sounds</loc>
-      <lastmod>2020-1-11</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.5</priority>
-   </url>
-   <url>
-      <loc>https://www.sample.house/register</loc>
-      <lastmod>2020-1-11</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.5</priority>
-   </url>
-   <url>
-      <loc>https://www.sample.house/login</loc>
+      <loc>https://www.sample.house/authentication</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
@@ -45,7 +32,13 @@
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.sample.house/subscription</loc>
+      <loc>https://www.sample.house/subscriptions</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+   <url>
+      <loc>https://www.sample.house/offers</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>

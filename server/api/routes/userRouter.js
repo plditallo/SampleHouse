@@ -112,7 +112,7 @@ router.post("/login",
     });
 
 // todo I think tokens are stacking when double clicking here...
-router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
+router.post("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
     // todo send to frontend form to rest password w/ token
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
@@ -126,16 +126,18 @@ router.get("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req, 
             if (!user) return res.status(403).json({
                 msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
             });
-            if (!user.isVerified) return res.status(401).send({
-                type: 'not-verified',
-                msg: 'Your account has not been verified.'
-            });
+            // if (!user.isVerified) return res.status(401).send({
+            //     type: 'not-verified',
+            //     msg: 'Your account has not been verified.'
+            // });
             //* sends token email & saves variable
             const token = tokenEmailer(user, req.headers.host, "password");
 
+            console.log({
+                token
+            })
             user.password_reset_token = token.token
             user.password_reset_expires = Date.now() + 21600000 //6hrs
-
             updateUser(user).then(() => res.status(200).send({
                 msg: `A email as been sent to ${req.body.email} with a link to reset your password. This link will expire in 6 hours.`
             }))

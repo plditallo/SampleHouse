@@ -99,7 +99,7 @@ class LoginForm extends React.Component {
 
   componentDidMount() {
     if (window.location.hash) {
-      if (window.location.hash.includes("#email")) {
+      if (window.location.hash.includes("#email=")) {
         const emailHash = window.location.hash.replace("#email=", "");
         this.setState({ ...this.state, logEmail: emailHash });
       } else if (window.location.hash.includes("#resend")) {
@@ -110,6 +110,9 @@ class LoginForm extends React.Component {
           resendSuccessMsg: `A confirmation email has been sent to ${resendHash}.`,
           logEmail: resendHash,
         });
+      } else if (window.location.hash.includes("#forgot=")) {
+        const forgotHash = window.location.hash.replace("#forgot=", "");
+        this.setState({ ...this.state, logEmail: forgotHash });
       }
       window.location.hash = "#";
     }
