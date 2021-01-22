@@ -130,12 +130,9 @@ router.post("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req,
             //     type: 'not-verified',
             //     msg: 'Your account has not been verified.'
             // });
-            //* sends token email & saves variable
+            //* send token email & save variable
             const token = tokenEmailer(user, req.headers.host, "password");
 
-            console.log({
-                token
-            })
             user.password_reset_token = token.token
             user.password_reset_expires = Date.now() + 21600000 //6hrs
             updateUser(user).then(() => res.status(200).send({
@@ -153,23 +150,23 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
         password,
         token
     } = req.body;
-
+    // todo send token back down if error?
     getUserByEmail(email)
         .then(([user]) => {
             if (!user) return res.status(403).json({
                 msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
             });
-            if (!user.isVerified) return res.status(401).send({
-                type: 'not-verified',
-                msg: 'Your account has not been verified.'
-            });
+            // if (!user.isVerified) return res.status(401).send({
+            //     type: 'not-verified',
+            //     msg: 'Your account has not been verified.'
+            // });
             //* Token expired
             if (Date.now() - user.password_reset_expires >= 0) {
                 user.password_reset_token = null
                 user.password_reset_expires = null
-                return updateUser(user).then(() => res.status(400).send({
+                return updateUser(user).then(() => res.status(400).json({
                     type: 'token-expired',
-                    msg: 'We were unable to find a valid token. Your token may have expired.'
+                    msg: 'We were unable to find a valid token. Your link has expired.'
                 }))
             }
             if (user.password_reset_token === token) {
@@ -177,14 +174,14 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password_reset_expires = null
                 user.password = hashSync(password, 13)
                 //todo  change link here from req.headers.host to correct endpoint FRONTEND NOT HOST
-                return updateUser(user).then(() => res.status(200).send({
+                return updateUser(user).then(() => res.status(200).json({
                     type: 'password-reset',
-                    msg: `Password has been successfully been changed. Click this link to login: http:\/\/${req.headers.host}\/api\/user\/login\/.`
+                    msg: `Password has been successfully been changed.`
                 }))
             }
-            return res.status(400).send({
+            return res.status(400).json({
                 type: 'wrong-token',
-                msg: 'We were unable to find a valid token. Your token may have expired.'
+                msg: 'We were unable to find a valid token. Your link may have expired.'
             })
         })
 })

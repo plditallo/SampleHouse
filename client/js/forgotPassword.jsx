@@ -4,10 +4,9 @@ class forgotPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "fish0859@gmail.co",
+      email: "",
       errorMsg: null,
       successMsg: null,
-      redirecting: false,
     };
   }
   verifyEmail = () => {
@@ -57,26 +56,27 @@ class forgotPassword extends React.Component {
   };
 
   componentDidMount() {
-    if (window.location.hash && window.location.hash.includes("forgot=")) {
-      const hash = window.location.hash.replace("#forgot=", "");
-      this.setState({
-        ...this.state,
-        successMsg: `A email as been sent to ${hash} with a link to reset your password. This link will expire in 6 hours.`,
-        redirecting: true,
-      });
-      window.location.hash = "#";
-      setTimeout(
-        () => (window.location = `authentication.html#forgot=${hash}`),
-        5000
-      );
+    if (window.location.hash) {
+      if (window.location.hash.includes("#forgot=")) {
+        const hash = window.location.hash.replace("#forgot=", "");
+        this.setState({
+          ...this.state,
+          successMsg: `A email as been sent to ${hash} with a link to reset your password. This link will expire in 6 hours.`,
+        });
+        window.location.hash = "#";
+      } else if (window.location.hash.includes("reset=")) {
+        const resetHash = window.location.hash.replace("#reset=", "");
+        return this.setState({ ...this.state, email: resetHash });
+      }
     }
   }
 
   render() {
+    console.log(this.state);
     return (
       <form
-        name="passwordForm"
-        id="passwordForm"
+        name="forgotPasswordForm"
+        id="forgotPasswordForm"
         onSubmit={this.onSubmitHandler}
       >
         <p className="error">{this.state.errorMsg}</p>
@@ -86,21 +86,16 @@ class forgotPassword extends React.Component {
         >
           {this.state.successMsg}
         </p>
-        {this.state.redirecting ? (
-          <p className="redirect">
-            You will be redirected to the login page in 5 seconds. If not
-            redirected: <a href="authentication.html">click here</a>.
-          </p>
-        ) : null}
         <label htmlFor="email">Email Address</label>
         <input
           type="text"
           name="email"
           onChange={this.onChangeHandler}
           value={this.state.email}
+          required
         />
         <button type="submit">
-          <img src="../assets/lock.png" alt="lock"></img>Reset Password
+          <img src="../assets/lock.png" alt="lock"></img>Submit
         </button>
       </form>
     );

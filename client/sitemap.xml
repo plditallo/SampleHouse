@@ -26,6 +26,12 @@
       <priority>0.5</priority>
    </url>
    <url>
+      <loc>https://www.sample.house/reset-password</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+   <url>
       <loc>https://www.sample.house/contact</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>

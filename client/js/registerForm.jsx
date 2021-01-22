@@ -18,17 +18,17 @@ class RegisterForm extends React.Component {
   onSubmitHandler = (evt) => {
     evt.preventDefault();
     // console.log(evt);
-
+    const { regEmail, regPassword, fname, lname } = this.state;
     const errState = { ...this.state, errors: [] };
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(this.state.regEmail.toLowerCase()))
+    if (!re.test(regEmail.toLowerCase()))
       errState.errors = ["Please enter a valid Email address."];
-    if (this.state.regPassword.length < 7)
+    if (regPassword.length < 7)
       errState.errors = [
         ...errState.errors,
         "Password must have a minimum of 6 characters.",
       ];
-    if (this.state.fname.length < 3)
+    if (fname.length < 3)
       errState.errors = [...errState.errors, "Please enter your first name."];
     if (errState.errors.length) return this.setState(errState);
 
@@ -41,10 +41,10 @@ class RegisterForm extends React.Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: this.state.regEmail,
-          password: this.state.regPassword,
-          first_name: this.state.fname,
-          last_name: this.state.lname.length ? this.state.lname : null,
+          email: regEmail,
+          password: regPassword,
+          first_name: fname,
+          last_name: lname.length ? lname : null,
         }),
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
 
@@ -55,7 +55,6 @@ class RegisterForm extends React.Component {
       // console.log(data.msg);
       window.location.hash = `email=${this.state.regEmail}`;
     });
-    //todo prevent window from refreshing on successful register
   };
   onChangeHandler = (evt) => {
     this.setState({
@@ -102,7 +101,7 @@ class RegisterForm extends React.Component {
               name="fname"
               onChange={this.onChangeHandler}
               value={this.state.fname}
-              required={true}
+              required
             />
           </div>
           <div>
@@ -121,7 +120,7 @@ class RegisterForm extends React.Component {
           name="regEmail"
           onChange={this.onChangeHandler}
           value={this.state.regEmail}
-          required={true}
+          required
         />
         <label htmlFor="regPassword">&#42;Password</label>
         <input
@@ -129,7 +128,7 @@ class RegisterForm extends React.Component {
           name="regPassword"
           onChange={this.onChangeHandler}
           value={this.state.regPassword}
-          required={true}
+          required
         />
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />

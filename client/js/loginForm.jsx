@@ -98,6 +98,7 @@ class LoginForm extends React.Component {
   };
 
   componentDidMount() {
+    // todo catch #reset/#forgot from successful reset
     if (window.location.hash) {
       if (window.location.hash.includes("#email=")) {
         const emailHash = window.location.hash.replace("#email=", "");
@@ -110,9 +111,6 @@ class LoginForm extends React.Component {
           resendSuccessMsg: `A confirmation email has been sent to ${resendHash}.`,
           logEmail: resendHash,
         });
-      } else if (window.location.hash.includes("#forgot=")) {
-        const forgotHash = window.location.hash.replace("#forgot=", "");
-        this.setState({ ...this.state, logEmail: forgotHash });
       }
       window.location.hash = "#";
     }
@@ -143,6 +141,7 @@ class LoginForm extends React.Component {
           name="logEmail"
           onChange={this.onChangeHandler}
           value={this.state.logEmail}
+          required
         />
         <label htmlFor="logPassword">Password</label>
         <input
@@ -150,6 +149,7 @@ class LoginForm extends React.Component {
           name="logPassword"
           onChange={this.onChangeHandler}
           value={this.state.logPassword}
+          required
         />
         <a href="forgot-password.html">Forgot Password?</a>
         <button type="submit">
