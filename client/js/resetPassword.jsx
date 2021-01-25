@@ -44,7 +44,7 @@ class resetPassword extends React.Component {
     if (newPassword !== confirmPassword)
       return this.setState({
         ...this.state,
-        errorMsg: "The Confirm Password confirmation does not match.",
+        errorMsg: "The confirm password confirmation does not match.",
       });
 
     const submitFetch = async () =>
@@ -148,7 +148,6 @@ class resetPassword extends React.Component {
   }
 
   render() {
-    //todo find out where this errorMsg from (no email associated with account) is being overridden
     console.log("state", this.state);
     // console.log("errorMsg", this.state.errorMsg);
     return (
@@ -157,6 +156,7 @@ class resetPassword extends React.Component {
         id="resetPasswordForm"
         onSubmit={this.onSubmitHandler}
       >
+        <h1>Reset Password</h1>
         <p className="error">{this.state.errorMsg}</p>
         <p
           className="success"
@@ -171,30 +171,36 @@ class resetPassword extends React.Component {
             <a href={this.state.redirectingUrl}>click here</a>.
           </p>
         ) : null}
-        <label htmlFor="email">Email Address</label>
-        <input
-          type="text"
-          name="email"
-          onChange={this.onChangeHandler}
-          value={this.state.email}
-          required
-        />
-        <label htmlFor="newPassword">New Password</label>
-        <input
-          type="password"
-          name="newPassword"
-          onChange={this.onChangeHandler}
-          value={this.state.newPassword}
-          required
-        />
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          onChange={this.onChangeHandler}
-          value={this.state.confirmPassword}
-          required
-        />
+        <label htmlFor="email">
+          Email Address
+          <input
+            type="text"
+            name="email"
+            onChange={this.onChangeHandler}
+            value={this.state.email}
+            required
+          />
+        </label>
+        <label htmlFor="newPassword">
+          New Password
+          <input
+            type="password"
+            name="newPassword"
+            onChange={this.onChangeHandler}
+            value={this.state.newPassword}
+            required
+          />
+        </label>
+        <label htmlFor="confirmPassword">
+          Confirm Password
+          <input
+            type="password"
+            name="confirmPassword"
+            onChange={this.onChangeHandler}
+            value={this.state.confirmPassword}
+            required
+          />
+        </label>
         <button type="submit">
           <img src="../assets/lock.png" alt="lock"></img>Reset Password
         </button>

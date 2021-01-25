@@ -84,6 +84,7 @@ class forgotPassword extends React.Component {
         id="forgotPasswordForm"
         onSubmit={this.onSubmitHandler}
       >
+        <h1>Forgot Password</h1>
         <p className="error">{this.state.errorMsg}</p>
         <p
           className="success"
@@ -91,15 +92,18 @@ class forgotPassword extends React.Component {
         >
           {this.state.successMsg}
         </p>
-        <label htmlFor="email">Email Address</label>
-        <input
-          type="text"
-          name="email"
-          onChange={this.onChangeHandler}
-          value={this.state.email}
-          required
-        />
+        <label htmlFor="email">
+          Email Address:
+          <input
+            type="text"
+            name="email"
+            onChange={this.onChangeHandler}
+            value={this.state.email}
+            required
+          />
+        </label>
         <button type="submit">
+          {/* //todo get new png here */}
           <img src="../assets/lock.png" alt="lock"></img>Submit
         </button>
       </form>
