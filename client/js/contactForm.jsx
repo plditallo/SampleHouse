@@ -72,7 +72,6 @@ class ContactForm extends React.Component {
   render() {
     return (
       <form name="contactForm" id="contactForm" onSubmit={this.onSubmitHandler}>
-        <h1>Contact</h1>
         <span className="success">{this.state.successMsg}</span>
         <div className="errors">
           {this.state.errors.map((e, i) => (
@@ -81,16 +80,14 @@ class ContactForm extends React.Component {
             </p>
           ))}
         </div>
-        <div>
-          <label htmlFor="name">&#42;Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={this.onChangeHandler}
-            value={this.state.name}
-            required
-          />
-        </div>
+        <label htmlFor="name">&#42;Name</label>
+        <input
+          type="text"
+          name="name"
+          onChange={this.onChangeHandler}
+          value={this.state.name}
+          required
+        />
         <label htmlFor="email">&#42;Email Address</label>
         <input
           type="text"
@@ -118,7 +115,7 @@ class ContactForm extends React.Component {
           maxLength="250"
           required
         />
-        <span className="counter">{250 - this.state.message.length}</span>
+        <span className="text-counter">{250 - this.state.message.length}</span>
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />
           Submit
