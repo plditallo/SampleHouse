@@ -81,7 +81,7 @@ class RegisterForm extends React.Component {
         id="registerForm"
         onSubmit={this.onSubmitHandler}
       >
-        <p>
+        <p className="info">
           Please enter your Email address and a password to create an account.
         </p>
         <span className="success">{this.state.successMsg}</span>

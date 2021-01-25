@@ -6,6 +6,7 @@ const userRouter = require("./routes/userRouter");
 const purchaseRouter = require("./routes/purchaseRouter");
 const tokenRouter = require("./routes/tokenRouter");
 const audioRouter = require("./routes/audioRouter");
+const contactRouter = require("./routes/contact")
 
 //* MIDDLEWARE
 const restricted = require("./middleware/restricted");
@@ -16,6 +17,7 @@ router.use("/token", tokenRouter);
 router.use("/purchase", restricted, purchaseRouter);
 //todo add restricted route for sounds
 router.use("/audio", audioRouter)
+router.use("/contact", contactRouter)
 
 router.use("/", (req, res) => {
   res.status(200).json({
