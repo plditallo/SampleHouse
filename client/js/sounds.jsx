@@ -100,7 +100,7 @@ class Sounds extends React.Component {
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
     // console.log(soundSourceNode);
-    // spinner.show()
+    // todo spinner.show()
     // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
     await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {
@@ -168,7 +168,7 @@ class Sounds extends React.Component {
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
+    // this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
   }
   //todo  pagination btn still going up if no more pages
   // todo pagination button spammed causes getSounds not to work

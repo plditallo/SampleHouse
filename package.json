@@ -34,7 +34,8 @@
     "server": "nodemon index.js",
     "start": "node index.js",
     "dev": "concurrently 'yarn start' 'cd client && yarn start'",
-    "client": "cd client && yarn start"
+    "client": "cd client && yarn start",
+    "dbreset": "knex migrate:rollback && knex migrate:latest && knex seed:run"
   },
   "jest": {
     "testEnvironment": "node",
