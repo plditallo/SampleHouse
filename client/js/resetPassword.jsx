@@ -5,9 +5,9 @@ class resetPassword extends React.Component {
     super(props);
     this.state = {
       token: null,
-      email: "fish0859@gmail.co",
-      newPassword: "password",
-      confirmPassword: "password",
+      email: "",
+      newPassword: "",
+      confirmPassword: "",
       errorMsg: null,
       successMsg: null,
       redirecting: false,
@@ -95,12 +95,6 @@ class resetPassword extends React.Component {
       if (window.location.hash.includes("#token=")) {
         const token = window.location.hash.replace("#token=", "");
         this.setState({ ...this.state, token });
-        // if (token === "err") {
-        // return setTimeout(
-        //   () =>
-        //     (window.location = `forgot-password.html#reset=${this.state.email}`),
-        //   5000
-        // );
       }
       //* Page refreshes on submit, so use hash to set error
       else if (window.location.hash.includes("#errType")) {
@@ -126,7 +120,7 @@ class resetPassword extends React.Component {
           successMsg: "Password has been successfully been changed.",
           redirecting: true,
           redirectingPage: "login",
-          redirectingUrl: `authentication.html##emailSucReset=${this.state.email}`,
+          redirectingUrl: `authentication.html#emailSucReset=${this.state.email}`,
         });
         // todo add redirect w/ timeout
       }
