@@ -5,17 +5,16 @@ class ContactForm extends React.Component {
     super(props);
     // todo remove state
     this.state = {
-      name: "Jack Barry",
-      email: "jack@testing.com",
-      subject: "subjectLine",
-      message: "This is a test message.",
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
       errors: [],
       successMsg: null,
     };
   }
   onSubmitHandler = (evt) => {
     evt.preventDefault();
-    // console.log(evt);
     const { email, name, subject, message } = this.state;
     const errState = { ...this.state, errors: [] };
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -41,12 +40,18 @@ class ContactForm extends React.Component {
         }),
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
     submitFetch().then(({ status, data }) => {
-      // window.location.hash = "#";
-      console.log(status, data);
       if (status !== 200)
         return this.setState({ ...this.state, errors: [data.msg] });
-      // console.log(data.msg);
       // window.location.hash = `contactSuccessful`;
+      return this.setState({
+        ...this.state,
+        successMsg: data.msg,
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+        errors: [],
+      });
     });
   };
   onChangeHandler = (evt) => {
@@ -56,18 +61,18 @@ class ContactForm extends React.Component {
     });
   };
 
-  componentDidMount() {
-    const hash = window.location.hash;
-    console.log({ hash });
-    // if (hash && !this.state.successMsg)
-    //   if (hash.includes("#emailSucReg=")) {
-    //     const emailHash = hash.replace("#emailSucReg=", "");
-    //     this.setState({
-    //       ...this.state,
-    //       successMsg: `A confirmation email has been sent to ${emailHash}. In case you did not receive the verification email, please be sure to check your spam folder.`,
-    //     });
-    //   }
-  }
+  // componentDidMount() {
+  //   if (
+  //     window.location.hash &&
+  //     window.location.hash.includes("#contactSuccessful")
+  //   ) {
+  //     window.location.hash = "#";
+  //     this.setState({
+  //       ...this.state,
+  //       successMsg: `Successfully submitted. Please expect a reply within 48-72 hours.`,
+  //     });
+  //   }
+  // }
 
   render() {
     return (

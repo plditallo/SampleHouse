@@ -41,6 +41,7 @@ h1 {
     .error {
       margin: 0 0 0.5em;
       color: #f12538;
+      font-size: 1.2em;
     }
     span {
       cursor: pointer;
@@ -50,7 +51,7 @@ h1 {
   // todo change color
   .success {
     margin-top: 0;
-    font-size: 1em;
+    font-size: 1.2em;
     color: lawngreen;
   }
   label {
@@ -67,11 +68,20 @@ h1 {
     margin-bottom: 1.5em;
     color: $lightGrey;
     font-size: 1.2em;
+    @include breakpoint(xxs, xs, s) {
+      width: 90%;
+    }
   }
   textarea {
     height: 6em;
     margin-bottom: 0;
     padding: 0.5em;
+  }
+  .text-counter {
+    @include breakpoint(xxs, xs, s) {
+      width: 80%;
+      margin: auto;
+    }
   }
 
   button {

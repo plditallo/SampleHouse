@@ -94,6 +94,7 @@ h1 {
 #contactForm .errors .error {
   margin: 0 0 0.5em;
   color: #f12538;
+  font-size: 1.2em;
 }
 
 #contactForm .errors span {
@@ -103,7 +104,7 @@ h1 {
 
 #contactForm .success {
   margin-top: 0;
-  font-size: 1em;
+  font-size: 1.2em;
   color: lawngreen;
 }
 
@@ -123,10 +124,52 @@ h1 {
   font-size: 1.2em;
 }
 
+@media (max-width: 360px) {
+  #contactForm input,
+  #contactForm textarea {
+    width: 90%;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  #contactForm input,
+  #contactForm textarea {
+    width: 90%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  #contactForm input,
+  #contactForm textarea {
+    width: 90%;
+  }
+}
+
 #contactForm textarea {
   height: 6em;
   margin-bottom: 0;
   padding: 0.5em;
+}
+
+@media (max-width: 360px) {
+  #contactForm .text-counter {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  #contactForm .text-counter {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  #contactForm .text-counter {
+    width: 80%;
+    margin: auto;
+  }
 }
 
 #contactForm button {

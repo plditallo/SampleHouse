@@ -256,6 +256,7 @@ header div .right nav ul li {
   position: sticky;
   top: 0;
   background: black;
+  z-index: 100;
 }
 
 @media (max-width: 360px) {
@@ -330,6 +331,7 @@ header div .right nav ul li {
   top: 0;
   width: 100%;
   background: black;
+  z-index: 100;
 }
 
 @media (min-width: 981px) and (max-width: 1280px) {
