@@ -1,6 +1,6 @@
 body {
   background: black;
-  color: white;
+  color: #c3c1c1;
 }
 
 .top {
@@ -71,7 +71,7 @@ body {
   text-align: center;
   padding: 0.5em 1em;
   border: 1px solid #c3c1c1;
-  height: 35em;
+  height: 30em;
   width: 25%;
   position: relative;
   font-size: 1.1em;
@@ -101,7 +101,6 @@ body {
 
 #subscription-cards .card h2 {
   color: #eb6662;
-  background: grey;
   margin: 0.5em auto;
   border-radius: 1em;
   padding: 0.5em 0;
@@ -122,7 +121,7 @@ body {
 }
 
 #subscription-cards .card .info {
-  background: #0f495f;
+  background: black;
   padding: 0.25em 0.5em;
   border-radius: 1em;
   position: absolute;
@@ -138,7 +137,7 @@ body {
 }
 
 #subscription-cards .card .info .credits {
-  color: #eb6662;
+  color: #00bdf5;
   font-size: 1.5em;
   white-space: nowrap;
   margin: 0.25em auto;
@@ -156,7 +155,7 @@ body {
 }
 
 #subscription-cards .card .info .included {
-  color: #eb6662;
+  color: #00bdf5;
 }
 
 #subscription-cards .card .info ul {
@@ -170,6 +169,24 @@ body {
   font-weight: 300;
 }
 
+@media (max-width: 360px) {
+  #subscription-cards .card .info ul li {
+    text-align: center;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  #subscription-cards .card .info ul li {
+    text-align: center;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  #subscription-cards .card .info ul li {
+    text-align: center;
+  }
+}
+
 .payment {
   margin-bottom: 7em;
 }
@@ -177,7 +194,7 @@ body {
 .payment h3 {
   color: #c3c1c1;
   text-align: center;
-  margin-bottom: 4em;
+  margin-bottom: 5em;
 }
 
 .payment div {
@@ -186,6 +203,9 @@ body {
   display: flex;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 @media (max-width: 360px) {
@@ -194,9 +214,6 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
   }
 }
 
@@ -206,9 +223,6 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
   }
 }
 
@@ -218,13 +232,16 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
   }
 }
 
-.payment div img {
+.payment div .stripe-logo {
+  height: 15em;
   width: 15em;
+}
+
+.payment div .paypal-logo {
+  height: 10em;
+  width: 25em;
 }
 /*# sourceMappingURL=subscriptions.css.map */
