@@ -88,8 +88,8 @@ router.post("/credits", validateOffer, async (req, res) => {
                 quantity: 1,
             }, ],
             mode: 'payment',
-            success_url: `https://localhost:3000/success.html`,
-            cancel_url: `https://localhost:3000/cancel.html`,
+            success_url: `http://127.0.0.1:5500/client/html/success.html`,
+            cancel_url: `http://127.0.0.1:5500/client/html/subscriptions.html`,
         });
         console.log(session.id)
     }

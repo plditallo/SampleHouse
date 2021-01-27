@@ -1,5 +1,6 @@
 "use strict";
 
+// todo setup subscription upgrade/downgrade
 class Subscriptions extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +18,8 @@ class Subscriptions extends React.Component {
           ],
           // todo change payPal_id to live ID
           payPal_id: "P-5NY36749SE7475025MAIOEJI",
+          // todo change stipe_id to live ID
+          stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
         },
         {
           name: "Standard",
@@ -33,6 +36,7 @@ class Subscriptions extends React.Component {
             "Private Discord",
           ],
           payPal_id: "P-03Y07993KV0411933MAIOETA",
+          stripe_id: "price_1I48RIBPBM0JAFXGmk4lEPOD",
         },
         {
           name: "Studio",
@@ -49,16 +53,23 @@ class Subscriptions extends React.Component {
             "Private Discord",
           ],
           payPal_id: "P-1V678195DT9234000MAIOEYA",
-          plan_name: "Basic",
+          stripe_id: "price_1I48RvBPBM0JAFXG5XSFHyq6",
         },
       ],
-      subscriptionPlanId: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id
+      plan_name: "Basic",
+      payPalPlanId: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id,
+      stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
     };
   }
 
   selectSubscription = (cardIndex, payPalId, plan_name) => {
-    if (payPalId !== this.state.subscriptionPlanId) {
-      this.setState({ ...this.state, subscriptionPlanId: payPalId, plan_name });
+    if (payPalId !== this.state.payPalPlanId) {
+      this.setState({
+        ...this.state,
+        payPalPlanId: payPalId,
+        plan_name,
+        stripe_id,
+      });
       const cards = document.querySelectorAll(".card");
       cards.forEach((e) => (e.style.border = "1px solid #c3c1c1"));
       cards[cardIndex].style.border = "3px solid #c3c1c1";
@@ -67,11 +78,11 @@ class Subscriptions extends React.Component {
 
   componentDidUpdate() {
     document.querySelector("#paypal-button-container").innerHTML = "";
-    createPayPalButtons(this.state.subscriptionPlanId, this.state.plan_name);
+    createPayPalButtons(this.state.payPalPlanId, this.state.plan_name);
   }
   componentDidMount() {
     document.querySelector(".card").style.border = "3px solid #c3c1c1";
-    createPayPalButtons(this.state.subscriptionPlanId, this.state.plan_name);
+    createPayPalButtons(this.state.payPalPlanId, this.state.plan_name);
   }
 
   render() {
@@ -141,10 +152,15 @@ function createPayPalButtons(plan_id, plan_name) {
 
       onApprove: function (data, actions) {
         alert(`You have successfully subscribed to the ${plan_name} plan.`);
+        // todo redirect to somewhere on success
+        //todo how to update database with updated subscription??
+        window.location.hash = "success";
       },
       onCancel: function (data) {
         // Show a cancel page, or return to cart
         alert(`You have canceled the subscription to ${plan_name}`);
+        // todo redirect to somewhere on cancel
+        window.location.hash = "cancel";
       },
     })
     .render("#paypal-button-container");
