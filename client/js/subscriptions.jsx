@@ -4,69 +4,20 @@
 class Subscriptions extends React.Component {
   constructor(props) {
     super(props);
+    // todo get data from database
     this.state = {
-      data: [
-        {
-          name: "Basic",
-          credits: 100,
-          price: 5.99,
-          included: [
-            "Samples (one shots)",
-            "Loops",
-            "MIDI Files",
-            "Private Discord",
-          ],
-          // todo change payPal_id to live ID
-          payPal_id: "P-5NY36749SE7475025MAIOEJI",
-          // todo change stipe_id to live ID
-          stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
-        },
-        {
-          name: "Standard",
-          credits: 250,
-          price: 10.99,
-          discount: 15, //todo find discount
-          included: [
-            "VST Access",
-            "Instructional Videos",
-            "Samples (one shots)",
-            "Loops",
-            "Exclusive Loops",
-            "MIDI Files",
-            "Private Discord",
-          ],
-          payPal_id: "P-03Y07993KV0411933MAIOETA",
-          stripe_id: "price_1I48RIBPBM0JAFXGmk4lEPOD",
-        },
-        {
-          name: "Studio",
-          credits: 500,
-          price: 19.99,
-          discount: 20, //todo find discount
-          included: [
-            "VST Access",
-            "Instructional Videos",
-            "Samples (one shots)",
-            "Loops",
-            "Exclusive Loops",
-            "MIDI Files",
-            "Private Discord",
-          ],
-          payPal_id: "P-1V678195DT9234000MAIOEYA",
-          stripe_id: "price_1I48RvBPBM0JAFXG5XSFHyq6",
-        },
-      ],
+      data: [],
       plan_name: "Basic",
-      payPalPlanId: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id,
+      payPal_id: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id,
       stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
     };
   }
 
-  selectSubscription = (cardIndex, payPalId, plan_name) => {
-    if (payPalId !== this.state.payPalPlanId) {
+  selectSubscription = (cardIndex, plan_name, payPal_id, stripe_id) => {
+    if (plan_name !== this.state.plan_name) {
       this.setState({
         ...this.state,
-        payPalPlanId: payPalId,
+        payPal_id,
         plan_name,
         stripe_id,
       });
@@ -76,13 +27,29 @@ class Subscriptions extends React.Component {
     }
   };
 
+  componentDidMount() {
+    fetch("http://localhost:5000/api/plan", {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (res) => await res.json())
+      .then((resp) => {
+        const data = [];
+        resp.forEach((e) => data.push(e));
+        this.setState({ ...this.state, data });
+      })
+      .then(() => {
+        document.querySelector(".card").style.border = "3px solid #c3c1c1";
+        createPayPalButtons(this.state.payPal_id, this.state.plan_name);
+      });
+  }
+
   componentDidUpdate() {
     document.querySelector("#paypal-button-container").innerHTML = "";
-    createPayPalButtons(this.state.payPalPlanId, this.state.plan_name);
-  }
-  componentDidMount() {
-    document.querySelector(".card").style.border = "3px solid #c3c1c1";
-    createPayPalButtons(this.state.payPalPlanId, this.state.plan_name);
+    createPayPalButtons(this.state.payPal_id, this.state.plan_name);
   }
 
   render() {
@@ -90,11 +57,24 @@ class Subscriptions extends React.Component {
       <div>
         <div id="subscription-cards">
           {this.state.data.map(
-            ({ name, credits, price, discount, included, payPal_id }, i) => (
+            (
+              {
+                name,
+                credits,
+                price,
+                discount,
+                included,
+                payPal_id,
+                stripe_id,
+              },
+              i
+            ) => (
               <div
                 className="card"
                 key={i}
-                onClick={() => this.selectSubscription(i, payPal_id, name)}
+                onClick={() =>
+                  this.selectSubscription(i, name, payPal_id, stripe_id)
+                }
               >
                 {i > 0 ? (
                   <span className="discount">Save {discount}%</span>
@@ -113,7 +93,7 @@ class Subscriptions extends React.Component {
                   <span>per month</span>
                   <p className="included">INCLUDED IN PACKAGE</p>
                   <ul>
-                    {included.map((e, i) => (
+                    {included.split(",").map((e, i) => (
                       <li key={i}>{e}</li>
                     ))}
                   </ul>
@@ -153,7 +133,8 @@ function createPayPalButtons(plan_id, plan_name) {
       onApprove: function (data, actions) {
         alert(`You have successfully subscribed to the ${plan_name} plan.`);
         // todo redirect to somewhere on success
-        //todo how to update database with updated subscription??
+        //todo update database with updated subscription and listen for any unsubscribes
+        // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
         window.location.hash = "success";
       },
       onCancel: function (data) {

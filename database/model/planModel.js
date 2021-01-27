@@ -1,11 +1,17 @@
 const db = require("../database-config");
 
 module.exports = {
+    getPlans,
     insertPlan,
     getPlanById,
     getPlanByTier,
+    getPlanByPayPalId,
     updatePlan,
     removePlan
+}
+
+function getPlans() {
+    return db("Plan")
 }
 
 function insertPlan(data) {
@@ -21,6 +27,12 @@ function getPlanById(id) {
 function getPlanByTier(tier) {
     return db("Plan").where({
         tier
+    })
+}
+
+function getPlanByPayPalId(payPal_id) {
+    return db("Plan").where({
+        payPal_id
     })
 }
 

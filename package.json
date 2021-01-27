@@ -12,6 +12,7 @@
   "dependencies": {
     "aws-sdk": "^2.828.0",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
@@ -22,6 +23,7 @@
     "knex": "^0.21.5",
     "mysql": "^2.18.1",
     "nodemailer": "^6.4.17",
+    "paypal-ipn": "^3.0.0",
     "s3": "^4.4.0",
     "stripe": "^8.129.0",
     "uuid": "^8.3.2"
