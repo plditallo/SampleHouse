@@ -113,8 +113,10 @@ body {
   right: 0;
   top: 0;
   background: #00bdf5;
+  color: black;
   border-radius: 0 1em;
   font-size: 0.9em;
+  font-weight: 700;
   padding: 0.125em 1em;
   border-top: 1px solid #c3c1c1;
   border-right: 1px solid #c3c1c1;
