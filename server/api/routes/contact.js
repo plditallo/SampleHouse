@@ -17,8 +17,8 @@ router.post("/", (req, res) => {
 
     const emailTemplate = {
         from: email,
-        // to: 'contact@sample.house', //todo check which email to go to
-        to: 'braden@bluesmokemedia.net',
+        // to: "braden@bluesmokemedia.net",
+        to: "support@sample.house", //todo not receiving emails to this email
         subject: `Contact-${subject}`,
         text: `From ${name}, \n\n${message} \n\nHave a great day Craig :D`
     };
@@ -42,7 +42,7 @@ router.post("/", (req, res) => {
         });
     });
     res.status(200).json({
-        msg: "Successfully submitted. Please expect a reply within 48-72 hours."
+        msg: "Successfully submitted. Please expect a reply within 24-48 hours."
     }) //todo message
 })
 

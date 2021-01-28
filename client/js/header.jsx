@@ -7,8 +7,6 @@ class Header extends React.Component {
     };
   }
   componentDidMount() {
-    <script src="../js/utils/jwt-decode.js"></script>;
-    <script src="../js/utils/jwt-verify.js"></script>;
     const token = window.localStorage.getItem("samplehousetoken");
     if (token && jwt_verify(jwt_decode(token)))
       this.setState({ loggedIn: true });
@@ -19,7 +17,7 @@ class Header extends React.Component {
     const { loggedIn } = this.state;
     return (
       <div>
-        <a href="index.html#">
+        <a href={!loggedIn ? "index.html#" : "home.html#"}>
           <div className="logo">
             <img
               src="../assets/sample_house_logo.png"
@@ -81,12 +79,17 @@ class Header extends React.Component {
                 </li>
                 <li>
                   <a href="#PLUGINS">PLUGINS</a>
+                  {/* download link for VST IMG w/ Title, Desc w/ download button*/}
                 </li>
                 <li>
                   <a href="#SAMPLEPACKS">SAMPLEPACKS</a>
+                  {/* grid out with pack's img and title --> packs page */}
                 </li>
                 <li>
                   <a href="#VIDEOS">VIDEOS</a>
+                  {/* grid out video w/ img and title */}
+                  {/* tier 2+ only, w/ upgrade btn  and go back btn-->  */}
+                  {/* youtube private channel link */}
                 </li>
                 <li>
                   <a href="#DISCORD">DISCORD</a>

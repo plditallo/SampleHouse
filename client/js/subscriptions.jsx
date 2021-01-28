@@ -10,6 +10,7 @@ class Subscriptions extends React.Component {
       plan_name: "Basic",
       payPal_id: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id,
       stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
+      user: {},
     };
   }
 
@@ -28,6 +29,14 @@ class Subscriptions extends React.Component {
   };
 
   componentDidMount() {
+    //todo don't allow payment method if already have a subscription
+    <script src="../js/utils/jwt-decode.js"></script>;
+    <script src="../js/utils/jwt-verify.js"></script>;
+    const token = window.localStorage.getItem("samplehousetoken");
+    let user;
+    if (token) {
+      user = jwt_decode(token);
+    }
     fetch("http://localhost:5000/api/plan", {
       method: "GET",
       type: "cors",
@@ -39,21 +48,29 @@ class Subscriptions extends React.Component {
       .then((resp) => {
         const data = [];
         resp.forEach((e) => data.push(e));
-        this.setState({ ...this.state, data });
+        this.setState({ ...this.state, data, user });
       })
       .then(() => {
         document.querySelector(".card").style.border = "3px solid #c3c1c1";
-        document.querySelector("#paypal-button-container").innerHTML = "";
-        createPayPalButtons(this.state.payPal_id, this.state.plan_name);
+        // document.querySelector("#paypal-button-container").innerHTML = "";
+        // createPayPalButtons(this.state.payPal_id, this.state.plan_name);
       });
   }
 
   componentDidUpdate() {
-    document.querySelector("#paypal-button-container").innerHTML = "";
-    createPayPalButtons(this.state.payPal_id, this.state.plan_name);
+    const payPalBtnContainer = document.querySelector(
+      "#paypal-button-container"
+    );
+    if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
+    createPayPalButtons(
+      this.state.payPal_id,
+      this.state.plan_name,
+      this.state.user
+    );
   }
 
   render() {
+    console.log(this.state.user.activeSubscription); //active_subscription
     return (
       <div>
         <div id="subscription-cards">
@@ -101,19 +118,24 @@ class Subscriptions extends React.Component {
                 </div>
               </div>
             )
+            // todo change link in headers to go to home/index based on loggin
           )}
         </div>
+        {/* {!this.state.user.active_subscription ? ( */}
         <div className="payment">
           <h3>Choose Your Payment Type</h3>
-          <div>
-            <div id="paypal-button-container"></div>
-            <img
+          {/* <div> */}
+          <div id="paypal-button-container"></div>
+          {/* <img
               src="../assets/stripe_logo.png"
               alt="Stripe Logo"
               className="stripe-logo"
-            />
-          </div>
+            /> */}
+          {/* </div> */}
         </div>
+        {/* ) : (
+          <div>Upgrade Subscription</div>
+        )} */}
       </div>
     );
   }
@@ -122,24 +144,30 @@ class Subscriptions extends React.Component {
 const domContainer = document.querySelector("#subscriptions");
 ReactDOM.render(React.createElement(Subscriptions), domContainer);
 
-function createPayPalButtons(plan_id, plan_name) {
-  const userId = "userId123"; //todo get userId from token in storage...
+function createPayPalButtons(plan_id, plan_name, user) {
   paypal
     .Buttons({
       createSubscription: function (data, actions) {
         return actions.subscription.create({
           plan_id,
-          userId,
         });
       },
-//  	sb-ct3q94894640@personal.example.com // /d0bKeN<
       onApprove: function (data, actions) {
-        alert(`You have successfully subscribed to the ${plan_name} plan.`);
         // todo purchase router here
         // todo redirect to somewhere on success
         //todo update database with updated subscription and listen for any unsubscribes
         // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
-        window.location.hash = "success";
+        fetch(`http://localhost:5000/api/purchase/subscribe/${plan_name}`, {
+          method: "GET",
+          type: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: window.localStorage.getItem("samplehousetoken"),
+          },
+        })
+          .then(async (res) => await res.json())
+          .then((resp) => alert(resp.msg));
+        window.location.hash = "success"; // home.html
       },
       onCancel: function (data) {
         // Show a cancel page, or return to cart

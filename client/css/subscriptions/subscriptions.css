@@ -193,6 +193,38 @@ body {
   margin-bottom: 7em;
 }
 
+@media (max-width: 360px) {
+  .payment {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  .payment {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 736px) {
+  .payment {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 737px) and (max-width: 980px) {
+  .payment {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .payment h3 {
   color: #c3c1c1;
   text-align: center;

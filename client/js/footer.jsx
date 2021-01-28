@@ -3,14 +3,23 @@
 class Footer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loggedIn: false,
+    };
+  }
+
+  componentDidMount() {
+    const token = window.localStorage.getItem("samplehousetoken");
+    if (token && jwt_verify(jwt_decode(token)))
+      this.setState({ loggedIn: true });
   }
 
   render() {
+    const { loggedIn } = this.state;
     return (
       <div>
         <div className="top">
-          <a href="index.html">
+          <a href={!loggedIn ? "index.html#" : "home.html#"}>
             <div className="logo">
               <img
                 src="../assets/sample_house_logo.png"
@@ -57,7 +66,6 @@ class Footer extends React.Component {
               alt="Blue Smoke Logo"
             />
           </a>
-          {/* todo sample.house? legal branding */}
           <p>© Copyright 2021 SampleHouse</p>
         </div>
       </div>

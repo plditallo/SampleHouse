@@ -120,6 +120,11 @@ class ContactForm extends React.Component {
           maxLength="250"
           required
         />
+        <input
+          type="hidden"
+          class="anti-spam"
+          style={{ display: "none", position: "absolute" }}
+        />
         <span className="text-counter">{250 - this.state.message.length}</span>
         <button type="submit">
           <img src="../assets/half-man.png" alt="half-man" />

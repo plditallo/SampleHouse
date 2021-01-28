@@ -4,7 +4,7 @@ class Sounds extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      limit: 5,
+      limit: 25,
       offset: 0,
       page: 1,
       curMaxPage: 1,
