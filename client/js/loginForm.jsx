@@ -4,8 +4,8 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      logEmail: "",
-      logPassword: "",
+      logEmail: "jack@testing.com", //! testing
+      logPassword: "password", //!testing
       errorMsg: null,
       resendSuccessMsg: null,
       verified: true,
@@ -51,8 +51,7 @@ class LoginForm extends React.Component {
         if (status !== 200)
           this.setState({ ...this.state, errorMsg: data.msg });
         else {
-          console.log(data);
-          //todo catch token and save somewhere (for continuous login)(keychain?? (and pc))
+          window.localStorage.setItem("samplehousetoken", data.token);
           window.location.href = "home.html";
         }
       });
@@ -77,7 +76,7 @@ class LoginForm extends React.Component {
           email: this.state.logEmail,
         }),
       }).then(async (res) => ({ status: res.status, data: await res.json() }));
-    // todo can't see response, reloading page
+
     submitFetch().then(({ status, data }) => {
       // console.log(status, data.msg);
       if (status !== 200) this.setState({ ...this.state, errorMsg: data.msg });
@@ -113,7 +112,7 @@ class LoginForm extends React.Component {
           "#emailSucReset=",
           ""
         );
-        console.log(window.location.hash, emailSucResetHash);
+        // console.log(window.location.hash, emailSucResetHash);
         this.setState({ ...this.state, logEmail: emailSucResetHash });
       }
       window.location.hash = "#";

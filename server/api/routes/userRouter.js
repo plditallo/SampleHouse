@@ -154,13 +154,8 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
             if (!user) return res.status(403).json({
                 msg: `The email address ${req.body.email} is not associated with any account. Please double-check your email address and try again.`
             });
-            // if (!user.isVerified) return res.status(401).send({
-            //     type: 'not-verified',
-            //     msg: 'Your account has not been verified.'
-            // });
             //* Token expired
-            //? If I add && 
-            console.log(user.password_reset_token, token);
+            // console.log(user.password_reset_token, token);
             if (Date.now() - user.password_reset_expires >= 0) {
                 user.password_reset_token = null
                 user.password_reset_expires = null
@@ -225,11 +220,15 @@ module.exports = router;
 //? send sub expiry time in payload for VST?
 function generateToken(user) {
     const {
+        id,
+        vst_access
+    } = user;
+    const {
         JWT_SECRET
     } = process.env
     const payload = {
-        subject: user.id,
-        vst_access: user.vst_access
+        subject: id,
+        vst_access
     };
     const options = {
         expiresIn: "72hr",

@@ -55,6 +55,7 @@ router.post("/", (req, res) => {
                 ]) => {
                     if (!plan || mc_currency !== "USD" || mc_gross != plan.price) return console.log("false information")
                     else console.log("payment successful and verified")
+                    // todo get userId here
                 })
             }
         }

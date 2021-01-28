@@ -12,6 +12,13 @@
     <title></title>
   </head>
   <body>
+    <script src="../js/utils/jwt-decode.js"></script>
+    <script src="../js/utils/jwt-verify.js"></script>
+    <script type="module">
+      const token = window.localStorage.getItem("samplehousetoken");
+      if (!token || (token && !jwt_verify(jwt_decode(token))))
+        window.location = "index.html";
+    </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>

@@ -43,6 +43,7 @@ class Subscriptions extends React.Component {
       })
       .then(() => {
         document.querySelector(".card").style.border = "3px solid #c3c1c1";
+        document.querySelector("#paypal-button-container").innerHTML = "";
         createPayPalButtons(this.state.payPal_id, this.state.plan_name);
       });
   }
@@ -122,16 +123,19 @@ const domContainer = document.querySelector("#subscriptions");
 ReactDOM.render(React.createElement(Subscriptions), domContainer);
 
 function createPayPalButtons(plan_id, plan_name) {
+  const userId = "userId123"; //todo get userId from token in storage...
   paypal
     .Buttons({
       createSubscription: function (data, actions) {
         return actions.subscription.create({
           plan_id,
+          userId,
         });
       },
-
+//  	sb-ct3q94894640@personal.example.com // /d0bKeN<
       onApprove: function (data, actions) {
         alert(`You have successfully subscribed to the ${plan_name} plan.`);
+        // todo purchase router here
         // todo redirect to somewhere on success
         //todo update database with updated subscription and listen for any unsubscribes
         // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/

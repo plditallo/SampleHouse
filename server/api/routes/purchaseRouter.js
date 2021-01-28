@@ -8,17 +8,12 @@ const {
     validateOffer
 } = require("../middleware/purchaseMiddleware");
 const {
-    updateUser
-} = require("../../../database/model/userModel")
-const {
     insertSubscription,
     getSubscriberById,
     removeSubscription
 } = require("../../../database/model/subscriptionModel");
-const {
-    insertInvoice
-} = require("../../../database/model/invoiceModel");
-// const day = 1000
+const createInvoice = require("../utils/createInvoice");
+
 const day = 86400000
 router.post("/subscribe", validatePlan, (req, res) => {
     const {
@@ -121,29 +116,29 @@ router.use("/", (req, res) => {
 
 module.exports = router;
 
-function createInvoice(user, product) {
-    const user_id = user.id
-    const {
-        id,
-        product_type,
-        price,
-        credits,
-        tier
-    } = product
+// function createInvoice(user, product) {
+//     const user_id = user.id
+//     const {
+//         id,
+//         product_type,
+//         price,
+//         credits,
+//         tier
+//     } = product
 
-    user.active_subscription = true
-    user.balance += credits
-    if (tier > 1) user.vst_access = true
-    else user.vst_access = false
+//     user.active_subscription = true
+//     user.balance += credits
+//     if (tier > 1) user.vst_access = true
+//     else user.vst_access = false
 
 
-    updateUser(user).then(null)
-    insertInvoice({
-        user_id,
-        product_type,
-        product_id: id,
-        amount: price, //? does this save as int or str
-        created: Date.now(),
-        // description:
-    }).then(null)
-}
+//     updateUser(user).then(null)
+//     insertInvoice({
+//         user_id,
+//         product_type,
+//         product_id: id,
+//         amount: price, //? does this save as int or str
+//         created: Date.now(),
+//         // description:
+//     }).then(null)
+// }

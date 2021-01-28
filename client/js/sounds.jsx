@@ -92,8 +92,8 @@ class Sounds extends React.Component {
           // this.fetchTags(e);
         });
         // console.log(newState);
-      })
-      .then(() => console.log(this.state));
+      });
+    // .then(() => console.log(this.state));
   }
 
   async fetchSound(path) {
