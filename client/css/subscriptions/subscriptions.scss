@@ -132,10 +132,6 @@ body {
     @include breakpoint(xxs, xs, s) {
       flex-direction: column;
     }
-    .stripe-logo {
-      height: 15em;
-      width: 15em;
-    }
     .paypal-logo {
       height: 10em;
       width: 25em;

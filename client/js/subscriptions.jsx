@@ -7,20 +7,18 @@ class Subscriptions extends React.Component {
     // todo get data from database
     this.state = {
       data: [],
-      plan_name: "Basic",
-      payPal_id: "P-5NY36749SE7475025MAIOEJI", //todo change this to Basic for init plan_id,
-      stripe_id: "price_1I48QkBPBM0JAFXGWczaXWy5",
+      plan_name: "",
+      payPal_id: "",
       user: {},
     };
   }
 
-  selectSubscription = (cardIndex, plan_name, payPal_id, stripe_id) => {
+  selectSubscription = (cardIndex, plan_name, payPal_id) => {
     if (plan_name !== this.state.plan_name) {
       this.setState({
         ...this.state,
         payPal_id,
         plan_name,
-        stripe_id,
       });
       const cards = document.querySelectorAll(".card");
       cards.forEach((e) => (e.style.border = "1px solid #c3c1c1"));
@@ -30,8 +28,8 @@ class Subscriptions extends React.Component {
 
   componentDidMount() {
     //todo don't allow payment method if already have a subscription
-    <script src="../js/utils/jwt-decode.js"></script>;
-    <script src="../js/utils/jwt-verify.js"></script>;
+    // <script src="../js/utils/jwt-decode.js"></script>;
+    // <script src="../js/utils/jwt-verify.js"></script>;
     const token = window.localStorage.getItem("samplehousetoken");
     let user;
     if (token) {
@@ -48,51 +46,49 @@ class Subscriptions extends React.Component {
       .then((resp) => {
         const data = [];
         resp.forEach((e) => data.push(e));
-        this.setState({ ...this.state, data, user });
+        this.setState({
+          ...this.state,
+          data,
+          user,
+          plan_name: data[0].name,
+          payPal_id: data[0].payPal_id,
+        });
       })
       .then(() => {
         document.querySelector(".card").style.border = "3px solid #c3c1c1";
+        console.log(this.state.data[0]);
+
         // document.querySelector("#paypal-button-container").innerHTML = "";
         // createPayPalButtons(this.state.payPal_id, this.state.plan_name);
       });
   }
 
   componentDidUpdate() {
-    const payPalBtnContainer = document.querySelector(
-      "#paypal-button-container"
-    );
-    if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
-    createPayPalButtons(
-      this.state.payPal_id,
-      this.state.plan_name,
-      this.state.user
-    );
+    //! testing change to !this.
+    if (this.state.user.active_subscription) {
+      const payPalBtnContainer = document.querySelector(
+        "#paypal-button-container"
+      );
+      if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
+      createPayPalButtons(
+        this.state.payPal_id,
+        this.state.plan_name,
+        this.state.user
+      );
+    }
   }
 
   render() {
-    console.log(this.state.user.activeSubscription); //active_subscription
+    const { active_subscription } = this.state.user;
     return (
       <div>
         <div id="subscription-cards">
           {this.state.data.map(
-            (
-              {
-                name,
-                credits,
-                price,
-                discount,
-                included,
-                payPal_id,
-                stripe_id,
-              },
-              i
-            ) => (
+            ({ name, credits, price, discount, included, payPal_id }, i) => (
               <div
                 className="card"
                 key={i}
-                onClick={() =>
-                  this.selectSubscription(i, name, payPal_id, stripe_id)
-                }
+                onClick={() => this.selectSubscription(i, name, payPal_id)}
               >
                 {i > 0 ? (
                   <span className="discount">Save {discount}%</span>
@@ -121,21 +117,14 @@ class Subscriptions extends React.Component {
             // todo change link in headers to go to home/index based on loggin
           )}
         </div>
-        {/* {!this.state.user.active_subscription ? ( */}
-        <div className="payment">
-          <h3>Choose Your Payment Type</h3>
-          {/* <div> */}
-          <div id="paypal-button-container"></div>
-          {/* <img
-              src="../assets/stripe_logo.png"
-              alt="Stripe Logo"
-              className="stripe-logo"
-            /> */}
-          {/* </div> */}
-        </div>
-        {/* ) : (
+        {active_subscription ? ( //!testing change to !active_subscription
+          <div className="payment">
+            <h3>Choose Your Payment Type</h3>
+            <div id="paypal-button-container"></div>
+          </div>
+        ) : (
           <div>Upgrade Subscription</div>
-        )} */}
+        )}
       </div>
     );
   }
@@ -157,16 +146,17 @@ function createPayPalButtons(plan_id, plan_name, user) {
         // todo redirect to somewhere on success
         //todo update database with updated subscription and listen for any unsubscribes
         // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
-        fetch(`http://localhost:5000/api/purchase/subscribe/${plan_name}`, {
-          method: "GET",
-          type: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: window.localStorage.getItem("samplehousetoken"),
-          },
-        })
-          .then(async (res) => await res.json())
-          .then((resp) => alert(resp.msg));
+        // fetch(`http://localhost:5000/api/purchase/subscribe/${plan_name}`, {
+        //   method: "GET",
+        //   type: "cors",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Authorization: window.localStorage.getItem("samplehousetoken"),
+        //   },
+        // })
+        //   .then(async (res) => await res.json())
+        //   .then((resp) => alert(resp.msg));
+        console.log("onApprove paypal Btns");
         window.location.hash = "success"; // home.html
       },
       onCancel: function (data) {

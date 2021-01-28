@@ -30,10 +30,10 @@ exports.seed = function (knex) {
         email: "beta@sample.house",
         password: hashSync('tiger6381', 13),
         isVerified: true,
-        first_name: "Beta Tester",
-        last_name: "",
+        first_name: "Beta",
+        last_name: "Tester",
         role: "beta",
-        balance: 0,
+        balance: 100,
         vst_access: true,
       }]);
     });

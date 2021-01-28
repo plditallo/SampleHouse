@@ -269,11 +269,6 @@ body {
   }
 }
 
-.payment div .stripe-logo {
-  height: 15em;
-  width: 15em;
-}
-
 .payment div .paypal-logo {
   height: 10em;
   width: 25em;

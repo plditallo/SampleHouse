@@ -36,6 +36,7 @@ router.post("/register",
         })
     ],
     checkExistingUsers, (req, res) => {
+        // todo set role to "beta" for 1st week of deployment
         // console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());

@@ -1,7 +1,6 @@
 exports.up = function (knex) {
     return knex.schema.createTable("Plan", (tbl) => {
         tbl.string("id").primary().unique()
-        tbl.string("stripe_id").unique()
         tbl.string("payPal_id").unique()
         tbl.string("name").notNullable()
         tbl.string("description")

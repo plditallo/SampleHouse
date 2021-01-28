@@ -1,9 +1,5 @@
 const router = require("express").Router();
 const {
-    STRIPE_API_SECRET_KEY
-} = process.env;
-const stripe = require("stripe")(STRIPE_API_SECRET_KEY)
-const {
     validatePlan,
     validateOffer
 } = require("../middleware/purchaseMiddleware");
@@ -49,44 +45,6 @@ router.get("/credits", validateOffer, async (req, res) => {
         user,
         offer
     } = req;
-    //* stripe taken out of code temporarily
-    if (paymentTypeIsStripe = false) {
-
-        // const invoiceItem = await stripe.invoiceItems.create({
-        //     customer: user.stripe_id,
-        //     price: offer.stripe_price_id,
-        // });
-        // const invoice = await stripe.invoices.create({
-        //     customer: user.stripe_id,
-        //     auto_advance: true, // auto-finalize this draft after ~1 hour
-        // });
-
-        // console.log({
-        //     invoiceItem
-        // }, {
-        //     invoice
-        // })
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            client_reference_id: user.stripe_id,
-            customer: user.stripe_id,
-            line_items: [{
-                price_data: {
-                    currency: user.currency,
-                    product_data: {
-                        name: offer.name,
-                        images: ['https://i.imgur.com/EHyR2nP.png'],
-                    },
-                    unit_amount: offer.price.toString().replace(".", ""),
-                },
-                quantity: 1,
-            }, ],
-            mode: 'payment',
-            success_url: `http://127.0.0.1:5500/client/html/success.html`,
-            cancel_url: `http://127.0.0.1:5500/client/html/subscriptions.html`,
-        });
-        console.log(session.id)
-    }
 
     getSubscriberById(user.id).then(([subscriber]) => {
         //* check if subscriber has LESS than 24 hours left on subscription
