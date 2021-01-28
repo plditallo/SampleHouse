@@ -4,6 +4,7 @@ module.exports = {
     getPlans,
     insertPlan,
     getPlanById,
+    getPlanByName,
     getPlanByTier,
     getPlanByPayPalId,
     updatePlan,
@@ -21,6 +22,12 @@ function insertPlan(data) {
 function getPlanById(id) {
     return db("Plan").where({
         id
+    })
+}
+
+function getPlanByName(name) {
+    return db("Plan").where({
+        name
     })
 }
 

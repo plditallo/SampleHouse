@@ -15,12 +15,11 @@ const {
 const createInvoice = require("../utils/createInvoice");
 
 const day = 86400000
-router.post("/subscribe", validatePlan, (req, res) => {
+router.get("/subscribe/:plan_name", validatePlan, (req, res) => {
     const {
         user,
         plan
     } = req;
-
     getSubscriberById(user.id).then(([subscriber]) => {
         const subscriptionData = {
             user_id: user.id,
@@ -31,7 +30,7 @@ router.post("/subscribe", validatePlan, (req, res) => {
         //* check if subscriber has MORE than 24 hours left on subscription
         if (subscriber && (subscriber.subscribe_end - Date.now()) > day)
             return res.status(200).send({
-                msg: `User already has an active subscription. Subscription expires on: ${new Date(subscriber.subscribe_end).toLocaleDateString()}.`
+                msg: `You already has an active subscription. Subscription expires on: ${new Date(subscriber.subscribe_end).toLocaleDateString()}.`
             })
         else if (subscriber) removeSubscription(subscriber.id).then(null)
 
@@ -45,7 +44,7 @@ router.post("/subscribe", validatePlan, (req, res) => {
     })
 });
 
-router.post("/credits", validateOffer, async (req, res) => {
+router.get("/credits", validateOffer, async (req, res) => {
     const {
         user,
         offer

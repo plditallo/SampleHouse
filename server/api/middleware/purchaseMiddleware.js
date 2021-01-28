@@ -1,5 +1,5 @@
 const {
-    getPlanById
+    getPlanByName
 } = require("../../../database/model/planModel");
 const {
     getOfferById
@@ -12,9 +12,9 @@ module.exports = {
 
 function validatePlan(req, res, next) {
     const {
-        id
-    } = req.body
-    getPlanById(id).then(([plan]) => {
+        plan_name
+    } = req.params
+    getPlanByName(plan_name).then(([plan]) => {
         if (!plan) return res.status(400).json({
             msg: `No Plan found with ID: ${id}.`,
         })

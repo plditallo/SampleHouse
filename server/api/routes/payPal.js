@@ -6,6 +6,7 @@ const planDb = require("../../../database/model/planModel");
 
 // 1. PayPal HTTPS POSTs an IPN message to your listener that notifies it of an event.
 router.post("/", (req, res) => {
+    console.log("👍🏼")
     let {
         txn_id,
         payment_status,
@@ -46,9 +47,10 @@ router.post("/", (req, res) => {
             if (payment_status === 'Completed' && existingSuccessIPN === false) {
                 //? 9. Check that the receiver_email is an email address registered in your PayPal account. (step 5???)
                 // 10. Check that the price (carried in mc_gross) and the currency (carried in mc_currency) are correct for the item (carried in item_name or item_number).
+
                 // todo item_number1 ??????
-                item_number1 = "P-5NY36749SE7475025MAIOEJI" //!testing
-                mc_gross = '5.99' //!testing
+                // item_number1 = "P-5NY36749SE7475025MAIOEJI" //!testing
+                // mc_gross = '5.99' //!testing
 
                 planDb.getPlanByPayPalId(item_number1).then(([
                     plan

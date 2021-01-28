@@ -219,16 +219,19 @@ module.exports = router;
 
 //? send sub expiry time in payload for VST?
 function generateToken(user) {
+    console.log(user)
     const {
         id,
-        vst_access
+        vst_access,
+        active_subscription
     } = user;
     const {
         JWT_SECRET
     } = process.env
     const payload = {
         subject: id,
-        vst_access
+        vst_access,
+        active_subscription
     };
     const options = {
         expiresIn: "72hr",
