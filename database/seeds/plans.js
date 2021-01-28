@@ -16,7 +16,7 @@ exports.seed = function (knex) {
             "Private Discord",
           ],
           // todo change payPal_id to live ID
-          payPal_id: "P-5NY36749SE7475025MAIOEJI",
+          payPal_id: "P-3UA655559E7099157MAJTDFY",
         },
         {
           id: 2,
@@ -24,7 +24,7 @@ exports.seed = function (knex) {
           name: "Standard",
           credits: 250,
           price: "10.99",
-          discount: 15, //todo find discount
+          discount: 27, //*26.61%
           included: [
             "VST Access",
             "Instructional Videos",
@@ -34,7 +34,7 @@ exports.seed = function (knex) {
             "MIDI Files",
             "Private Discord",
           ],
-          payPal_id: "P-03Y07993KV0411933MAIOETA",
+          payPal_id: "P-1KL895179M828440HMAJTDUA",
         },
         {
           id: 3,
@@ -42,7 +42,7 @@ exports.seed = function (knex) {
           name: "Studio",
           credits: 500,
           price: "19.99",
-          discount: 20, //todo find discount
+          discount: 33, //*33.2554257095%
           included: [
             "VST Access",
             "Instructional Videos",
@@ -52,7 +52,7 @@ exports.seed = function (knex) {
             "MIDI Files",
             "Private Discord",
           ],
-          payPal_id: "P-1V678195DT9234000MAIOEYA",
+          payPal_id: "P-147778146U0869313MAJTDXA",
         }
       ]);
     });

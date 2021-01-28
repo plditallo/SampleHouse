@@ -6,6 +6,7 @@ exports.up = function (knex) {
         tbl.integer("credits").notNullable()
         tbl.string("product_type").default("offer")
         tbl.string("price")
+        tbl.integer("discount")
         tbl.integer("tier").default(0)
     })
 };
