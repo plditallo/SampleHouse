@@ -16,7 +16,7 @@ function validatePlan(req, res, next) {
     } = req.params
     getPlanByName(plan_name).then(([plan]) => {
         if (!plan) return res.status(400).json({
-            msg: `No Plan found with ID: ${id}.`,
+            msg: `No Plan found with name: ${plan_name}.`,
         })
         req.plan = plan
         next()

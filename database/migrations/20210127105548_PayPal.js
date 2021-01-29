@@ -3,6 +3,7 @@ exports.up = function (knex) {
         tbl.increments().primary();
         tbl.string("transaction_id").notNullable();
         tbl.string("payment_status").notNullable();
+        // tbl.string("recurring_payment_id").notNullable()
     })
 };
 

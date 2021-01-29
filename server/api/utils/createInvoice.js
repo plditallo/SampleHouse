@@ -22,7 +22,6 @@ function createInvoice(user, product) {
     if (tier > 1) user.vst_access = true
     else user.vst_access = false
 
-
     updateUser(user).then(null)
     insertInvoice({
         user_id,

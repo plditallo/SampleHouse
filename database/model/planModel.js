@@ -26,6 +26,7 @@ function getPlanById(id) {
 }
 
 function getPlanByName(name) {
+    console.log("name", name)
     return db("Plan").where({
         name
     })

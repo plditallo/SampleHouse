@@ -4,6 +4,7 @@ module.exports = {
     insertUser,
     getUserById,
     getUserByEmail,
+    getUserByPayPalSubscriptionId,
     updateUser,
     removeUser
 }
@@ -21,6 +22,12 @@ function getUserById(id) {
 function getUserByEmail(email) {
     return db("User").where({
         email
+    })
+}
+
+function getUserByPayPalSubscriptionId(payPal_subscription_id) {
+    return db("User").where({
+        payPal_subscription_id
     })
 }
 

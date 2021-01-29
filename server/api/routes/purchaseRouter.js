@@ -11,11 +11,13 @@ const {
 const createInvoice = require("../utils/createInvoice");
 
 const day = 86400000
-router.get("/subscribe/:plan_name", validatePlan, (req, res) => {
+router.post("/subscribe/:plan_name", validatePlan, (req, res) => {
     const {
         user,
         plan
     } = req;
+    console.log(req.body)
+    user.payPal_subscription_id = req.body.subscriptionID
     getSubscriberById(user.id).then(([subscriber]) => {
         const subscriptionData = {
             user_id: user.id,
@@ -23,20 +25,19 @@ router.get("/subscribe/:plan_name", validatePlan, (req, res) => {
             subscribe_start: Date.now(),
             subscribe_end: Date.now() + (day * plan.day_length)
         }
-        //* check if subscriber has MORE than 24 hours left on subscription
-        if (subscriber && (subscriber.subscribe_end - Date.now()) > day)
+        //* check if subscriber has MORE than 2 hours left on subscription
+        if (subscriber && (subscriber.subscribe_end - Date.now()) > (day / 12))
             return res.status(200).send({
                 msg: `You already has an active subscription. Subscription expires on: ${new Date(subscriber.subscribe_end).toLocaleDateString()}.`
             })
         else if (subscriber) removeSubscription(subscriber.id).then(null)
 
-        if (paymentResponse = true) return insertSubscription(subscriptionData).then(() => {
+        insertSubscription(subscriptionData).then(() => {
             createInvoice(user, plan)
             res.status(200).send({
                 msg: `Subscription to: ${plan.name} was successful.`
             })
         })
-        console.log("payment failed at new subscriber")
     })
 });
 

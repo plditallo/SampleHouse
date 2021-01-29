@@ -16,7 +16,7 @@ exports.seed = function (knex) {
             "Private Discord",
           ],
           // todo change payPal_id to live ID
-          payPal_id: "P-3UA655559E7099157MAJTDFY",
+          payPal_id: "P-56Y32113PA500112XMAKFDMQ",
         },
         {
           id: 2,
@@ -34,7 +34,7 @@ exports.seed = function (knex) {
             "MIDI Files",
             "Private Discord",
           ],
-          payPal_id: "P-1KL895179M828440HMAJTDUA",
+          payPal_id: "P-1C95019562040184VMAKFDXA",
         },
         {
           id: 3,
@@ -52,7 +52,7 @@ exports.seed = function (knex) {
             "MIDI Files",
             "Private Discord",
           ],
-          payPal_id: "P-147778146U0869313MAJTDXA",
+          payPal_id: "P-48G78859E2352503XMAKFEAA",
         }
       ]);
     });

@@ -4,7 +4,6 @@
 class Subscriptions extends React.Component {
   constructor(props) {
     super(props);
-    // todo get data from database
     this.state = {
       data: [],
       plan_name: "",
@@ -56,30 +55,26 @@ class Subscriptions extends React.Component {
       })
       .then(() => {
         document.querySelector(".card").style.border = "3px solid #c3c1c1";
-        console.log(this.state.data[0]);
-
         // document.querySelector("#paypal-button-container").innerHTML = "";
         // createPayPalButtons(this.state.payPal_id, this.state.plan_name);
       });
   }
 
   componentDidUpdate() {
+    const { user, payPal_id, plan_name } = this.state;
     //! testing change to !this.
-    if (this.state.user.active_subscription) {
+    if (!user.active_subscription) {
       const payPalBtnContainer = document.querySelector(
         "#paypal-button-container"
       );
       if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
-      createPayPalButtons(
-        this.state.payPal_id,
-        this.state.plan_name,
-        this.state.user
-      );
+      createPayPalButtons(payPal_id, plan_name, user.subject);
     }
   }
 
   render() {
     const { active_subscription } = this.state.user;
+    // console.log(this.state.user.subject);
     return (
       <div>
         <div id="subscription-cards">
@@ -117,7 +112,7 @@ class Subscriptions extends React.Component {
             // todo change link in headers to go to home/index based on loggin
           )}
         </div>
-        {active_subscription ? ( //!testing change to !active_subscription
+        {!active_subscription ? ( //!testing change to !active_subscription
           <div className="payment">
             <h3>Choose Your Payment Type</h3>
             <div id="paypal-button-container"></div>
@@ -133,7 +128,8 @@ class Subscriptions extends React.Component {
 const domContainer = document.querySelector("#subscriptions");
 ReactDOM.render(React.createElement(Subscriptions), domContainer);
 
-function createPayPalButtons(plan_id, plan_name, user) {
+function createPayPalButtons(plan_id, plan_name, user_id) {
+  // console.log(plan_id, plan_name);
   paypal
     .Buttons({
       createSubscription: function (data, actions) {
@@ -142,21 +138,28 @@ function createPayPalButtons(plan_id, plan_name, user) {
         });
       },
       onApprove: function (data, actions) {
+        console.log("onApprove function");
+        console.log(data);
+        const { subscriptionID, orderID } = data;
         // todo purchase router here
         // todo redirect to somewhere on success
-        //todo update database with updated subscription and listen for any unsubscribes
+        // todo update database with updated subscription and listen for any unsubscribes
         // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
-        // fetch(`http://localhost:5000/api/purchase/subscribe/${plan_name}`, {
-        //   method: "GET",
-        //   type: "cors",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: window.localStorage.getItem("samplehousetoken"),
-        //   },
-        // })
-        //   .then(async (res) => await res.json())
-        //   .then((resp) => alert(resp.msg));
-        console.log("onApprove paypal Btns");
+        fetch(`http://localhost:5000/api/paypal/subscribe`, {
+          method: "POST",
+          type: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            //? remove Authorization?
+            Authorization: window.localStorage.getItem("samplehousetoken"),
+          },
+          body: JSON.stringify({
+            user_id,
+            subscriptionID,
+          }),
+        }) //todo change to .then(null)
+          .then(async (res) => await res.json())
+          .then((resp) => console.log(resp));
         window.location.hash = "success"; // home.html
       },
       onCancel: function (data) {
