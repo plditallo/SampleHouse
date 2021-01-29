@@ -7,7 +7,6 @@ exports.up = function (knex) {
         tbl.date("subscribe_end")
         tbl.date("trial_start")
         tbl.date("trial_end")
-        tbl.boolean("transaction_verified").default(false);
     })
 };
 
