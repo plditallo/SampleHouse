@@ -3,7 +3,7 @@ const router = require("express").Router();
 
 //* ROUTES
 const userRouter = require("./routes/userRouter");
-const purchaseRouter = require("./routes/purchaseRouter");
+// const purchaseRouter = require("./routes/purchaseRouter");
 const tokenRouter = require("./routes/tokenRouter");
 const audioRouter = require("./routes/audioRouter");
 const contactRouter = require("./routes/contact");
@@ -16,9 +16,8 @@ const restricted = require("./middleware/restricted");
 
 router.use("/user", userRouter);
 router.use("/token", tokenRouter);
-router.use("/purchase", restricted, purchaseRouter);
-//todo add restricted route for sounds
-router.use("/audio", audioRouter)
+// router.use("/purchase", restricted, purchaseRouter);
+router.use("/audio", restricted, audioRouter)
 router.use("/contact", contactRouter)
 router.use("/paypal", payPalRouter)
 router.use("/plan", planRouter)

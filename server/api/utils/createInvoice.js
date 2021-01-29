@@ -31,4 +31,5 @@ function createInvoice(user, product) {
         created: Date.now(),
         // description:
     }).then(null)
+    console.log(`Invoice created for ${product.name} was successful.`)
 }

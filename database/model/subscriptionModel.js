@@ -23,8 +23,8 @@ function updateSubscription(user_id, data) {
     })
 }
 
-function removeSubscription(id) {
+function removeSubscription(user_id) {
     return db("Subscription").where({
-        id
+        user_id
     }).del()
 }

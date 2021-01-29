@@ -16,7 +16,6 @@ module.exports = (req, res, next) => {
 
   verify(authorization, process.env.JWT_SECRET, (err, decodedToken) => {
     if (err) {
-      window.localStorage.removeItem("samplehousetoken")
       return res.status(401).json({
         msg: "Invalid token"
       })

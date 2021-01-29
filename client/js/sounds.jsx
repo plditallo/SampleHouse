@@ -14,6 +14,7 @@ class Sounds extends React.Component {
       isTruncated: false,
       covers: {},
       soundSourceNode: null,
+      token: window.localStorage.getItem("samplehousetoken"),
     };
   }
   nextBtnHandler = () => {
@@ -49,23 +50,19 @@ class Sounds extends React.Component {
         type: "cors",
         headers: {
           "Content-Type": "application/json",
+          authorization: this.state.token,
         },
       }
     )
-      .then(async (resp) => await resp.json())
-      .then(({ IsTruncated, sounds, NextContinuationToken }) => {
-        // console.log({ sounds });
-        // const newState = {
-        //   ...this.state,
-        //   // soundsList: [...soundsList, ...sounds],
-        //   soundsList: [...soundsList],
-        //   nextContinuationToken: IsTruncated ? NextContinuationToken : "",
-        //   isTruncated: IsTruncated,
-        //   maxPage: IsTruncated ? null : page,
-        // };
-        // sounds.forEach(async (e) =>
-        //   newState.soundsList.push({ [e]: await this.fetchTags(e) })
-        // );
+      .then(async (resp) => ({
+        status: resp.status,
+        data: await resp.json(),
+      }))
+      .then(({ status, data }) => {
+        if (status !== 200)
+          return window.localStorage.removeItem("samplehousetoken");
+
+        const { IsTruncated, sounds, NextContinuationToken } = data;
         this.setState({
           ...this.state,
           soundsList: [...soundsList, ...sounds],
@@ -108,6 +105,7 @@ class Sounds extends React.Component {
       type: "cors",
       headers: {
         "Content-Type": "application/octet-stream",
+        authorization: this.state.token,
       },
     }).then(async (Data) => {
       const context = new AudioContext();
@@ -130,6 +128,7 @@ class Sounds extends React.Component {
           type: "cors",
           headers: {
             "Content-Type": "image/png", //? application/json?
+            authorization: this.state.token,
           },
         }
       )
@@ -147,23 +146,24 @@ class Sounds extends React.Component {
     }
   }
 
-  async fetchTags(path) {
-    await fetch(
-      `http://localhost:5000/api/audio/tag/${encodeURIComponent(path)}`,
-      {
-        method: "GET",
-        type: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (resp) => await resp.json())
-      .then((tags) => {
-        // console.log(getSoundName(path), tags);
-        return tags;
-      });
-  }
+  // async fetchTags(path) {
+  //   await fetch(
+  //     `http://localhost:5000/api/audio/tag/${encodeURIComponent(path)}`,
+  //     {
+  //       method: "GET",
+  //       type: "cors",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         authorization: this.state.token,
+  //       },
+  //     }
+  //   )
+  //     .then(async (resp) => await resp.json())
+  //     .then((tags) => {
+  //       // console.log(getSoundName(path), tags);
+  //       return tags;
+  //     });
+  // }
 
   componentDidMount() {
     this.fetchSoundList();

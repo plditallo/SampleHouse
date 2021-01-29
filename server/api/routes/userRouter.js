@@ -8,6 +8,7 @@ const {
 } = require("../../../database/model/userModel");
 const {
     getSubscriberById,
+    removeSubscription
 } = require("../../../database/model/subscriptionModel");
 const {
     hashSync,
@@ -95,14 +96,14 @@ router.post("/login",
                     else {
                         user.active_subscription = false
                         user.vst_access = false
+                        removeSubscription(user.id).then(null)
                     }
 
                     user.last_login = Date.now()
                     updateUser(user).then(null)
                     //* Login successful, write token, and send back user
                     res.status(200).json({
-                        token: generateToken(user),
-                        subscribed: user.active_subscription,
+                        token: generateToken(user)
                     });
                 })
             })
@@ -220,7 +221,7 @@ module.exports = router;
 
 //? send sub expiry time in payload for VST?
 function generateToken(user) {
-    console.log(user)
+    // console.log(user)
     const {
         id,
         vst_access,

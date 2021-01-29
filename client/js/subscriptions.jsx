@@ -27,8 +27,6 @@ class Subscriptions extends React.Component {
 
   componentDidMount() {
     //todo don't allow payment method if already have a subscription
-    // <script src="../js/utils/jwt-decode.js"></script>;
-    // <script src="../js/utils/jwt-verify.js"></script>;
     const token = window.localStorage.getItem("samplehousetoken");
     let user;
     if (token) {
@@ -39,6 +37,7 @@ class Subscriptions extends React.Component {
       type: "cors",
       headers: {
         "Content-Type": "application/json",
+        authorization: token,
       },
     })
       .then(async (res) => await res.json())
@@ -138,20 +137,16 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
         });
       },
       onApprove: function (data, actions) {
-        console.log("onApprove function");
-        console.log(data);
+        console.log("onApprove", data);
         const { subscriptionID, orderID } = data;
-        // todo purchase router here
         // todo redirect to somewhere on success
         // todo update database with updated subscription and listen for any unsubscribes
-        // todo IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
+        // todo LIVE IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
         fetch(`http://localhost:5000/api/paypal/subscribe`, {
           method: "POST",
           type: "cors",
           headers: {
             "Content-Type": "application/json",
-            //? remove Authorization?
-            Authorization: window.localStorage.getItem("samplehousetoken"),
           },
           body: JSON.stringify({
             user_id,
@@ -163,6 +158,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
         window.location.hash = "success"; // home.html
       },
       onCancel: function (data) {
+        console.log("onCancel", data);
         // Show a cancel page, or return to cart
         alert(`You have canceled the subscription to ${plan_name}`);
         // todo redirect to somewhere on cancel
