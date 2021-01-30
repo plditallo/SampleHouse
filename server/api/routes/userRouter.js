@@ -222,6 +222,10 @@ router.get("/:id", (req, res) => {
     })
 })
 
+router.get("/vst-access", (req, res) => {
+    // todo new endpoint for VST to hit to know if they have access to VST NEW ROUTE
+})
+
 router.use("/", (req, res) => {
     res.status(200).json({
         Route: "User Route"
@@ -236,8 +240,7 @@ function generateToken(user) {
     const {
         id,
         vst_access,
-        active_subscription,
-        payPal_subscription_id
+        active_subscription
     } = user;
     const {
         JWT_SECRET
@@ -245,14 +248,12 @@ function generateToken(user) {
     const payload = {
         subject: id,
         vst_access,
-        active_subscription,
     };
     const options = {
         expiresIn: "72hr",
     };
     return jwt.sign(payload, JWT_SECRET, options);
 }
-
 
 
 const sound1 = {

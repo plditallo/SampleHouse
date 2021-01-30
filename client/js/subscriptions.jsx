@@ -9,6 +9,7 @@ class Subscriptions extends React.Component {
       plan_name: "",
       payPal_id: "",
       user: {},
+      token: window.localStorage.getItem("samplehousetoken"),
     };
   }
 
@@ -27,17 +28,24 @@ class Subscriptions extends React.Component {
 
   componentDidMount() {
     //todo don't allow payment method if already have a subscription
-    const token = window.localStorage.getItem("samplehousetoken");
+    const id = jwt_decode(this.state.token).subject;
     let user;
-    if (token) {
-      user = jwt_decode(token);
-    }
+    fetch(`http://localhost:5000/api/user/${id}`, {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (res) => await res.json())
+      .then((resp) => (user = resp));
+
     fetch("http://localhost:5000/api/plan", {
       method: "GET",
       type: "cors",
       headers: {
         "Content-Type": "application/json",
-        authorization: token,
+        authorization: this.state.token,
       },
     })
       .then(async (res) => await res.json())
@@ -67,13 +75,14 @@ class Subscriptions extends React.Component {
         "#paypal-button-container"
       );
       if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
-      createPayPalButtons(payPal_id, plan_name, user.subject);
+      createPayPalButtons(payPal_id, plan_name, user.id);
     }
   }
 
   render() {
     const { active_subscription } = this.state.user;
     // console.log(this.state.user.subject);
+    console.log(this.state);
     return (
       <div>
         <div id="subscription-cards">
@@ -111,7 +120,7 @@ class Subscriptions extends React.Component {
             // todo change link in headers to go to home/index based on loggin
           )}
         </div>
-        {!active_subscription ? ( //!testing change to !active_subscription
+        {!active_subscription ? (
           <div className="payment">
             <h3>Choose Your Payment Type</h3>
             <div id="paypal-button-container"></div>
@@ -139,6 +148,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
       onApprove: function (data, actions) {
         console.log("onApprove", data);
         const { subscriptionID, orderID } = data;
+        // todo set user active_subscription to true in local state
         // todo redirect to somewhere on success
         // todo update database with updated subscription and listen for any unsubscribes
         // todo LIVE IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
