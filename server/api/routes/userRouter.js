@@ -183,31 +183,42 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
         })
 })
 
-router.delete("/:id", (req, res) => {
-    //todo check token to see if user is trying to delete (not someone else)
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).send(errors.array());
+// router.delete("/:id", (req, res) => {
+//     //todo check token to see if user is trying to delete (not someone else)
+//? use token w/ restricted route
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) return res.status(400).send(errors.array());
+//     const {
+//         id
+//     } = req.params;
+//     const {
+//         password
+//     } = req.body;
+
+//     getUserById(id).then(([user]) => {
+//         if (!user) return res.status(403).json({
+//             msg: `The user id: ${id} is not associated with any account.`
+//         });
+//         //* Check password
+//         if (!compareSync(password, user.password)) return res.status(403).json({
+//             msg: "Invalid password"
+//         });
+//         if (user.balance > 0) return res.status(403).json({
+//             msg: `This account still has a balance of ${user.balance} credits. Please spend remaining credits before deleting account.`
+//         });
+//         removeUser(id).then(() => res.status(200).send({
+//             msg: "Successfully removed user"
+//         }))
+//     })
+// })
+
+router.get("/:id", (req, res) => {
     const {
         id
     } = req.params;
-    const {
-        password
-    } = req.body;
-
     getUserById(id).then(([user]) => {
-        if (!user) return res.status(403).json({
-            msg: `The user id: ${id} is not associated with any account.`
-        });
-        //* Check password
-        if (!compareSync(password, user.password)) return res.status(403).json({
-            msg: "Invalid password"
-        });
-        if (user.balance > 0) return res.status(403).json({
-            msg: `This account still has a balance of ${user.balance} credits. Please spend remaining credits before deleting account.`
-        });
-        removeUser(id).then(() => res.status(200).send({
-            msg: "Successfully removed user"
-        }))
+        res.status(200).json(user)
+        //todo send back only necessary data
     })
 })
 
@@ -225,7 +236,8 @@ function generateToken(user) {
     const {
         id,
         vst_access,
-        active_subscription
+        active_subscription,
+        payPal_subscription_id
     } = user;
     const {
         JWT_SECRET
@@ -233,7 +245,7 @@ function generateToken(user) {
     const payload = {
         subject: id,
         vst_access,
-        active_subscription
+        active_subscription,
     };
     const options = {
         expiresIn: "72hr",

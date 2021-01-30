@@ -52,14 +52,14 @@ class Subscriptions extends React.Component {
           payPal_id: data[0].payPal_id,
         });
       })
-      .then(() => {
-        document.querySelector(".card").style.border = "3px solid #c3c1c1";
-        // document.querySelector("#paypal-button-container").innerHTML = "";
-        // createPayPalButtons(this.state.payPal_id, this.state.plan_name);
-      });
+      .then(
+        () =>
+          (document.querySelector(".card").style.border = "3px solid #c3c1c1")
+      );
   }
 
   componentDidUpdate() {
+    // todo get user, not through token to verify active subscription
     const { user, payPal_id, plan_name } = this.state;
     //! testing change to !this.
     if (!user.active_subscription) {
@@ -152,10 +152,10 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
             user_id,
             subscriptionID,
           }),
-        }) //todo change to .then(null)
+        }) //todo redirect to success page w/ hash for success type
           .then(async (res) => await res.json())
           .then((resp) => console.log(resp));
-        window.location.hash = "success"; // home.html
+        window.location.hash = "success"; //success.html#subscribe
       },
       onCancel: function (data) {
         console.log("onCancel", data);

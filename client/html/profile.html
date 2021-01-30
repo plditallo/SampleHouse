@@ -9,12 +9,18 @@
   <body>
     <script src="../js/utils/jwt-decode.js"></script>
     <script src="../js/utils/jwt-verify.js"></script>
+    <script type="module">
+      const token = window.localStorage.getItem("samplehousetoken");
+      if (!token || (token && !jwt_verify(jwt_decode(token))))
+        window.location = "index.html";
+    </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
 
     <!--! Content goes here -->
     <!-- <button id="cancel-btn">Cancel Subscription</button> -->
+    <div id="profile"></div>
 
     <footer id="footer"></footer>
     <!--* Load React. -->
@@ -32,5 +38,6 @@
     <script type="text/babel" src="../js/sticky-nav.jsx"></script>
     <script type="text/babel" src="../js/hamburgerMenu.jsx"></script>
     <script type="text/babel" src="../js/footer.jsx"></script>
+    <script type="text/babel" src="../js/profile.jsx"></script>
   </body>
 </html>
