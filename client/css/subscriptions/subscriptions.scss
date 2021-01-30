@@ -37,6 +37,7 @@ body {
     position: relative;
     font-size: 1.1em;
     border-radius: 1em;
+    cursor: pointer;
 
     @include breakpoint(xxs, xs, s) {
       width: 70%;

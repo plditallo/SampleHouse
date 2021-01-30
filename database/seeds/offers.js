@@ -14,7 +14,7 @@ exports.seed = function (knex) {
           name: "offer 2",
           credits: 250,
           price: "9.49", //0.03796
-          discount: 0 //*15.4565701559
+          discount: 15 //*15.4565701559
         },
         {
           id: 3,

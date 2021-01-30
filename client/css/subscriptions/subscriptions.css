@@ -76,6 +76,7 @@ body {
   position: relative;
   font-size: 1.1em;
   border-radius: 1em;
+  cursor: pointer;
 }
 
 @media (max-width: 360px) {

@@ -69,7 +69,6 @@ class Subscriptions extends React.Component {
   componentDidUpdate() {
     // todo get user, not through token to verify active subscription
     const { user, payPal_id, plan_name } = this.state;
-    //! testing change to !this.
     if (!user.active_subscription) {
       const payPalBtnContainer = document.querySelector(
         "#paypal-button-container"
@@ -82,7 +81,7 @@ class Subscriptions extends React.Component {
   render() {
     const { active_subscription } = this.state.user;
     // console.log(this.state.user.subject);
-    console.log(this.state);
+    // console.log(this.state);
     return (
       <div>
         <div id="subscription-cards">

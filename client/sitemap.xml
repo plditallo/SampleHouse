@@ -6,9 +6,15 @@
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
    </url>
+  
    <url>
-   <!--* home after login -->
-      <loc>https://www.sample.house/home</loc>
+      <loc>https://www.sample.house/404</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+   <url>
+      <loc>https://www.sample.house/account</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
@@ -19,8 +25,27 @@
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
    </url>
+      <url>
+      <loc>https://www.sample.house/contact</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
    <url>
       <loc>https://www.sample.house/forgot-password</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+ <url>
+   <!--* home after login -->
+      <loc>https://www.sample.house/home</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+    <url>
+      <loc>https://www.sample.house/privacy-policy</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
@@ -31,12 +56,7 @@
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
    </url>
-   <url>
-      <loc>https://www.sample.house/contact</loc>
-      <lastmod>2020-1-11</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.5</priority>
-   </url>
+
    <url>
       <loc>https://www.sample.house/subscriptions</loc>
       <lastmod>2020-1-11</lastmod>
@@ -44,13 +64,19 @@
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.sample.house/offers</loc>
+      <loc>https://www.sample.house/success</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
    </url>
    <url>
-      <loc>https://www.sample.house/account</loc>
+      <loc>https://www.sample.house/terms-of-service</loc>
+      <lastmod>2020-1-11</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+   <url>
+      <loc>https://www.sample.house/offers</loc>
       <lastmod>2020-1-11</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>

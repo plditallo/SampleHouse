@@ -1,6 +1,6 @@
 "use strict";
 
-class Profile extends React.Component {
+class Account extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,8 +35,8 @@ class Profile extends React.Component {
   }
 }
 
-const domContainer = document.querySelector("#profile");
-ReactDOM.render(React.createElement(Profile), domContainer);
+const domContainer = document.querySelector("#account");
+ReactDOM.render(React.createElement(Account), domContainer);
 
 // todo change all sandbox.paypal
 async function unsubscribe(subscription_id) {
