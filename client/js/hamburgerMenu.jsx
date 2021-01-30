@@ -5,10 +5,18 @@ class HamburgerMenu extends React.Component {
     super(props);
     this.state = {
       open: false,
+      loggedIn: false,
     };
+  }
+  componentDidMount() {
+    const token = window.localStorage.getItem("samplehousetoken");
+    if (token && jwt_verify(jwt_decode(token)))
+      this.setState({ loggedIn: true });
   }
 
   render() {
+    const { loggedIn } = this.state;
+
     const menu = document.querySelector("#menu");
     const links = document.querySelectorAll("#menu a");
 
@@ -37,33 +45,74 @@ class HamburgerMenu extends React.Component {
           <span className="hamburger-span" />
           <span className="hamburger-span" />
 
-          <ul id="menu">
-            <li>
-              <a href="index.html#">HOME</a>
-            </li>
-            <li>
-              <a href="index.html#about">ABOUT</a>
-            </li>
-            <li>
-              <a href="index.html#products">PRODUCTS</a>
-            </li>
-            <li>
-              <a href="index.html#pricing">PRICING</a>
-            </li>
-            <li>
-              <a href="index.html#faq">FAQ's</a>
-            </li>
-            <li>
-              <a href="contact.html">CONTACT</a>
-            </li>
-          </ul>
+          {!loggedIn ? (
+            <ul id="menu">
+              <li>
+                <a href="index.html#">HOME</a>
+              </li>
+              <li>
+                <a href="index.html#about">ABOUT</a>
+              </li>
+              <li>
+                <a href="index.html#products">PRODUCTS</a>
+              </li>
+              <li>
+                <a href="index.html#pricing">PRICING</a>
+              </li>
+              <li>
+                <a href="index.html#faq">FAQ's</a>
+              </li>
+              <li>
+                <a href="contact.html">CONTACT</a>
+              </li>
+            </ul>
+          ) : (
+            <ul id="menu">
+              <li>
+                <a href="home.html#">SOUNDS</a>
+              </li>
+              <li>
+                <a href="#PLUGINS">PLUGINS</a>
+                {/* download link for VST IMG w/ Title, Desc w/ download button*/}
+              </li>
+              <li>
+                <a href="#SAMPLEPACKS">SAMPLEPACKS</a>
+                {/* grid out with pack's img and title --> packs page */}
+              </li>
+              <li>
+                <a href="#VIDEOS">VIDEOS</a>
+                {/* grid out video w/ img and title */}
+                {/* tier 2+ only, w/ upgrade btn  and go back btn-->  */}
+                {/* youtube private channel link */}
+              </li>
+              <li>
+                <a href="#DISCORD">DISCORD</a>
+              </li>
+              <li>
+                <a href="contact.html">CONTACT</a>
+              </li>
+            </ul>
+          )}
         </div>
         <div className="right">
-          <div className="actions">
-            <a href="authentication.html#">LOGIN</a>
-            <a href="authentication.html#">SIGN UP</a>
-          </div>
-          <a href="index.html#">
+          {!loggedIn ? (
+            <div className="actions">
+              <a href="authentication.html#">LOGIN</a>
+              <a href="authentication.html#">SIGN UP</a>
+            </div>
+          ) : (
+            <div className="actions">
+              <a
+                href="index.html"
+                onClick={() =>
+                  window.localStorage.removeItem("samplehousetoken")
+                }
+              >
+                LOGOUT
+              </a>
+            </div>
+          )}
+          <a href={!loggedIn ? "index.html#" : "home.html#"}>
             <img src="../assets/sample_house_logo.png" alt="SampleHouse Logo" />
           </a>
         </div>
