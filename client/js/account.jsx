@@ -38,7 +38,6 @@ class Account extends React.Component {
 const domContainer = document.querySelector("#account");
 ReactDOM.render(React.createElement(Account), domContainer);
 
-// todo change all sandbox.paypal
 async function unsubscribe(subscription_id) {
   let creds = null;
 
@@ -66,9 +65,7 @@ async function unsubscribe(subscription_id) {
       },
     }
   ).then(({ status }) => {
-    if (status === 204) return (window.location.hash = "successful-cancel");
-    // todo redirect to success.html#cancel
-    //todo catch error just in case
-    else return (window.location.hash = "error");
+    if (status === 204) return (window.location = "success.html#cancel");
+    else return (window.location = "404.html#error");
   });
 }

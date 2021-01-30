@@ -17,7 +17,7 @@ class forgotPassword extends React.Component {
     }
     this.setState({
       ...this.state,
-      errorMsg: "Please enter a valid Email address.",
+      errorMsg: "Please enter a valid E-mail address.",
     });
     return false;
   };
@@ -93,7 +93,7 @@ class forgotPassword extends React.Component {
           {this.state.successMsg}
         </p>
         <label htmlFor="email">
-          Email Address:
+          E-mail Address:
           <input
             type="text"
             name="email"

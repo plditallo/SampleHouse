@@ -17,7 +17,7 @@ class LoginForm extends React.Component {
     if (re.test(this.state.logEmail.toLowerCase())) return true;
     this.setState({
       ...this.state,
-      errorMsg: "Please enter a valid Email address.",
+      errorMsg: "Please enter a valid E-mail address.",
       verified: true,
     });
     return false;
@@ -139,7 +139,7 @@ class LoginForm extends React.Component {
         >
           {this.state.resendSuccessMsg}
         </p>
-        <label htmlFor="logEmail">Email Address</label>
+        <label htmlFor="logEmail">E-mail Address</label>
         <input
           type="text"
           name="logEmail"

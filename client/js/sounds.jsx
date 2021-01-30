@@ -168,7 +168,6 @@ class Sounds extends React.Component {
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    // this.fetchTags("SH Essential Drums/SH_Essential_Hat_01.wav"); //! testing
   }
   //todo  pagination btn still going up if no more pages
   // todo pagination button spammed causes getSounds not to work

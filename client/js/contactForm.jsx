@@ -3,7 +3,6 @@
 class ContactForm extends React.Component {
   constructor(props) {
     super(props);
-    // todo remove state
     this.state = {
       name: "",
       email: "",
@@ -19,13 +18,12 @@ class ContactForm extends React.Component {
     const errState = { ...this.state, errors: [] };
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(email.toLowerCase()))
-      errState.errors = ["Please enter a valid Email address."];
+      errState.errors = ["Please enter a valid E-mail address."];
     if (name.length < 3)
       errState.errors = [...errState.errors, "Please enter your name."];
     if (errState.errors.length) return this.setState(errState);
 
     const submitFetch = async () =>
-      //todo change url
       await fetch("http://localhost:5000/api/contact", {
         method: "POST",
         type: "cors",
@@ -93,7 +91,7 @@ class ContactForm extends React.Component {
           value={this.state.name}
           required
         />
-        <label htmlFor="email">&#42;Email Address</label>
+        <label htmlFor="email">&#42;E-mail Address</label>
         <input
           type="text"
           name="email"

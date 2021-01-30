@@ -1,0 +1,3 @@
+change client-id="change to client live id"
+change all sandbox.paypal
+change all localhost --> Heroku
