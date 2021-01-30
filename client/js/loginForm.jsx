@@ -29,7 +29,6 @@ class LoginForm extends React.Component {
     if (!this.verifyEmail()) return;
     // todo if confirmation email from register, remove
     const submitFetch = async () =>
-      //todo change url
       await fetch("http://localhost:5000/api/user/login", {
         method: "POST",
         type: "cors",
@@ -65,7 +64,6 @@ class LoginForm extends React.Component {
     if (!this.verifyEmail()) return;
     // todo add response to hash and do same as register to display message
     const submitFetch = async () =>
-      //todo change url
       await fetch("http://localhost:5000/api/token/resend", {
         method: "POST",
         type: "cors",
@@ -155,7 +153,7 @@ class LoginForm extends React.Component {
           value={this.state.logPassword}
           required
         />
-        {/* //todo check if all links are accessable via TAB */}
+        {/* //todo check if all links are accessible via TAB (tab-index?) */}
         <a
           href={`forgot-password.html${logEmail ? "#forgot=" + logEmail : ""}`}
         >

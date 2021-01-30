@@ -1,5 +1,4 @@
 "use strict";
-// todo add spinner
 class Sounds extends React.Component {
   constructor(props) {
     super(props);
@@ -97,7 +96,6 @@ class Sounds extends React.Component {
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
     // console.log(soundSourceNode);
-    // todo spinner.show()
     // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
     await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {

@@ -27,7 +27,6 @@ class Subscriptions extends React.Component {
   };
 
   componentDidMount() {
-    //todo don't allow payment method if already have a subscription
     const id = jwt_decode(this.state.token).subject;
     let user;
     fetch(`http://localhost:5000/api/user/${id}`, {
@@ -67,7 +66,6 @@ class Subscriptions extends React.Component {
   }
 
   componentDidUpdate() {
-    // todo get user, not through token to verify active subscription
     const { user, payPal_id, plan_name } = this.state;
     if (!user.active_subscription) {
       const payPalBtnContainer = document.querySelector(
@@ -116,7 +114,6 @@ class Subscriptions extends React.Component {
                 </div>
               </div>
             )
-            // todo change link in headers to go to home/index based on loggin
           )}
         </div>
         {!active_subscription ? (
@@ -147,10 +144,6 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
       onApprove: function (data, actions) {
         console.log("onApprove", data);
         const { subscriptionID, orderID } = data;
-        // todo set user active_subscription to true in local state
-        // todo redirect to somewhere on success
-        // todo update database with updated subscription and listen for any unsubscribes
-        // todo LIVE IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
         fetch(`http://localhost:5000/api/paypal/subscribe`, {
           method: "POST",
           type: "cors",
@@ -161,17 +154,17 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
             user_id,
             subscriptionID,
           }),
-        }) //todo redirect to success page w/ hash for success type
+        })
           .then(async (res) => await res.json())
           .then((resp) => console.log(resp));
-        window.location.hash = "success"; //success.html#subscribe
+        window.location = "success.html#subscribe";
       },
       onCancel: function (data) {
         console.log("onCancel", data);
         // Show a cancel page, or return to cart
         alert(`You have canceled the subscription to ${plan_name}`);
         // todo redirect to somewhere on cancel
-        window.location.hash = "cancel";
+        window.location.hash = "cancel"; //404.html#error-cancel
       },
     })
     .render("#paypal-button-container");

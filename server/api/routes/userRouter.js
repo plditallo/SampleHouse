@@ -37,7 +37,7 @@ router.post("/register",
         })
     ],
     checkExistingUsers, (req, res) => {
-        // todo set role to "beta" for 1st week of deployment
+        // todo set role to "beta" for 1st week of deployment (use Date.now and the date 1 week after live deployment)
         // console.log("body", req.body)
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).send(errors.array());
@@ -64,9 +64,6 @@ router.post("/register",
     });
 // https://stackoverflow.com/questions/23507200/good-practices-for-designing-monthly-subscription-system-in-database
 
-//todo logging in from VST? (Header? HOST??) -> validateSubscription
-//todo use user.active for vst auth as well as user.lastLogin
-// todo login VST include tier 2+
 router.post("/login",
     [body('email').isEmail().normalizeEmail()], (req, res) => {
         const errors = validationResult(req);
@@ -170,7 +167,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
                 user.password_reset_token = null
                 user.password_reset_expires = null
                 user.password = hashSync(password, 13)
-                //todo  change link here from req.headers.host to correct endpoint FRONTEND NOT HOST
+
                 return updateUser(user).then(() => res.status(200).json({
                     type: 'password-reset',
                     msg: `Password has been successfully been changed.`
@@ -220,10 +217,6 @@ router.get("/:id", (req, res) => {
         res.status(200).json(user)
         //todo send back only necessary data
     })
-})
-
-router.get("/vst-access", (req, res) => {
-    // todo new endpoint for VST to hit to know if they have access to VST NEW ROUTE
 })
 
 router.use("/", (req, res) => {
@@ -279,4 +272,3 @@ const sound2 = {
     tag9: "value",
     tag10: "value",
 }
-// todo check aws s3 bucket for number of downloads per object

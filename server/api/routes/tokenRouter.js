@@ -15,7 +15,6 @@ const {
     getUserByEmail
 } = require("../../../database/model/userModel");
 
-//todo all login responses give link to login from header host
 router.get("/confirmation/:token", (req, res) => {
     const {
         token
@@ -42,7 +41,6 @@ router.get("/confirmation/:token", (req, res) => {
             });
 
             user.isVerified = true
-            // todo add login link from this response
             updateUser(user).then(() => res.status(200).send("The account has been verified. Please log in.")).catch(err => res.status(500).send({
                 msg: err.message
             }))

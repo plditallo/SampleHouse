@@ -8,7 +8,7 @@ AWS.config.update({
 const s3 = new AWS.S3({
     apiVersion: '2006-03-01'
 });
-// todo find out how to pull full files from S3
+// todo find out how to download full files from S3
 
 router.get("/", (req, res) => {
     const {

@@ -3,9 +3,7 @@
 class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
-    // todo remove state
     this.state = {
-      // regEmail: `${Math.random().toString(32)}@testing.com`,
       regEmail: "",
       regPassword: "",
       fname: "",
@@ -32,7 +30,6 @@ class RegisterForm extends React.Component {
     if (errState.errors.length) return this.setState(errState);
 
     const submitFetch = async () =>
-      //todo change url
       await fetch("http://localhost:5000/api/user/register", {
         method: "POST",
         type: "cors",

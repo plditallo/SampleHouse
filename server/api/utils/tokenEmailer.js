@@ -29,9 +29,7 @@ function tokenEmailer(user, host, type) {
         text: `Hello,\n\n Please verify your account by clicking the link: \nhttp:\/\/${host}\/api\/token\/reset-password.html#${token.token}. This token will expire in 12 hours.`
     };
     if (type === "password") {
-        // todo email isn't sending if I change the text...
         emailTemplate.subject = "Sample.House Account Reset Password";
-        // todo SEND EMAIL W/ LINK TO FORM TO REST PASSWORD THEN POST REQUEST
         emailTemplate.text = `Hello ${user.first_name},\n\n Please reset your password by clicking the following link: \n${CLIENT_URL}/html/reset-password.html#token=${token.token}. This link will expire in 6 hours.`
     }
     //* email transporter and mail options

@@ -17,7 +17,6 @@ class Product extends React.Component {
           alt: "img alt",
           title: "Subscription",
           text: `Your monthly subscription plan includes pre-loaded credits that allow you to download Sample.House products. If you don’t use all of your credits, they will roll over into the next month. Choose from one of our three subscription plans.`,
-          // todo get anchor tag working here for subscription plans
         },
         {
           img: "../assets/vst_sound_mixing_board.png",
@@ -47,13 +46,6 @@ class Product extends React.Component {
           text:
             "Watch our demonstration videos & courses to discover the best production tips& tricks to make a better composition.",
         },
-        // {
-        //   img: "../assets/exclusive_loops.png",
-        //   alt: "img alt",
-        //   //todo span bold here
-        //   text:
-        //     "<span>No more duplicate samples</span> used on hundreds of songs. Once a loop is downloaded,it is removed from the site.You will be the only person with that loop!Search our exclusive loops library with new loops added every day!",
-        // },
       ],
     };
   }

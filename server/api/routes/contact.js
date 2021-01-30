@@ -43,7 +43,7 @@ router.post("/", (req, res) => {
     });
     res.status(200).json({
         msg: "Successfully submitted. Please expect a reply within 24-48 hours."
-    }) //todo message
+    })
 })
 
 module.exports = router
