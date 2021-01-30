@@ -104,7 +104,7 @@ class LoginForm extends React.Component {
         const resendHash = window.location.hash.replace("#resend=", "");
         this.setState({
           ...this.state,
-          resendSuccessMsg: `A confirmation email has been re-sent to ${resendHash}. In case you did not receive the verification email, please be sure to check your spam folder.`,
+          resendSuccessMsg: `A confirmation E-mail has been re-sent to ${resendHash}. If  you did not receive the verification E-mail, please be sure to check your spam folder.`,
           logEmail: resendHash,
         });
       } else if (window.location.hash.includes("#emailSucReset=")) {

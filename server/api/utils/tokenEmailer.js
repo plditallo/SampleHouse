@@ -56,7 +56,7 @@ function tokenEmailer(user, host, type) {
     //* Insert verification token
     insertToken(token).then(null)
     return {
-        msg: `A confirmation email has been sent to ${user.email}.`
+        msg: `A confirmation E-mail has been sent to ${user.email}.`
     }
 
 }

@@ -21,7 +21,6 @@ class forgotPassword extends React.Component {
     });
     return false;
   };
-  // todo add 'check junk mailbox if you don't receive email'
   onSubmitHandler = (evt) => {
     evt.preventDefault();
     // window.location.hash = "#";
@@ -68,7 +67,7 @@ class forgotPassword extends React.Component {
         const forgotSucHash = window.location.hash.replace("#forgotSuc=", "");
         this.setState({
           ...this.state,
-          successMsg: `A email as been sent to ${forgotSucHash} with a link to reset your password. This link will expire in 6 hours. In case you did not receive the password reset link email, please be sure to check your spam folder.`,
+          successMsg: `A E-mail as been sent to ${forgotSucHash} with a link to reset your password. This link will expire in 6 hours. In case you did not receive the password reset link E-mail, please be sure to check your spam folder.`,
         });
       }
       window.location.hash = "#";

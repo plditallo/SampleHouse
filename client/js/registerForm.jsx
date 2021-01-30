@@ -5,6 +5,7 @@ class RegisterForm extends React.Component {
     super(props);
     // todo remove state
     this.state = {
+      // regEmail: `${Math.random().toString(32)}@testing.com`,
       regEmail: "",
       regPassword: "",
       fname: "",
@@ -20,7 +21,7 @@ class RegisterForm extends React.Component {
     const errState = { ...this.state, errors: [] };
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(regEmail.toLowerCase()))
-      errState.errors = ["Please enter a valid E-mail address."];
+      errState.errors = ["Please enter a valid Email address."];
     if (regPassword.length < 7)
       errState.errors = [
         ...errState.errors,
@@ -39,7 +40,7 @@ class RegisterForm extends React.Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          -: regEmail,
+          email: regEmail,
           password: regPassword,
           first_name: fname,
           last_name: lname.length ? lname : null,
@@ -68,7 +69,7 @@ class RegisterForm extends React.Component {
         const emailHash = hash.replace("#emailSucReg=", "");
         this.setState({
           ...this.state,
-          successMsg: `A confirmation email has been sent to ${emailHash}. In case you did not receive the verification email, please be sure to check your spam folder.`,
+          successMsg: `A confirmation E-mail has been sent to ${emailHash}. In case you did not receive the verification E-mail, please be sure to check your spam folder.`,
         });
       }
   }
@@ -81,7 +82,7 @@ class RegisterForm extends React.Component {
         onSubmit={this.onSubmitHandler}
       >
         <p className="info">
-          Please enter your E-mail address and a password to create an account.
+          Please enter your Email address and a password to create an account.
         </p>
         <span className="success">{this.state.successMsg}</span>
         <div className="errors">
@@ -112,7 +113,7 @@ class RegisterForm extends React.Component {
             />
           </div>
         </div>
-        <label htmlFor="regEmail">&#42;E-mail Address</label>
+        <label htmlFor="regEmail">&#42;Email Address</label>
         <input
           type="text"
           name="regEmail"

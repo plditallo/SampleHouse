@@ -136,7 +136,7 @@ router.post("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req,
             user.password_reset_token = token.token
             user.password_reset_expires = Date.now() + 21600000 //6hrs
             updateUser(user).then(() => res.status(200).send({
-                msg: `A email as been sent to ${req.body.email} with a link to reset your password. This link will expire in 6 hours.`
+                msg: `A E-mail as been sent to ${req.body.email} with a link to reset your password. This link will expire in 6 hours.`
             }))
         })
 })

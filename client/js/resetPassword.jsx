@@ -104,7 +104,7 @@ class resetPassword extends React.Component {
           errMsg = "Your forgot password link has expired.";
         } else if (errTypeHash === "wrong-token")
           errMsg =
-            "We were unable to find a valid token. Please try the reset password link again in your email.";
+            "We were unable to find a valid token. Please try the reset password link again in your E-mail.";
         localRedirectingState = errTypeHash === "token-expired" ? true : false;
         this.setState({
           ...this.state,
