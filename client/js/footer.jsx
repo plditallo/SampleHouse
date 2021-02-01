@@ -37,20 +37,23 @@ class Footer extends React.Component {
             </p>
             {/* //todo links */}
             <div className="sm">
-              <a href="#youtubeLink">
+              <a href="https://www.youtube.com/c/SampleHouse" target="_blank">
                 <img src="../assets/youtube_icon.png" alt="Youtube Icon" />
               </a>
-              <a href="#twitterLink">
+              <a href="https://twitter.com/Sample_House" target="_blank">
                 <img src="../assets/twitter_icon.png" alt="Twitter Icon" />
               </a>
-              <a href="#FacebookLink">
+              <a href="#FacebookLink" target="_blank">
                 <img src="../assets/facebook_icon.png" alt="Facebook Icon" />
               </a>
             </div>
           </div>
         </div>
         <div className="bottom">
-          <a href="https://www.bluesmokedigitalandprintedmedia.com">
+          <a
+            href="https://www.bluesmokedigitalandprintedmedia.com"
+            target="_blank"
+          >
             <p>
               Organic SEO, Web Design and Development by Blue Smoke Digital and
               Printed Media
