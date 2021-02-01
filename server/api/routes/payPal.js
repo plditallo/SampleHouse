@@ -110,6 +110,7 @@ router.post("/", (req, res) => {
                     user.payPal_subscription_id = null;
                     removeSubscription(user.id).then(null)
                     updateUser(user).then(null)
+                    console.log("User has successfully unsubscribed")
                 })
             }
         }
@@ -117,7 +118,7 @@ router.post("/", (req, res) => {
 })
 
 router.post("/subscribe", (req, res) => {
-    // update user with subscription ID for upgrade/cancel
+    // update user with subscription ID for upgrade/cancel (IPN)
     const {
         user_id,
         subscriptionID
@@ -129,6 +130,7 @@ router.post("/subscribe", (req, res) => {
 })
 
 router.get("/creds", (req, res) => {
+    // get PayPal credentials for subscription auth
     const config = {
         method: 'post',
         url: 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
