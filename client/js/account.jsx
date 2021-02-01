@@ -1,5 +1,4 @@
 "use strict";
-
 class Account extends React.Component {
   constructor(props) {
     super(props);
@@ -39,9 +38,7 @@ const domContainer = document.querySelector("#account");
 ReactDOM.render(React.createElement(Account), domContainer);
 
 async function unsubscribe(subscription_id) {
-  let creds = null;
-
-  await fetch(`http://localhost:5000/api/paypal/creds`, {
+  const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
     method: "GET",
     type: "cors",
     headers: {
@@ -49,9 +46,8 @@ async function unsubscribe(subscription_id) {
     },
   })
     .then(async (res) => await res.json())
-    .then((resp) => (creds = resp));
-
-  console.log(subscription_id, creds);
+    .then((resp) => resp);
+  // console.log(subscription_id, await getCreds());
   // this.state.user. = "I-94BT1KUWKGL1"; //! testing (use other subscriptions)
 
   fetch(
