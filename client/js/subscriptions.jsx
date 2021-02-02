@@ -8,8 +8,8 @@ class Subscriptions extends React.Component {
       data: [],
       plan_name: "",
       payPal_id: "",
+      selectedPlan: {}, //todo refactor to store whole plan
       user: {},
-      userCurrentPlan: "",
       token: window.localStorage.getItem("samplehousetoken"),
     };
   }
@@ -25,9 +25,9 @@ class Subscriptions extends React.Component {
       cards.forEach((e) => (e.style.border = "1px solid #c3c1c1"));
       cards[cardIndex].style.border = "3px solid #c3c1c1";
       // select current plan
-      if (this.state.user.plan_id)
+      if (this.state.user.currentPlanId)
         document.querySelectorAll(".card")[
-          this.state.user.plan_id - 1
+          this.state.user.currentPlanId - 1
         ].style.border = "2px solid lime";
     }
   };
@@ -59,7 +59,8 @@ class Subscriptions extends React.Component {
         let userCurrentPlan = "";
         // console.log("id", user);
         resp.forEach((e) => {
-          if (user.plan_id && e.id == user.plan_id) userCurrentPlan = e;
+          if (user.currentPlanId && e.id == user.currentPlanId)
+            userCurrentPlan = e;
           return data.push(e);
         });
         this.setState({
@@ -73,9 +74,10 @@ class Subscriptions extends React.Component {
       })
       .then(() => {
         document.querySelector(".card").style.border = "3px solid #c3c1c1";
-        if (this.state.user.plan_id)
-          document.querySelectorAll(".card")[user.plan_id - 1].style.border =
-            "3px solid lime";
+        if (this.state.user.currentPlanId)
+          document.querySelectorAll(".card")[
+            user.currentPlanId - 1
+          ].style.border = "3px solid lime";
       });
   }
 
@@ -93,12 +95,11 @@ class Subscriptions extends React.Component {
   render() {
     const { userCurrentPlan, payPal_id } = this.state;
     const { active_subscription, payPal_subscription_id } = this.state.user;
-    // console.log(this.state.user);
 
     return (
       <div>
         {active_subscription ? (
-          <h3>Your current subscription plan is: {userCurrentPlan.plan}</h3>
+          <h3>Your current subscription plan is: {userCurrentPlan.name}</h3>
         ) : null}
         <div id="subscription-cards">
           {this.state.data.map(
@@ -142,8 +143,9 @@ class Subscriptions extends React.Component {
         ) : (
           <button
             onClick={() => {
-              console.log(userCurrentPlan.id == this.state.user.plan_id);
-              updateSubscription(payPal_subscription_id, payPal_id);
+              userCurrentPlan.name !== this.state.plan_name
+                ? updateSubscription(payPal_subscription_id, payPal_id)
+                : null;
             }}
           >
             Update Subscription
@@ -194,7 +196,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
     .render("#paypal-button-container");
 }
 
-async function updateSubscription(userPayPalId, planId) {
+async function updateSubscription(subscription_id, plan_id) {
   const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
     method: "GET",
     type: "cors",
@@ -205,36 +207,45 @@ async function updateSubscription(userPayPalId, planId) {
     .then(async (res) => await res.json())
     .then((resp) => resp);
 
-  console.log({ creds, userPayPalId, planId });
-  // console.log(subscription_id, await getCreds());
-  // this.state.user. = "I-94BT1KUWKGL1"; //! testing (use other subscriptions)
-
-  // fetch(
-  //   `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscription_id}/cancel`,
-  //   {
-  //     method: "POST",
-  //     type: "cors",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${creds}`,
-  //     },
-  //   }
-  // ).then(({ status }) => {
-  //   if (status === 204) return (window.location = "success.html#cancel");
-  //   else return (window.location = "404.html#error");
-  // });
-  // only update if selected card is different than current subscription
-  //   fetch(`http://localhost:5000/api/paypal/subscribe`, {
-  //     method: "POST",
-  //     type: "cors",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       user_id,
-  //       subscriptionID,
-  //     }),
-  //   })
-  //     // .then(async (res) => await res.json())
-  //     .then(() => (window.location = "success.html#subscribe"));
+  // console.log({ creds, subscription_id, planId });
+  console.log(subscription_id);
+  //! todo https://www.paypal-support.com/s/account-overview# (braden@bluesmokemedia.net)
+  fetch(
+    `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscription_id}/revise`,
+    {
+      method: "POST",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${creds}`,
+      },
+      body: JSON.stringify({
+        plan_id,
+      }),
+    }
+  )
+    .then(async (res) => {
+      if (res.status !== 200) return (window.location.hash = "error");
+      return await res.json();
+      // if (status === 204) return (window.location = "success.html#cancel");
+      // else return (window.location = "404.html#error");
+    })
+    .then((resp) => {
+      console.log(resp);
+      const link = resp["links"].find((e) => e.rel === "approve").href;
+      console.log(link);
+      window.open(link, "_blank");
+    });
+  // fetch(`http://localhost:5000/api/paypal/subscribe`, {
+  //   method: "POST",
+  //   type: "cors",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     user_id,
+  //     subscriptionID,
+  //   }),
+  // }).then(async (res) => await res.json()).then(resp => console.log(resp))
+  // .then(() => (window.location = "success.html#subscribe"));
 }
