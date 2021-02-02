@@ -22,10 +22,28 @@
     <!--! Content goes here -->
     <!-- base off # -->
     <div id="success">
-      <h1>SUCCESSFUL SUBSCRIPTION</h1>
-      <p>Please allow up to 20 minutes for PayPal to authorize payment.</p>
-      <h1>SUCCESSFUL CANCEL</h1>
+      <h1 id="message"></h1>
+      <p>Please allow up to 20 minutes for PayPal to process the request.</p>
     </div>
+
+    <script>
+      const hash = window.location.hash.replace("#", "");
+      const message = document.getElementById("message");
+      switch (hash) {
+        case "cancel":
+          message.innerText = "CANCEL";
+          break;
+
+        case "subscribe":
+          message.innerText = "SUCCESSFUL SUBSCRIPTION";
+          break;
+
+        default:
+          message.innerText = "OTHER";
+          // window.location = "404.html"
+          break;
+      }
+    </script>
 
     <footer id="footer"></footer>
     <!--* Load React. -->
