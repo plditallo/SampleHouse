@@ -28,7 +28,8 @@ router.post("/", (req, res) => {
         mc_currency,
         mc_gross,
         recurring_payment_id,
-        txn_type
+        txn_type,
+        payer_id
     } = req.body
     console.log(req.body)
     // 2. Your listener returns an empty HTTP 200 response to PayPal.
@@ -42,27 +43,32 @@ router.post("/", (req, res) => {
         if (err) {
             console.error(err);
         } else {
-            console.log(msg)
+            console.log(msg) //! Verified
             // 5. Verify that you are the intended recipient of the IPN message. To do this, check the email address in the message. //todo change this email
             if (receiver_email !== 'sb-f2tra4923122@business.example.com') return console.log("receiver_email is not correct");
             // console.log("5-verify receive email")
             // 6. Verify that the IPN is not a duplicate. To do this, save the transaction ID and last payment status in each IPN message in a database and verify that the current IPN's values for these fields are not already in this database.
-            //! CHECK IPN TYPE
-            //! SUBSCRIPTION UPDATE (monthly)
-            if (txn_type === "recurring_payment") {
-                console.log("txn_type is new subscription")
-                let existingSuccessIPN = null;
-                if (txn_id) await payPalDb.getTransaction(txn_id).then(([resp]) => {
-                    if (resp) {
-                        if (resp.payment_status !== payment_status) {
-                            return payPalDb.updateTransaction(txn_id, payment_status).then(() => existingSuccessIPN = false)
-                        } else
-                            return existingSuccessIPN = true;
-
+            let existingSuccessIPN = null;
+            if (txn_id) await payPalDb.getTransaction(txn_id).then(([resp]) => {
+                if (resp) {
+                    if (resp.payment_status !== payment_status) {
+                        return payPalDb.updateTransaction(txn_id, payment_status).then(() => existingSuccessIPN = false)
                     } else
-                        return payPalDb.insertTransaction(txn_id, payment_status).then(() => existingSuccessIPN = false)
+                        return existingSuccessIPN = true;
 
-                })
+                } else {
+                    console.log("else")
+                    return payPalDb.insertTransaction(txn_id, payment_status, payer_id).then(() => existingSuccessIPN = false)
+                }
+
+            })
+            console.log({
+                existingSuccessIPN
+            })
+            //! CHECK IPN TYPE
+            //! SUBSCRIPTION PAYMENT (monthly)
+            if (txn_type === "recurring_payment") {
+                // console.log("txn_type is new subscription")
                 // 7. Check that the payment_status is Completed.
                 // 8.(step 6) If the payment_status is Completed, check the txn_id against the previous PayPal transaction that you processed to ensure the IPN message is not a duplicate.
                 if (payment_status === 'Completed' && existingSuccessIPN === false) {
@@ -102,17 +108,22 @@ router.post("/", (req, res) => {
                         }
                     })
                 }
-            } else if (txn_type === "recurring_payment_profile_cancel") {
+            } //! subscription canceling
+            else if (txn_type === "recurring_payment_profile_cancel") {
                 console.log("txn_type is canceling subscription")
                 getUserByPayPalSubscriptionId(recurring_payment_id).then(([user]) => {
-                    console.log(user)
-                    user.active_subscription = false;
-                    user.vst_access = false;
-                    user.payPal_subscription_id = null;
-                    removeSubscription(user.id).then(null)
-                    updateUser(user).then(null)
-                    console.log("User has successfully unsubscribed", user)
+                    if (user) {
+                        user.active_subscription = false;
+                        user.vst_access = false;
+                        user.payPal_subscription_id = null;
+                        removeSubscription(user.id).then(null)
+                        updateUser(user).then(null)
+                        console.log("User has successfully unsubscribed", user)
+                    }
                 })
+            } //! Offer Purchase
+            else if (txn_type === "express_checkout" && existingSuccessIPN === false) {
+                console.log("txn_type if a offer purchase")
             }
         }
     }, process.env.NODE_ENV === 'production');

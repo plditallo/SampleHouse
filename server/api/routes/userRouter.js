@@ -215,12 +215,19 @@ router.get("/:id", (req, res) => {
     } = req.params;
     //todo send back only necessary data
     getUserById(id).then(([user]) => {
-        if (user.active_subscription)
-            getSubscriberById(user.id).then(([sub]) => {
-                user.currentPlanId = sub.plan_id;
-                res.status(200).json(user)
-            })
-        else res.status(200).json(user)
+        if (user) {
+            let userData = {};
+            userData.id = user.id;
+            userData.active_subscription = user.active_subscription;
+            userData.balance = user.balance;
+            userData.payPal_subscription_id = user.payPal_subscription_id;
+            if (user.active_subscription)
+                getSubscriberById(user.id).then(([sub]) => {
+                    userData.currentPlanId = sub.plan_id;
+                    res.status(200).json(userData)
+                })
+            else res.status(200).json(userData)
+        }
     })
 })
 

@@ -3,18 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--* Paypal Smart Button meta data -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
     <link rel="stylesheet" href="../css/core.css" />
-    <title></title>
+    <link rel="stylesheet" href="../css/offers/offers.css" />
+    <title>Offers</title>
   </head>
   <body>
     <script src="../js/utils/jwt-decode.js"></script>
     <script src="../js/utils/jwt-verify.js"></script>
-    <!--! Uncomment to verify token to access page -->
-    <!-- <script type="module">
+    <script type="module">
       const token = window.localStorage.getItem("samplehousetoken");
       if (!token || (token && !jwt_verify(jwt_decode(token))))
         window.location = "index.html";
-    </script> -->
+    </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
@@ -33,6 +37,11 @@
       crossorigin
     ></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!--* Load PayPal Smart Button -->
+    <!--* https://developer.paypal.com/docs/subscriptions/integrate/ -->
+    <script src="https://www.paypal.com/sdk/js?client-id=ARDI-oaJaTUBc-0omUSyNvFGjV-6tm3AZxQtgMw_04mc6uq_h6MKh9n1GviJ060FT2VRGby5XrP_dNL4&vault=true&disable-funding=credit"></script>
+
     <!--* Load React components -->
     <script type="text/babel" src="../js/header.jsx"></script>
     <script type="text/babel" src="../js/sticky-nav.jsx"></script>

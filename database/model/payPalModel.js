@@ -6,10 +6,12 @@ module.exports = {
     updateTransaction
 }
 
-function insertTransaction(transaction_id, payment_status) {
+function insertTransaction(transaction_id, payment_status, payer_id) {
     return db("PayPal").insert({
         transaction_id,
-        payment_status
+        payment_status,
+        payer_id,
+        created: Date.now()
     })
 }
 
@@ -21,7 +23,8 @@ function getTransaction(transaction_id) {
 
 function updateTransaction(transaction_id, payment_status) {
     return db("PayPal").update({
-        payment_status
+        payment_status,
+        updated: Date.now()
     }).where({
         transaction_id
     })

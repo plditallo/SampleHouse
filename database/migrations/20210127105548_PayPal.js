@@ -1,9 +1,11 @@
 exports.up = function (knex) {
     return knex.schema.createTable("PayPal", tbl => {
         tbl.increments().primary();
+        tbl.date("created").notNullable();
+        tbl.date("updated")
         tbl.string("transaction_id").notNullable();
         tbl.string("payment_status").notNullable();
-        // tbl.string("recurring_payment_id").notNullable()
+        tbl.string("payer_id").notNullable()
     })
 };
 

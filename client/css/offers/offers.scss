@@ -18,10 +18,11 @@ body {
     color: $lightGrey;
   }
 }
-#subscription-cards {
+#offer-cards {
   display: flex;
   justify-content: space-around;
   margin-bottom: 6em;
+  margin-top: 5em;
   @include breakpoint(xxs, xs, s) {
     flex-direction: column;
     align-items: center;
@@ -32,7 +33,7 @@ body {
     text-align: center;
     padding: 0.5em 1em;
     border: 1px solid $lightGrey;
-    height: 34em;
+    height: 20em;
     width: 25%;
     position: relative;
     font-size: 1.1em;

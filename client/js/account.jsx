@@ -44,11 +44,9 @@ async function unsubscribe(subscription_id) {
     headers: {
       "Content-Type": "application/json",
     },
-  })
-    .then(async (res) => await res.json())
-    .then((resp) => resp);
+  }).then(async (res) => await res.json());
   // console.log(subscription_id, await getCreds());
-  // this.state.user. = "I-94BT1KUWKGL1"; //! testing (use other subscriptions)
+  // subscription_id = "I-R5MYP1JUL3LC"; //! testing (use other subscriptions)
 
   fetch(
     `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscription_id}/cancel`,
