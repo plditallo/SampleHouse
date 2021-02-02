@@ -45,7 +45,7 @@ class Subscriptions extends React.Component {
       .then(async (res) => await res.json())
       .then((resp) => (user = resp));
 
-    await fetch("http://localhost:5000/api/plan", {
+    await fetch("http://localhost:5000/api/product/plans", {
       method: "GET",
       type: "cors",
       headers: {
@@ -55,6 +55,7 @@ class Subscriptions extends React.Component {
     })
       .then(async (res) => await res.json())
       .then((resp) => {
+        console.log(resp);
         const data = [];
         let userCurrentPlan = "";
         // console.log("id", user);

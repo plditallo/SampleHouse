@@ -8,7 +8,7 @@ const tokenRouter = require("./routes/tokenRouter");
 const audioRouter = require("./routes/audioRouter");
 const contactRouter = require("./routes/contact");
 const payPalRouter = require("./routes/payPal");
-const planRouter = require("./routes/planRouter");
+const productRouter = require("./routes/productRouter");
 
 //* MIDDLEWARE
 const restricted = require("./middleware/restricted");
@@ -20,7 +20,7 @@ router.use("/token", tokenRouter);
 router.use("/audio", restricted, audioRouter)
 router.use("/contact", contactRouter)
 router.use("/paypal", payPalRouter)
-router.use("/plan", planRouter)
+router.use("/product", restricted, productRouter)
 
 router.use("/", (req, res) => {
   res.status(200).json({
