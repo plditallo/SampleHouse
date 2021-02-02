@@ -29,8 +29,7 @@ router.post("/", (req, res) => {
         mc_currency,
         mc_gross,
         recurring_payment_id,
-        txn_type,
-        payer_id
+        txn_type
     } = req.body
     console.log(req.body)
     // 2. Your listener returns an empty HTTP 200 response to PayPal.
@@ -58,7 +57,7 @@ router.post("/", (req, res) => {
                         return existingSuccessIPN = true;
 
                 } else
-                    return payPalDb.insertTransaction(txn_id, payment_status, payer_id).then(() => existingSuccessIPN = false)
+                    return payPalDb.insertTransaction(txn_id, payment_status).then(() => existingSuccessIPN = false)
 
 
             })
@@ -136,14 +135,11 @@ router.post("/purchase", (req, res) => {
     const {
         user_id,
         subscriptionID,
-        payerId
     } = req.body;
     console.log("body", req.body)
     getUserById(user_id).then(([user]) => {
         // for subscriptions
         if (subscriptionID) user.payPal_subscription_id = subscriptionID;
-        // for offers
-        if (payerId) user.payPal_payer_id = payerId
         updateUser(user).then(() => res.status(200).json("User updated"))
     })
 })

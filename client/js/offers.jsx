@@ -139,7 +139,6 @@ function createPayPalButtons(offer, user_id) {
             },
             body: JSON.stringify({
               user_id,
-              payerId: data.payerID,
             }),
           }).then(() => (window.location.hash = "offer"));
           // window.location = "success#offer"
