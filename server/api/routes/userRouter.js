@@ -215,10 +215,9 @@ router.get("/:id", (req, res) => {
     } = req.params;
     //todo send back only necessary data
     getUserById(id).then(([user]) => {
-        console.log(user.active_subscription)
         if (user.active_subscription)
             getSubscriberById(user.id).then(([sub]) => {
-                user.plan_id = sub.plan_id;
+                user.currentPlanId = sub.plan_id;
                 res.status(200).json(user)
             })
         else res.status(200).json(user)

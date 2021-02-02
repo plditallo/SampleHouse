@@ -105,12 +105,13 @@ router.post("/", (req, res) => {
             } else if (txn_type === "recurring_payment_profile_cancel") {
                 console.log("txn_type is canceling subscription")
                 getUserByPayPalSubscriptionId(recurring_payment_id).then(([user]) => {
+                    console.log(user)
                     user.active_subscription = false;
                     user.vst_access = false;
                     user.payPal_subscription_id = null;
                     removeSubscription(user.id).then(null)
                     updateUser(user).then(null)
-                    console.log("User has successfully unsubscribed")
+                    console.log("User has successfully unsubscribed", user)
                 })
             }
         }
