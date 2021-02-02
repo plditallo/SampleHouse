@@ -55,7 +55,7 @@ class Subscriptions extends React.Component {
     })
       .then(async (res) => await res.json())
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         const data = [];
         let userCurrentPlan = "";
         // console.log("id", user);
@@ -172,7 +172,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
       onApprove: function (data, actions) {
         console.log("onApprove", data);
         const { subscriptionID } = data;
-        fetch(`http://localhost:5000/api/paypal/subscribe`, {
+        fetch(`http://localhost:5000/api/paypal/purchase`, {
           method: "POST",
           type: "cors",
           headers: {
@@ -198,15 +198,16 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
 }
 
 async function updateSubscription(subscription_id, plan_id) {
-  const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
-    method: "GET",
-    type: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then(async (res) => await res.json())
-    .then((resp) => resp);
+  // this updateFunction not going to work yet until it updates the IPN
+  //! const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
+  //   method: "GET",
+  //   type: "cors",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+  //   .then(async (res) => await res.json())
+  //   .then((resp) => resp);
 
   // console.log({ creds, subscription_id, planId });
   console.log(subscription_id);
@@ -237,16 +238,4 @@ async function updateSubscription(subscription_id, plan_id) {
       console.log(link);
       window.open(link, "_blank");
     });
-  // fetch(`http://localhost:5000/api/paypal/subscribe`, {
-  //   method: "POST",
-  //   type: "cors",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     user_id,
-  //     subscriptionID,
-  //   }),
-  // }).then(async (res) => await res.json()).then(resp => console.log(resp))
-  // .then(() => (window.location = "success.html#subscribe"));
 }

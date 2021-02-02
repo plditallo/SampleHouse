@@ -5,7 +5,8 @@ const payPalDb = require("../../../database/model/payPalModel");
 const {
     getUserById,
     updateUser,
-    getUserByPayPalSubscriptionId
+    getUserByPayPalSubscriptionId,
+    getUserByPayPalPayerId
 } = require("../../../database/model/userModel");
 const offerDb = require("../../../database/model/offerModel");
 const planDb = require("../../../database/model/planModel");
@@ -56,14 +57,10 @@ router.post("/", (req, res) => {
                     } else
                         return existingSuccessIPN = true;
 
-                } else {
-                    console.log("else")
+                } else
                     return payPalDb.insertTransaction(txn_id, payment_status, payer_id).then(() => existingSuccessIPN = false)
-                }
 
-            })
-            console.log({
-                existingSuccessIPN
+
             })
             //! CHECK IPN TYPE
             //! SUBSCRIPTION PAYMENT (monthly)
@@ -124,19 +121,29 @@ router.post("/", (req, res) => {
             } //! Offer Purchase
             else if (txn_type === "express_checkout" && existingSuccessIPN === false) {
                 console.log("txn_type if a offer purchase")
+                console.log({
+                    payer_id
+                })
+                // todo how to know what user made the purchase???
+                getUserByPayPalPayerId(payer_id).then(res => console.log(res))
             }
         }
     }, process.env.NODE_ENV === 'production');
 })
 
-router.post("/subscribe", (req, res) => {
+router.post("/purchase", (req, res) => {
     // update user with subscription ID for upgrade/cancel (IPN)
     const {
         user_id,
-        subscriptionID
+        subscriptionID,
+        payerId
     } = req.body;
+    console.log("body", req.body)
     getUserById(user_id).then(([user]) => {
-        user.payPal_subscription_id = subscriptionID
+        // for subscriptions
+        if (subscriptionID) user.payPal_subscription_id = subscriptionID;
+        // for offers
+        if (payerId) user.payPal_payer_id = payerId
         updateUser(user).then(() => res.status(200).json("User updated"))
     })
 })

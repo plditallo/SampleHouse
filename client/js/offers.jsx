@@ -131,37 +131,19 @@ function createPayPalButtons(offer, user_id) {
         // This function captures the funds from the transaction.
         return actions.order.capture().then((details) => {
           console.log("onApprove", { data, details });
-          // This function shows a transaction success message to your buyer.
-          // fetch(`http://localhost:5000/api/paypal/subscribe`, {
-          //   method: "POST",
-          //   type: "cors",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   body: JSON.stringify({
-          //     user_id,
-          //     subscriptionID,
-          //   }),
-          // })
-          //   // .then(async (res) => await res.json())
-          //   .then(() => (window.location = "success.html#subscribe"));
+          fetch(`http://localhost:5000/api/paypal/purchase`, {
+            method: "POST",
+            type: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id,
+              payerId: data.payerID,
+            }),
+          }).then(() => (window.location.hash = "offer"));
           // window.location = "success#offer"
         });
-        // console.log("onApprove", data);
-        // const { subscriptionID } = data;
-        // fetch(`http://localhost:5000/api/paypal/subscribe`, {
-        //   method: "POST",
-        //   type: "cors",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     user_id,
-        //     subscriptionID,
-        //   }),
-        // })
-        //   // .then(async (res) => await res.json())
-        //   .then(() => (window.location = "success.html#subscribe"));
       },
       onCancel: function (data) {
         console.log("onCancel", data);
