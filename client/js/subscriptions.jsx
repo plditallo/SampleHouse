@@ -96,6 +96,7 @@ class Subscriptions extends React.Component {
   render() {
     const { userCurrentPlan, payPal_id } = this.state;
     const { active_subscription, payPal_subscription_id } = this.state.user;
+    console.log({ payPal_id });
 
     return (
       <div>
@@ -198,19 +199,15 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
 }
 
 async function updateSubscription(subscription_id, plan_id) {
-  // this updateFunction not going to work yet until it updates the IPN
-  // const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
-  //   method: "GET",
-  //   type: "cors",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // })
-  //   .then(async (res) => await res.json())
-  //   .then((resp) => resp);
+  const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
+    method: "GET",
+    type: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then(async (res) => await res.json());
 
-  // console.log({ creds, subscription_id, planId });
-  console.log(subscription_id);
+  console.log({ creds, subscription_id, plan_id });
   fetch(
     `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscription_id}/revise`,
     {
@@ -232,9 +229,8 @@ async function updateSubscription(subscription_id, plan_id) {
       // else return (window.location = "404.html#error");
     })
     .then((resp) => {
-      console.log(resp);
       const link = resp["links"].find((e) => e.rel === "approve").href;
-      console.log(link);
+      console.log({ resp, link });
       window.open(link, "_blank");
     });
 }

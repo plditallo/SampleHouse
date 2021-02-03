@@ -138,7 +138,6 @@ router.post("/forgotPassword", [body('email').isEmail().normalizeEmail()], (req,
         })
 })
 
-//todo post here from form w/ body containing email, newPass, and token
 router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).send(errors.array());
@@ -147,7 +146,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
         password,
         token
     } = req.body;
-    // todo send token back down if error?
+
     getUserByEmail(email)
         .then(([user]) => {
             if (!user) return res.status(403).json({

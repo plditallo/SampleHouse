@@ -202,6 +202,7 @@ class resetPassword extends React.Component {
           />
         </label>
         <button type="submit">
+          {/* todo change icon */}
           <img src="../assets/lock.png" alt="lock"></img>Reset Password
         </button>
       </form>

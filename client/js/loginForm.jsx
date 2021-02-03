@@ -27,7 +27,7 @@ class LoginForm extends React.Component {
     evt.preventDefault();
     this.setState({ ...this.state, resendSuccessMsg: null });
     if (!this.verifyEmail()) return;
-    // todo if confirmation email from register, remove
+    // todo if confirmation email message from register exists, remove message
     const submitFetch = async () =>
       await fetch("http://localhost:5000/api/user/login", {
         method: "POST",

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const ipn = require("paypal-ipn")
-const webhook = require("paypal-node-sdk")
+// const webhook = require("paypal-node-sdk")
+// const paypal = require('paypal-rest-sdk')
 const axios = require("axios")
 const payPalDb = require("../../../database/model/payPalModel");
 const {
@@ -39,7 +40,7 @@ router.post("/ipn", (req, res) => {
     // res.end()
     // 3. Your listener HTTPS POSTs the complete, unaltered message back to PayPal;
     ipn.verify(req.body, {
-        'allow_sandbox': true
+        'allow_sandbox': true //todo does this need to be to false? set to variable if sandbox PAYPAL_MODE
     }, async function callback(err, msg) {
         // 4. PayPal sends a single word back - either VERIFIED (if the message matches the original) or INVALID (if the message does not match the original)
         if (err) {
@@ -60,8 +61,6 @@ router.post("/ipn", (req, res) => {
 
                 } else
                     return payPalDb.insertTransaction(txn_id, payment_status).then(() => existingSuccessIPN = false)
-
-
             })
             //! CHECK IPN TYPE
             //! SUBSCRIPTION PAYMENT (monthly)
@@ -77,15 +76,11 @@ router.post("/ipn", (req, res) => {
                     // })
                     // 9.(step 5) Check that the receiver_email is an email address registered in your PayPal account.
                     // 10. Check that the price (carried in mc_gross) and the currency (carried in mc_currency) are correct for the item (carried in item_name or item_number).
-                    // console.log({
-                    //     product_name
-                    // })
+                    // console.log({product_name})
                     planDb.getPlanByName(product_name).then(([
                         plan
                     ]) => {
-                        // console.log({
-                        //     plan
-                        // })
+                        // console.log({plan})
                         if (!plan || mc_currency !== "USD" || mc_gross != plan.price) return console.log("false information")
                         else {
                             // console.log("payment successful and verified")
@@ -139,30 +134,30 @@ router.post("/ipn", (req, res) => {
     }, process.env.NODE_ENV === 'production');
 })
 
-
-
+// todo change webhook listener to only get updates
 router.post("/webhook", (req, res) => {
-    console.log(req.body)
-    webhook.notification.webhookEvent.verify(req.headers, req.body, process.env.PAYPAL_WEBHOOK_ID, function (err, response) {
-        if (err) {
-            console.log({
-                err
-            });
-            throw error;
-        } else {
-            console.log({
-                response
-            });
+    console.log("🪝", req.body)
+    //! https://developer.paypal.com/docs/api-basics/notifications/webhooks/
+    //! https://developer.paypal.com/docs/api-basics/notifications/webhooks/notification-messages/
+    // webhook.notification.webhookEvent.verify(req.headers, req.body, process.env.PAYPAL_WEBHOOK_ID, function (err, response) {
+    //     if (err) {
+    //         console.log({
+    //             err
+    //         });
+    //         throw error;
+    //     } else {
+    //         console.log({
+    //             response
+    //         });
 
-            // Verification status must be SUCCESS
-            if (response.verification_status === "SUCCESS") {
-                console.log("It was a success.");
-            } else {
-                console.log("It was a failed verification");
-            }
-        }
-    });
-
+    //         // Verification status must be SUCCESS
+    //         if (response.verification_status === "SUCCESS") {
+    //             console.log("It was a success.");
+    //         } else {
+    //             console.log("It was a failed verification");
+    //         }
+    //     }
+    // });
 })
 
 router.post("/purchase", (req, res) => {
