@@ -35,7 +35,7 @@ class Footer extends React.Component {
               or E-mail at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
-            {/* //todo links */}
+            {/* //todo links FB & DISCORD */}
             <div className="sm">
               <a href="https://www.youtube.com/c/SampleHouse" target="_blank">
                 <img src="../assets/youtube_icon.png" alt="Youtube Icon" />

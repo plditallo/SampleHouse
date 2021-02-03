@@ -13,3 +13,4 @@ Future Features
 - 'follow' sound authors
 - new releases/trending/popular categories
 - Rent-To-Own/Free/For-Sale Plugins
+- chat? zendesk
