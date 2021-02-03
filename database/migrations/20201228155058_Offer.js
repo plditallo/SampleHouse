@@ -8,7 +8,6 @@ exports.up = function (knex) {
         tbl.string("price")
         tbl.integer("discount")
         tbl.integer("tier").default(0)
-        tbl.string("payPal_id").notNullable()
     })
 };
 

@@ -1,0 +1,24 @@
+.lost {
+  background: black;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.lost img {
+  width: 50%;
+  margin: 4em auto 1em;
+}
+
+.lost .lost-message {
+  margin: 1em auto 0;
+  font-size: 2em;
+}
+/*# sourceMappingURL=404.css.map */

@@ -4,22 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/core.css" />
+    <link rel="stylesheet" href="../css/404/404.css" />
     <title></title>
   </head>
   <body>
     <script src="../js/utils/jwt-decode.js"></script>
     <script src="../js/utils/jwt-verify.js"></script>
-    <!--! Uncomment to verify token to access page -->
-    <!-- <script type="module">
-      const token = window.localStorage.getItem("samplehousetoken");
-      if (!token || (token && !jwt_verify(jwt_decode(token))))
-        window.location = "index.html";
-    </script> -->
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
 
     <!--! Content goes here -->
+    <div class="lost">
+      <img src="../assets/404.png" alt="404 chrome image" />
+      <p class="lost-message">
+        LOOKS LIKE YOU GOT LOST. RETURN HOME <a href="home.html">HERE</a>
+      </p>
+    </div>
     <!-- #error hash if any error -->
 
     <footer id="footer"></footer>

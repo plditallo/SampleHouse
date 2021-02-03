@@ -1,0 +1,16 @@
+@import "../utils/mixins.scss";
+
+.lost {
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  img {
+    width: 50%;
+    margin: 4em auto 1em;
+  }
+  .lost-message {
+    margin: 1em auto 0;
+    font-size: 2em;
+  }
+}

@@ -11,13 +11,12 @@ class Offers extends React.Component {
     };
   }
 
-  selectOffer = (index, name, payPal_id, price) => {
-    if (payPal_id !== this.state.selectedOffer.payPal_id) {
+  selectOffer = (index, name, price) => {
+    if (name !== this.state.selectedOffer.name) {
       this.setState({
         ...this.state,
         selectedOffer: {
           name,
-          payPal_id,
           price,
         },
       });
@@ -79,7 +78,7 @@ class Offers extends React.Component {
               <div
                 className="card"
                 key={i}
-                onClick={() => this.selectOffer(i, name, payPal_id, price)}
+                onClick={() => this.selectOffer(i, name, price)}
               >
                 {i > 0 ? (
                   <span className="discount">Save {discount}%</span>
