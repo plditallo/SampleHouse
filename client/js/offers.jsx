@@ -168,6 +168,10 @@ function createPayPalButtons(offer, user_id) {
         // Show a cancel page, or return to cart
         alert(`You have canceled the purchase for ${offer.name}`);
       },
+      onError: function (err) {
+        console.log(err);
+        window.location = "404.html#error";
+      },
     })
     .render("#paypal-button-container");
 }

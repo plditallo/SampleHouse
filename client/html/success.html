@@ -29,16 +29,15 @@
     <script>
       const hash = window.location.hash.replace("#", "");
       const message = document.getElementById("message");
+      const product = hash.substring(hash.indexOf("-") + 1).toUpperCase();
 
-      if (hash.includes("subscribe")) {
-        const subscription = hash
-          .substring(hash.indexOf("-") + 1)
-          .toUpperCase();
-        message.innerText = `SUCCESSFUL SUBSCRIPTION TO ${subscription}.`;
-      } else if (hash.includes("offer")) {
-        const offer = hash.substring(hash.indexOf("-") + 1).toUpperCase();
-        message.innerText = `SUCCESSFUL PURCHASE FOR ${offer}.`;
-      } else window.location = "home.html";
+      if (hash.includes("subscribe"))
+        message.innerText = `SUCCESSFUL SUBSCRIPTION TO ${product}.`;
+      else if (hash.includes("offer"))
+        message.innerText = `SUCCESSFUL PURCHASE FOR ${product}.`;
+      else if (hash.includes("unsubscribe"))
+        message.innerText = "YOU HAE SUCCESSFULLY UNSUBSCRIBED";
+      else window.location = "home.html";
     </script>
 
     <footer id="footer"></footer>

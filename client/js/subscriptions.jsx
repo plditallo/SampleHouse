@@ -193,10 +193,14 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
         // Show a cancel page, or return to cart
         alert(`You have canceled the subscription to ${plan_name}`);
       },
+      onError: function (err) {
+        console.log(err);
+        window.location = "404.html#error";
+      },
     })
     .render("#paypal-button-container");
 }
-
+/*
 async function updateSubscription(subscription_id, plan_id) {
   const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
     method: "GET",
@@ -233,8 +237,8 @@ async function updateSubscription(subscription_id, plan_id) {
       window.open(link, "_blank");
     });
 }
-/*
-https://www.paypal-support.com/s/account-overview# (braden@bluesmokemedia.net)
+
+!https://www.paypal-support.com/s/account-overview# (braden@bluesmokemedia.net)
 https://www.paypal-support.com/s/case/5002E00001iP2wLQAS/ipn
 Hello Braden,
 Thank you for reaching out to Merchant Technical Support.
