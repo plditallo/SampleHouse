@@ -199,7 +199,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
 
 async function updateSubscription(subscription_id, plan_id) {
   // this updateFunction not going to work yet until it updates the IPN
-  //! const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
+  // const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
   //   method: "GET",
   //   type: "cors",
   //   headers: {
@@ -211,7 +211,6 @@ async function updateSubscription(subscription_id, plan_id) {
 
   // console.log({ creds, subscription_id, planId });
   console.log(subscription_id);
-  //! todo https://www.paypal-support.com/s/account-overview# (braden@bluesmokemedia.net)
   fetch(
     `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscription_id}/revise`,
     {
@@ -239,3 +238,15 @@ async function updateSubscription(subscription_id, plan_id) {
       window.open(link, "_blank");
     });
 }
+/*
+https://www.paypal-support.com/s/account-overview# (braden@bluesmokemedia.net)
+https://www.paypal-support.com/s/case/5002E00001iP2wLQAS/ipn
+Hello Braden,
+Thank you for reaching out to Merchant Technical Support.
+I apologize for any frustration with your Subscription API calls. When you are using the subscription API, this is one of our REST API sets. OUr REST API sets do not use IPN, but rather, webhooks. Therefore, upon approval of the revision of the subscription, there will be a webhook sent out of  type BILLING.SUBSCRIPTION.UPDATED. In order to be notified of this, please make sure that the REST App that you are using is configured with a webhook listener, and that you are subscribed to all the events that you want to receive notifications for.
+
+See https://developer.paypal.com/docs/api-basics/notifications/webhooks/event-names/ for a list of all webhook event names.
+
+See the following page for advise on how to  get started in using webhooks.
+https://developer.paypal.com/docs/api-basics/notifications/webhooks
+*/

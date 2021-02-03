@@ -69,8 +69,9 @@ class Offers extends React.Component {
   }
 
   render() {
-    // console.log(this.state.selectedOffer);
-    return (
+    const { active_subscription } = this.state.user;
+
+    return active_subscription ? (
       <div>
         <div id="offer-cards">
           {this.state.data.map(
@@ -102,6 +103,11 @@ class Offers extends React.Component {
           <div id="paypal-button-container"></div>
         </div>
       </div>
+    ) : (
+      <h1>
+        Only active subscribers can take advantage of offers. You can subscribe{" "}
+        <a href="subscriptions.html">here</a>.
+      </h1>
     );
   }
 }

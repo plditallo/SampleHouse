@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const ipn = require("paypal-ipn");
+const ipn = require("paypal-ipn")
+const webhook = require("paypal-node-sdk")
 const axios = require("axios")
 const payPalDb = require("../../../database/model/payPalModel");
 const {
@@ -19,7 +20,7 @@ const {
 const createInvoice = require("../utils/createInvoice");
 const day = 86400000;
 // 1. PayPal HTTPS POSTs an IPN message to your listener that notifies it of an event.
-router.post("/", (req, res) => {
+router.post("/ipn", (req, res) => {
     console.log("👍🏼")
     const {
         txn_id,
@@ -34,7 +35,7 @@ router.post("/", (req, res) => {
     } = req.body
     console.log(req.body)
     // 2. Your listener returns an empty HTTP 200 response to PayPal.
-    res.status(200).send("OK").end() //? chain on .end?
+    res.status(200).send("OK").end()
     // res.end()
     // 3. Your listener HTTPS POSTs the complete, unaltered message back to PayPal;
     ipn.verify(req.body, {
@@ -136,6 +137,32 @@ router.post("/", (req, res) => {
             }
         }
     }, process.env.NODE_ENV === 'production');
+})
+
+
+
+router.post("/webhook", (req, res) => {
+    console.log(req.body)
+    webhook.notification.webhookEvent.verify(req.headers, req.body, process.env.PAYPAL_WEBHOOK_ID, function (err, response) {
+        if (err) {
+            console.log({
+                err
+            });
+            throw error;
+        } else {
+            console.log({
+                response
+            });
+
+            // Verification status must be SUCCESS
+            if (response.verification_status === "SUCCESS") {
+                console.log("It was a success.");
+            } else {
+                console.log("It was a failed verification");
+            }
+        }
+    });
+
 })
 
 router.post("/purchase", (req, res) => {
