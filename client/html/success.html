@@ -29,20 +29,16 @@
     <script>
       const hash = window.location.hash.replace("#", "");
       const message = document.getElementById("message");
-      switch (hash) {
-        case "cancel":
-          message.innerText = "CANCEL";
-          break;
 
-        case "subscribe":
-          message.innerText = "SUCCESSFUL SUBSCRIPTION";
-          break;
-
-        default:
-          message.innerText = "OTHER";
-          // window.location = "404.html"
-          break;
-      }
+      if (hash.includes("subscribe")) {
+        const subscription = hash
+          .substring(hash.indexOf("-") + 1)
+          .toUpperCase();
+        message.innerText = `SUCCESSFUL SUBSCRIPTION TO ${subscription}.`;
+      } else if (hash.includes("offer")) {
+        const offer = hash.substring(hash.indexOf("-") + 1).toUpperCase();
+        message.innerText = `SUCCESSFUL PURCHASE FOR ${offer}.`;
+      } else window.location = "home.html";
     </script>
 
     <footer id="footer"></footer>

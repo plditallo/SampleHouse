@@ -160,18 +160,14 @@ function createPayPalButtons(offer, user_id) {
               user_id,
               transaction_id,
             }),
-          }).then(() => (window.location.hash = "offer"));
-          // window.location = "success#offer"
+          }).then(() => (window.location = `success.html#offer-${offer.name}`));
         });
       },
       onCancel: function (data) {
         console.log("onCancel", data);
         // Show a cancel page, or return to cart
-        alert(`You have canceled the subscription to ${plan_name}`);
-        // todo redirect to somewhere on cancel
-        window.location.hash = "cancel"; //404.html#error-cancel
+        alert(`You have canceled the purchase for ${offer.name}`);
       },
-      // onError: (err)=> window.location = "404.html#error"
     })
     .render("#paypal-button-container");
 }

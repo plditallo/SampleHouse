@@ -137,22 +137,23 @@ class Subscriptions extends React.Component {
             )
           )}
         </div>
-        {!active_subscription ? (
-          <div className="payment">
-            <h3>Choose Your Payment Type</h3>
-            <div id="paypal-button-container"></div>
-          </div>
-        ) : (
-          <button
-            onClick={() => {
-              userCurrentPlan.name !== this.state.plan_name
-                ? updateSubscription(payPal_subscription_id, payPal_id)
-                : null;
-            }}
-          >
-            Update Subscription
-          </button>
-        )}
+        {
+          !active_subscription ? (
+            <div className="payment">
+              <h3>Choose Your Payment Type</h3>
+              <div id="paypal-button-container"></div>
+            </div>
+          ) : null //todo
+          // <button
+          //   onClick={() => {
+          //     userCurrentPlan.name !== this.state.plan_name
+          //       ? updateSubscription(payPal_subscription_id, payPal_id)
+          //       : null;
+          //   }}
+          // >
+          //   Update Subscription
+          // </button>
+        }
       </div>
     );
   }
@@ -183,16 +184,14 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
             user_id,
             subscriptionID,
           }),
-        })
-          // .then(async (res) => await res.json())
-          .then(() => (window.location = "success.html#subscribe"));
+        }).then(
+          () => (window.location = `success.html#subscribe-${plan_name}`)
+        );
       },
       onCancel: function (data) {
         console.log("onCancel", data);
         // Show a cancel page, or return to cart
         alert(`You have canceled the subscription to ${plan_name}`);
-        // todo redirect to somewhere on cancel
-        window.location.hash = "cancel"; //404.html#error-cancel
       },
     })
     .render("#paypal-button-container");
