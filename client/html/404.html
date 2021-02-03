@@ -18,10 +18,25 @@
     <div class="lost">
       <img src="../assets/404.png" alt="404 chrome image" />
       <p class="lost-message">
-        LOOKS LIKE YOU GOT LOST. RETURN HOME <a href="home.html">HERE</a>
+        <!-- fallback message if no js -->
+        LOOKS LIKE YOU GOT LOST. RETURN HOME <a href="index.html">HERE</a>.
       </p>
     </div>
-    <!-- #error hash if any error -->
+    <script>
+      const token = window.localStorage.getItem("samplehousetoken");
+      const message = document.querySelector(".lost-message");
+      if (window.location.hash.includes("error"))
+        message.innerHTML = `OOPS... LOOKS LIKE AN ERROR OCURRED RETURN HOME <a href=${
+          token ? "home.html" : "index.html"
+        }>HERE</a>.`;
+      else {
+        message.innerHTML = `LOOKS LIKE YOU GOT LOST. RETURN HOME <a href=${
+          token ? "home.html" : "index.html"
+        }>HERE</a>.`;
+      }
+    </script>
+
+    <!--todo #error if hash includes error, "something went wrong"-->
 
     <footer id="footer"></footer>
     <!--* Load React. -->
