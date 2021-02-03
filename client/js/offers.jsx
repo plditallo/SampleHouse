@@ -109,7 +109,7 @@ class Offers extends React.Component {
 const domContainer = document.querySelector("#offers");
 ReactDOM.render(React.createElement(Offers), domContainer);
 
-//todo only offer offers with active subscription?
+//todo only offer offers with active subscription? "Only active subscribers can take advantage of offers"
 function createPayPalButtons(offer, user_id) {
   // console.log(offer, user_id);
   paypal
@@ -117,12 +117,23 @@ function createPayPalButtons(offer, user_id) {
       createOrder: function (data, actions) {
         // This function sets up the details of the transaction, including the amount and line item details.
         return actions.order.create({
+          custom: "custom",
           purchase_units: [
             {
               amount: {
-                currency_code: "USD",
                 value: offer.price,
+                currency_code: "USD",
+                breakdown: {
+                  item_total: { value: offer.price, currency_code: "USD" },
+                },
               },
+              items: [
+                {
+                  name: offer.name,
+                  unit_amount: { value: offer.price, currency_code: "USD" },
+                  quantity: "1",
+                },
+              ],
             },
           ],
         });
@@ -131,6 +142,9 @@ function createPayPalButtons(offer, user_id) {
         // This function captures the funds from the transaction.
         return actions.order.capture().then((details) => {
           console.log("onApprove", { data, details });
+          const transaction_id =
+            details.purchase_units[0].payments.captures[0].id;
+
           fetch(`http://localhost:5000/api/paypal/purchase`, {
             method: "POST",
             type: "cors",
@@ -139,6 +153,7 @@ function createPayPalButtons(offer, user_id) {
             },
             body: JSON.stringify({
               user_id,
+              transaction_id,
             }),
           }).then(() => (window.location.hash = "offer"));
           // window.location = "success#offer"
@@ -151,6 +166,7 @@ function createPayPalButtons(offer, user_id) {
         // todo redirect to somewhere on cancel
         window.location.hash = "cancel"; //404.html#error-cancel
       },
+      // onError: (err)=> window.location = "404.html#error"
     })
     .render("#paypal-button-container");
 }

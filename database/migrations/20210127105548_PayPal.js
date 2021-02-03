@@ -4,7 +4,7 @@ exports.up = function (knex) {
         tbl.date("created").notNullable();
         tbl.date("updated")
         tbl.string("transaction_id").notNullable();
-        tbl.string("payment_status").notNullable();
+        tbl.string("payment_status")
     })
 };
 

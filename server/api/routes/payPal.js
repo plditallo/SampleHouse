@@ -6,7 +6,7 @@ const {
     getUserById,
     updateUser,
     getUserByPayPalSubscriptionId,
-    getUserByPayPalPayerId
+    getUserByPayPalTransactionId
 } = require("../../../database/model/userModel");
 const offerDb = require("../../../database/model/offerModel");
 const planDb = require("../../../database/model/planModel");
@@ -29,7 +29,8 @@ router.post("/", (req, res) => {
         mc_currency,
         mc_gross,
         recurring_payment_id,
-        txn_type
+        txn_type,
+        item_name1 //* because sending as a 'cart'
     } = req.body
     console.log(req.body)
     // 2. Your listener returns an empty HTTP 200 response to PayPal.
@@ -118,13 +119,20 @@ router.post("/", (req, res) => {
                     }
                 })
             } //! Offer Purchase
-            else if (txn_type === "express_checkout" && existingSuccessIPN === false) {
+            else if (txn_type === "cart" && existingSuccessIPN === false) {
                 console.log("txn_type if a offer purchase")
-                console.log({
-                    payer_id
+                offerDb.getOfferByName(item_name1).then(([
+                    offer
+                ]) => {
+                    if (!offer || mc_currency !== "USD" || mc_gross != offer.price) return console.log("false information")
+                    else getUserByPayPalTransactionId(txn_id).then(([user]) => {
+                        if (user) {
+                            user.payPal_transaction_id = null
+                            createInvoice(user, offer)
+                        }
+                    })
+
                 })
-                // todo how to know what user made the purchase???
-                getUserByPayPalPayerId(payer_id).then(res => console.log(res))
             }
         }
     }, process.env.NODE_ENV === 'production');
@@ -135,13 +143,20 @@ router.post("/purchase", (req, res) => {
     const {
         user_id,
         subscriptionID,
+        transaction_id
     } = req.body;
-    console.log("body", req.body)
+
     getUserById(user_id).then(([user]) => {
         // for subscriptions
         if (subscriptionID) user.payPal_subscription_id = subscriptionID;
+        // for offers
+        if (transaction_id) {
+            user.payPal_transaction_id = transaction_id
+            // payPalDb.insertTransaction(transaction_id).then(null)
+        }
         updateUser(user).then(() => res.status(200).json("User updated"))
     })
+    // for offers
 })
 
 router.get("/creds", (req, res) => {

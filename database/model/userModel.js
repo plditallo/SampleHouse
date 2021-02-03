@@ -5,7 +5,7 @@ module.exports = {
     getUserById,
     getUserByEmail,
     getUserByPayPalSubscriptionId,
-    getUserByPayPalPayerId,
+    getUserByPayPalTransactionId,
     updateUser,
     removeUser
 }
@@ -32,9 +32,9 @@ function getUserByPayPalSubscriptionId(payPal_subscription_id) {
     })
 }
 
-function getUserByPayPalPayerId(payPal_payer_id) {
+function getUserByPayPalTransactionId(payPal_transaction_id) {
     return db("User").where({
-        payPal_payer_id
+        payPal_transaction_id
     })
 }
 

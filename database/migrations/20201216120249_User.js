@@ -16,6 +16,7 @@ exports.up = function (knex) {
         tbl.string("currency").default("USD")
         tbl.string("vst_access").default(false)
         tbl.string("payPal_subscription_id");
+        tbl.string("payPal_transaction_id")
     })
 };
 

@@ -17,17 +17,20 @@ function createInvoice(user, product) {
         tier
     } = product
 
-    user.active_subscription = true
+    if (product_type === "plan") {
+        user.active_subscription = true
+        if (tier > 1) user.vst_access = true
+        else user.vst_access = false
+    }
+
     user.balance += credits
-    if (tier > 1) user.vst_access = true
-    else user.vst_access = false
 
     updateUser(user).then(null)
     insertInvoice({
         user_id,
         product_type,
         product_id: id,
-        amount: price, //? does this save as int or str
+        amount: price,
         created: Date.now(),
         // description:
     }).then(null)
