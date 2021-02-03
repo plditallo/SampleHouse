@@ -46,7 +46,7 @@ class Account extends React.Component {
       this.setState({ ...this.state, user: await res.json() })
     );
   }
-
+  //todo finish component
   render() {
     return (
       <div>

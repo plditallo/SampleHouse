@@ -169,6 +169,7 @@ class Sounds extends React.Component {
   }
   //todo  pagination btn still going up if no more pages
   // todo pagination button spammed causes getSounds not to work
+  // todo styling
   render() {
     const { soundsList, covers, page, maxPage, offset, limit } = this.state;
     return (
