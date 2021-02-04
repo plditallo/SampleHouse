@@ -111,8 +111,8 @@ router.post("/ipn", (req, res) => {
                         user.payPal_subscription_id = null;
                         removeSubscription(user.id).then(null)
                         updateUser(user).then(null)
-                        console.log("User has successfully unsubscribed", user)
-                    }
+                        console.log("User has successfully unsubscribed")
+                    } else console.log("no user found")
                 })
             } //! Offer Purchase
             else if (txn_type === "cart" && existingSuccessIPN === false) {

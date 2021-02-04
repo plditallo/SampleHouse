@@ -212,7 +212,7 @@ router.get("/:id", (req, res) => {
     const {
         id
     } = req.params;
-    //todo send back only necessary data
+    //todo send back user_type (beta, admin, user)
     getUserById(id).then(([user]) => {
         if (user) {
             let userData = {};
