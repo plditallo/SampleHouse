@@ -1,5 +1,5 @@
 "use strict";
-
+// todo check success page from offers
 class Offers extends React.Component {
   constructor(props) {
     super(props);

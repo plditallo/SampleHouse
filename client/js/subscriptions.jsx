@@ -1,6 +1,7 @@
 "use strict";
 
 // todo setup subscription upgrade/downgrade
+// todo message for cancel/resubscribe for upgrade/downgrade current subscription will last duration 30 days after init purchase
 class Subscriptions extends React.Component {
   constructor(props) {
     super(props);

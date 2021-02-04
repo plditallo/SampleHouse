@@ -1,5 +1,6 @@
 "use strict";
 // todo how to navigate here?
+// todo download sounds w/o charging credits
 class Account extends React.Component {
   constructor(props) {
     super(props);
@@ -8,7 +9,7 @@ class Account extends React.Component {
       user: {},
     };
   }
-  async unsubscribe() {
+  unsubscribe = async () => {
     const creds = await fetch(`http://localhost:5000/api/paypal/creds`, {
       method: "GET",
       type: "cors",
@@ -33,7 +34,7 @@ class Account extends React.Component {
       if (status === 204) return (window.location = "success.html#unsubscribe");
       else return (window.location = "404.html#error");
     });
-  }
+  };
 
   componentDidMount() {
     const id = jwt_decode(this.state.token).subject;

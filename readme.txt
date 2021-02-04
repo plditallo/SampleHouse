@@ -6,6 +6,7 @@ create a docs for the API
 
 Future Features
 - ADMIN FUNCTIONALITY --> UPDATE DATABASE
+- pull youtube videos automatically YOUTUBE-API
 - update subscription plan instead of cancel/resubscribe
 - author page (for creators of the sounds)
 - liked sounds for user
@@ -15,3 +16,6 @@ Future Features
 - new releases/trending/popular categories
 - Rent-To-Own/Free/For-Sale Plugins
 - chat? zendesk
+- implement coupon codes
+- authors to submit/upload packs (not singles) -> pay authors for sales (royalties)
+- waveform for sounds page
