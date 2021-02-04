@@ -132,12 +132,21 @@ header {
           flex-direction: row;
           justify-content: flex-end;
           margin-right: 0.8em;
+          align-items: center;
           a {
             margin-right: 1.5em;
             font-size: 1.25em;
-            &:first-child {
-              margin-right: 3em;
-            }
+          }
+          .login-btn {
+            margin-right: 3em;
+          }
+          .profile-btn {
+            margin-right: 1.5em;
+            border: 2px solid $lightBlue;
+            border-radius: 50%;
+            width: 1.5em;
+            height: 1.5em;
+            background: $lightBlue;
           }
         }
       }
@@ -228,6 +237,9 @@ header {
       }
       .actions {
         margin-right: 0.5em;
+        display: flex;
+        align-items: center;
+
         a {
           color: $lightGrey;
           font-size: 1.35em;
@@ -236,6 +248,14 @@ header {
             color: $lightBlue;
             transition: ease-in 0.23s;
           }
+        }
+        .profile-btn {
+          margin-right: 1.5em;
+          border: 2px solid $lightBlue;
+          border-radius: 50%;
+          width: 1.5em;
+          height: 1.5em;
+          background: $lightBlue;
         }
       }
     }

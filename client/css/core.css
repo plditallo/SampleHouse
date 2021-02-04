@@ -256,6 +256,9 @@ header div .right .top-actions .buttons {
       -ms-flex-pack: end;
           justify-content: flex-end;
   margin-right: 0.8em;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 header div .right .top-actions .buttons a {
@@ -263,8 +266,17 @@ header div .right .top-actions .buttons a {
   font-size: 1.25em;
 }
 
-header div .right .top-actions .buttons a:first-child {
+header div .right .top-actions .buttons .login-btn {
   margin-right: 3em;
+}
+
+header div .right .top-actions .buttons .profile-btn {
+  margin-right: 1.5em;
+  border: 2px solid #00bdf5;
+  border-radius: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  background: #00bdf5;
 }
 
 header div .right nav ul {
@@ -416,6 +428,12 @@ header div .right nav ul li {
 
 #hamburger-menu .menu-wrapper .right .actions {
   margin-right: 0.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #hamburger-menu .menu-wrapper .right .actions a {
@@ -428,6 +446,15 @@ header div .right nav ul li {
   color: #00bdf5;
   -webkit-transition: ease-in 0.23s;
   transition: ease-in 0.23s;
+}
+
+#hamburger-menu .menu-wrapper .right .actions .profile-btn {
+  margin-right: 1.5em;
+  border: 2px solid #00bdf5;
+  border-radius: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  background: #00bdf5;
 }
 
 #hamburger-menu #menuToggle {

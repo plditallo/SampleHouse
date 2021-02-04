@@ -102,6 +102,7 @@ class HamburgerMenu extends React.Component {
             </div>
           ) : (
             <div className="actions">
+              <a href="account.html" className="profile-btn"></a>
               <a
                 href="index.html"
                 onClick={() =>

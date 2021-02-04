@@ -34,11 +34,14 @@ class Header extends React.Component {
             </a>
             {!loggedIn ? (
               <div className="buttons">
-                <a href="authentication.html#">LOGIN</a>
+                <a href="authentication.html#" className="login-btn">
+                  LOGIN
+                </a>
                 <a href="authentication.html#">SIGN UP</a>
               </div>
             ) : (
               <div className="buttons">
+                <a href="account.html" className="profile-btn"></a>
                 <a
                   href="index.html"
                   onClick={() =>
