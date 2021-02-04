@@ -19,3 +19,4 @@ Future Features
 - implement coupon codes
 - authors to submit/upload packs (not singles) -> pay authors for sales (royalties)
 - waveform for sounds page
+- change password (hash forgot/change)

@@ -83,7 +83,7 @@ class Account extends React.Component {
           <p className="plan">You are subscribed to {plan_name}.</p>
         ) : (
           <p className="plan">
-            You are not subscribed to a plan.{" "}
+            You are not currently subscribed to a plan.{" "}
             <a href="subscriptions.html">Click here to view subscriptions.</a>
           </p>
         )}

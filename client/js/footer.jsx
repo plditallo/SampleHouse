@@ -35,7 +35,6 @@ class Footer extends React.Component {
               or E-mail at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>
-            {/* //todo links FB & DISCORD */}
             <div className="sm">
               <a href="https://www.youtube.com/c/SampleHouse" target="_blank">
                 <img src="../assets/youtube_icon.png" alt="Youtube Icon" />
@@ -43,7 +42,10 @@ class Footer extends React.Component {
               <a href="https://twitter.com/Sample_House" target="_blank">
                 <img src="../assets/twitter_icon.png" alt="Twitter Icon" />
               </a>
-              <a href="#FacebookLink" target="_blank">
+              <a
+                href="https://www.facebook.com/SampleHouseOfficial"
+                target="_blank"
+              >
                 <img src="../assets/facebook_icon.png" alt="Facebook Icon" />
               </a>
             </div>

@@ -86,7 +86,9 @@ class HamburgerMenu extends React.Component {
                 {/* youtube private channel link */}
               </li>
               <li>
-                <a href="#DISCORD">DISCORD</a>
+                <a href="https://discord.gg/GwTBeZjb" target="_blank">
+                  DISCORD
+                </a>
               </li>
               <li>
                 <a href="contact.html">CONTACT</a>
