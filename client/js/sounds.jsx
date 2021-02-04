@@ -16,6 +16,7 @@ class Sounds extends React.Component {
       covers: {},
       soundSourceNode: null,
       token: window.localStorage.getItem("samplehousetoken"),
+      loadingSoundList: true,
     };
   }
   nextBtnHandler = () => {
@@ -26,6 +27,7 @@ class Sounds extends React.Component {
       offset: offset + limit,
       page: page + 1,
       curMaxPage: page === curMaxPage ? curMaxPage + 1 : curMaxPage,
+      loadingSoundList: true,
     });
   };
 
@@ -69,7 +71,7 @@ class Sounds extends React.Component {
           soundsList: [...soundsList, ...sounds],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
-          maxPage: IsTruncated ? null : page,
+          maxPage: IsTruncated ? null : page + 1,
         });
         // console.log(newState);
         // this.setState(newState);
@@ -83,15 +85,9 @@ class Sounds extends React.Component {
             coverList.push(cover);
             this.fetchCover(cover);
           }
-          // console.log(this.fetchTags(e));
-          // newState.soundsList.push({
-          //   [getSoundName(e)]: this.fetchTags(e),
-          // });
-          // this.fetchTags(e);
         });
-        // console.log(newState);
-      });
-    // .then(() => console.log(this.state));
+      })
+      .then(() => this.setState({ ...this.state, loadingSoundList: false }));
   }
 
   async fetchSound(path) {
@@ -146,50 +142,24 @@ class Sounds extends React.Component {
     }
   }
 
-  // async fetchTags(path) {
-  //   await fetch(
-  //     `http://localhost:5000/api/audio/tag/${encodeURIComponent(path)}`,
-  //     {
-  //       method: "GET",
-  //       type: "cors",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         authorization: this.state.token,
-  //       },
-  //     }
-  //   )
-  //     .then(async (resp) => await resp.json())
-  //     .then((tags) => {
-  //       // console.log(getSoundName(path), tags);
-  //       return tags;
-  //     });
-  // }
-
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
-  //todo  pagination btn still going up if no more pages
-  // todo pagination button spammed causes getSounds not to work
-  // todo styling
+
   render() {
-    const { soundsList, covers, page, maxPage, offset, limit } = this.state;
+    const {
+      soundsList,
+      covers,
+      page,
+      maxPage,
+      offset,
+      limit,
+      loadingSoundList,
+    } = this.state;
     return (
       <div>
-        <div className="pagination">
-          <button
-            onClick={page > 1 ? this.prevBtnHandler : null}
-            style={{ color: page === 1 ? "grey" : "red" }}
-          >
-            Back
-          </button>
-          <button
-            onClick={page === maxPage ? null : this.nextBtnHandler}
-            style={{ color: page === maxPage ? "grey" : "red" }}
-          >
-            Next
-          </button>
-        </div>
+        {loadingSoundList ? <div className="loader" /> : null}
 
         {soundsList.slice(offset, offset + limit).map((sound, i) => {
           // console.log(Object.entries(sound)[0][0]);
@@ -215,6 +185,21 @@ class Sounds extends React.Component {
             </div>
           ) : null;
         })}
+        <div className="pagination">
+          <button
+            onClick={page > 1 ? this.prevBtnHandler : null}
+            style={{ color: page === 1 ? "grey" : "red" }}
+          >
+            Back
+          </button>
+          {page}
+          <button
+            onClick={page === maxPage ? null : this.nextBtnHandler}
+            style={{ color: page === maxPage ? "grey" : "red" }}
+          >
+            Next
+          </button>
+        </div>
       </div>
     );
   }
