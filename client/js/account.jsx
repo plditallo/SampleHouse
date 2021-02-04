@@ -1,4 +1,5 @@
 "use strict";
+// todo how to navigate here?
 class Account extends React.Component {
   constructor(props) {
     super(props);
@@ -42,14 +43,50 @@ class Account extends React.Component {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(async (res) =>
-      this.setState({ ...this.state, user: await res.json() })
-    );
+    }).then(async (res) => {
+      const user = await res.json();
+      if (user.active_subscription)
+        await fetch(
+          `http://localhost:5000/api/product/plan/${user.currentPlanId}`,
+          {
+            method: "GET",
+            type: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: this.state.token,
+            },
+          }
+        ).then(async (res) => {
+          const plan = await res.json();
+          return (user.plan_name = plan[0].name);
+        });
+      this.setState({ ...this.state, user });
+    });
   }
   //todo finish component
   render() {
+    const {
+      active_subscription,
+      first_name,
+      last_name,
+      plan_name,
+      balance,
+    } = this.state.user;
     return (
       <div>
+        <h1>Account</h1>
+        <h3>
+          Welcome {first_name} {last_name}
+        </h3>
+        {active_subscription ? (
+          <p className="plan">You are subscribed to {plan_name}.</p>
+        ) : (
+          <p className="plan">
+            You are not subscribed to a plan.{" "}
+            <a href="subscriptions.html">Click here to view subscriptions.</a>
+          </p>
+        )}
+        <p className="balance">Your balance is: {balance} credits.</p>
         <button id="cancel-btn" onClick={this.unsubscribe}>
           Cancel Subscription
         </button>

@@ -54,7 +54,8 @@ class Offers extends React.Component {
         user,
         selectedOffer: data[0],
       });
-      document.querySelector(".card").style.border = "3px solid #c3c1c1";
+      const card = document.querySelector(".card");
+      if (card) card.style.border = "3px solid #c3c1c1";
     });
   }
 
@@ -63,8 +64,10 @@ class Offers extends React.Component {
     const payPalBtnContainer = document.querySelector(
       "#paypal-button-container"
     );
-    if (payPalBtnContainer) payPalBtnContainer.innerHTML = "";
-    createPayPalButtons(selectedOffer, user.id);
+    if (payPalBtnContainer) {
+      payPalBtnContainer.innerHTML = "";
+      createPayPalButtons(selectedOffer, user.id);
+    }
   }
 
   render() {
@@ -73,29 +76,27 @@ class Offers extends React.Component {
     return active_subscription ? (
       <div>
         <div id="offer-cards">
-          {this.state.data.map(
-            ({ name, credits, price, discount, payPal_id }, i) => (
-              <div
-                className="card"
-                key={i}
-                onClick={() => this.selectOffer(i, name, price)}
-              >
-                {i > 0 ? (
-                  <span className="discount">Save {discount}%</span>
-                ) : null}
-                <h2>{name}</h2>
-                <div className="info">
-                  <p className="download">
-                    SAMPLEHOUSE
-                    <br />
-                    DOWNLOAD CREDITS
-                  </p>
-                  <p className="credits">{credits} Credits</p>
-                  <p className="price">${price}</p>
-                </div>
+          {this.state.data.map(({ name, credits, price, discount }, i) => (
+            <div
+              className="card"
+              key={i}
+              onClick={() => this.selectOffer(i, name, price)}
+            >
+              {i > 0 ? (
+                <span className="discount">Save {discount}%</span>
+              ) : null}
+              <h2>{name}</h2>
+              <div className="info">
+                <p className="download">
+                  SAMPLEHOUSE
+                  <br />
+                  DOWNLOAD CREDITS
+                </p>
+                {/* <p className="credits">{credits} Credits</p> */}
+                <p className="price">${price}</p>
               </div>
-            )
-          )}
+            </div>
+          ))}
         </div>
         <div className="payment">
           <h3>Choose Your Payment Type</h3>
@@ -166,7 +167,7 @@ function createPayPalButtons(offer, user_id) {
       onCancel: function (data) {
         console.log("onCancel", data);
         // Show a cancel page, or return to cart
-        alert(`You have canceled the purchase for ${offer.name}`);
+        alert(`You have canceled the purchase for ${offer.name}.`);
       },
       onError: function (err) {
         console.log(err);

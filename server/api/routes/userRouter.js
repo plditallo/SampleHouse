@@ -217,6 +217,8 @@ router.get("/:id", (req, res) => {
         if (user) {
             let userData = {};
             userData.id = user.id;
+            userData.first_name = user.first_name
+            userData.last_name = user.last_name
             userData.active_subscription = user.active_subscription;
             userData.balance = user.balance;
             userData.payPal_subscription_id = user.payPal_subscription_id;

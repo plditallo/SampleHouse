@@ -96,7 +96,7 @@ class Subscriptions extends React.Component {
   render() {
     const { userCurrentPlan, payPal_id } = this.state;
     const { active_subscription, payPal_subscription_id } = this.state.user;
-    console.log({ payPal_id });
+    // console.log({ payPal_id });
 
     return (
       <div>
@@ -191,7 +191,9 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
       onCancel: function (data) {
         console.log("onCancel", data);
         // Show a cancel page, or return to cart
-        alert(`You have canceled the subscription to ${plan_name}`);
+        alert(
+          `You have canceled the subscription to the subscription: ${plan_name}.`
+        );
       },
       onError: function (err) {
         console.log(err);
