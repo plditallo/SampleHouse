@@ -1,4 +1,6 @@
 "use strict";
+
+//todo download sounds and update database
 class Sounds extends React.Component {
   constructor(props) {
     super(props);

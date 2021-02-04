@@ -104,10 +104,10 @@ class Offers extends React.Component {
         </div>
       </div>
     ) : (
-      <h1>
+      <h2 className="no-subscription">
         Only active subscribers can take advantage of offers. You can subscribe{" "}
         <a href="subscriptions.html">here</a>.
-      </h1>
+      </h2>
     );
   }
 }
@@ -115,7 +115,6 @@ class Offers extends React.Component {
 const domContainer = document.querySelector("#offers");
 ReactDOM.render(React.createElement(Offers), domContainer);
 
-//todo only offer offers with active subscription? "Only active subscribers can take advantage of offers"
 function createPayPalButtons(offer, user_id) {
   // console.log(offer, user_id);
   paypal

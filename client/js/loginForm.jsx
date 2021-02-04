@@ -25,9 +25,10 @@ class LoginForm extends React.Component {
 
   onSubmitHandler = (evt) => {
     evt.preventDefault();
+    const regSuccess = document.querySelector(".success");
+    if (regSuccess) regSuccess.style.display = "none";
     this.setState({ ...this.state, resendSuccessMsg: null });
     if (!this.verifyEmail()) return;
-    // todo if confirmation email message from register exists, remove message
     const submitFetch = async () =>
       await fetch("http://localhost:5000/api/user/login", {
         method: "POST",
@@ -59,10 +60,8 @@ class LoginForm extends React.Component {
   resendVerification = (evt) => {
     evt.preventDefault();
     const regSuccess = document.querySelector(".success");
-    // console.log(regSuccess);
     if (regSuccess) regSuccess.style.display = "none";
     if (!this.verifyEmail()) return;
-    // todo add response to hash and do same as register to display message
     const submitFetch = async () =>
       await fetch("http://localhost:5000/api/token/resend", {
         method: "POST",
@@ -90,7 +89,6 @@ class LoginForm extends React.Component {
   };
 
   componentDidMount() {
-    // todo catch #reset/#forgot from successful reset
     if (window.location.hash) {
       //* autofill email on successful register
       if (window.location.hash.includes("#emailSucReg=")) {
