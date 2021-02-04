@@ -28,6 +28,7 @@
     "paypal-node-sdk": "^2.0.2",
     "paypal-rest-sdk": "^1.8.1",
     "s3": "^4.4.0",
+    "simple-youtube-api": "^5.2.1",
     "uuid": "^8.3.2"
   },
   "resolutions": {

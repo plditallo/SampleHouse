@@ -159,6 +159,7 @@ class Sounds extends React.Component {
     } = this.state;
     return (
       <div>
+        {/* todo search bar/functionality */}
         {loadingSoundList ? <div className="loader" /> : null}
 
         {soundsList.slice(offset, offset + limit).map((sound, i) => {
