@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
         // StartAfter: 'packs/SH Essential Drums/SH_Essential_Kick_07.wav',
         ContinuationToken: ContinuationToken.length ? ContinuationToken.replaceAll(" ", "+") : null
     }, (err, data) => {
-        if (err) console.log("Error /", err);
+        if (err) console.error("Error /", err);
         // else console.log("Success", data)
         const {
             NextContinuationToken,
@@ -71,7 +71,7 @@ router.get("/cover/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `covers/${key}.png`,
     }, (err, data) => {
-        if (err) console.log("Error /cover", err)
+        if (err) console.error("Error /cover", err)
         // else console.log("Success", data.Body)
         if (data) res.status(200).json(data.Body)
     })
@@ -85,7 +85,7 @@ router.get("/tag/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `packs/${key}`
     }, (err, data) => {
-        if (err) console.log("Error /tag", err)
+        if (err) console.error("Error /tag", err)
         else console.log("Success", data)
         if (data) res.status(200).json(data.TagSet)
     })

@@ -1,5 +1,4 @@
 "use strict";
-
 //todo download sounds and update database
 class Sounds extends React.Component {
   constructor(props) {
@@ -17,6 +16,7 @@ class Sounds extends React.Component {
       soundSourceNode: null,
       token: window.localStorage.getItem("samplehousetoken"),
       loadingSoundList: true,
+      count: 0,
     };
   }
   nextBtnHandler = () => {
@@ -57,9 +57,9 @@ class Sounds extends React.Component {
         },
       }
     )
-      .then(async (resp) => ({
-        status: resp.status,
-        data: await resp.json(),
+      .then(async (res) => ({
+        status: res.status,
+        data: await res.json(),
       }))
       .then(({ status, data }) => {
         if (status !== 200)
@@ -123,12 +123,12 @@ class Sounds extends React.Component {
           method: "GET",
           type: "cors",
           headers: {
-            "Content-Type": "image/png", //? application/json?
+            "Content-Type": "image/png",
             authorization: this.state.token,
           },
         }
       )
-        .then(async (resp) => await resp.json())
+        .then(async (res) => await res.json())
         .then(({ data }) => {
           const url = "data:image/png;base64," + encode(data);
           this.setState({
@@ -142,11 +142,32 @@ class Sounds extends React.Component {
     }
   }
 
+  async download(sound) {
+    return await fetch(
+      `http://localhost:5000/api/audio/${encodeURIComponent(sound)}`,
+      {
+        method: "GET",
+        type: "cors",
+        headers: {
+          "Content-Type": "audio/wav",
+          authorization: this.state.token,
+        },
+      }
+    ).then(async (res) => {
+      const blob = new Blob([await res.arrayBuffer()], { type: "audio/wav" });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = sound;
+      link.click();
+      // return buffer;
+    });
+  }
+
   componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
-
+  // todo scroll to top after page change
   render() {
     const {
       soundsList,
@@ -183,6 +204,11 @@ class Sounds extends React.Component {
               <p>exclusive?(1/15 credits)</p>
               <p>download btn</p>
               <p>type (One Shot/Loop)</p>
+              <img
+                src="../assets/lock.png"
+                alt="download"
+                onClick={() => this.download(sound)}
+              />
             </div>
           ) : null;
         })}
