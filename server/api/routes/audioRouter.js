@@ -76,17 +76,23 @@ router.get("/cover/:key", (req, res) => {
     })
 })
 
-router.get("/tag/:key", (req, res) => {
-    const {
-        key
-    } = req.params;
-    s3.getObjectTagging({
-        Bucket: 'samplehouse',
-        Key: `packs/${key}`
-    }, (err, data) => {
-        if (err) console.error("Error /tag", err)
-        else console.log("Success", data)
-        if (data) res.status(200).json(data.TagSet)
+router.post("/tags", async (req, res) => {
+    const soundsArr = req.body;
+    const dynamoSoundList = [];
+    soundsArr.forEach(async e => {
+        const dynamoSound = await getDynamoSound({
+            "TableName": "Sounds",
+            "Key": {
+                "pack": {
+                    "S": e.split("/")[0] //soundPack
+                },
+                "name": {
+                    "S": e.split("/")[1] //soundName
+                }
+            }
+        })
+        dynamoSoundList.push(dynamoSound);
+        if (dynamoSoundList.length === soundsArr.length) res.status(200).send(dynamoSoundList)
     })
 })
 

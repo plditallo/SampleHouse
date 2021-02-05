@@ -81,7 +81,7 @@ class Sounds extends React.Component {
           isTruncated: IsTruncated,
           maxPage: IsTruncated ? null : page + 1,
         });
-        return sounds;
+        return wavSoundList;
       })
       .then((sounds) => {
         const coverList = [];
@@ -92,11 +92,27 @@ class Sounds extends React.Component {
             this.fetchCover(cover);
           }
         });
+        return sounds;
+      })
+      .then(async (sounds) => {
+        await fetch(`http://localhost:5000/api/audio/tags`, {
+          method: "POST",
+          type: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: this.state.token,
+          },
+          body: JSON.stringify(sounds),
+        }).then(async (resp) => console.log("sound data", await resp.json()));
       })
       .then(() => this.setState({ ...this.state, loadingSoundList: false }));
+    // .then(async (sounds) => {
+    //   // console.log("stringify", JSON.stringify(sounds));
+
+    // });
   }
 
-  async fetchSound(path) {
+  async streamSound(path) {
     // todo this is still playing over itself?
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
@@ -187,13 +203,13 @@ class Sounds extends React.Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
   // todo scroll to top after page change
   render() {
-    console.log(this.state.message);
+    // console.log(this.state.message);
     const {
       soundsList,
       covers,
@@ -228,7 +244,7 @@ class Sounds extends React.Component {
           <tbody>
             {soundsList.slice(offset, offset + limit).map((sound, i) => (
               <tr key={i}>
-                {console.log(sound)}
+                {/* {console.log(sound)} */}
                 <td>
                   <a href={`#${getCoverName(sound)}`}>
                     <img
@@ -243,7 +259,7 @@ class Sounds extends React.Component {
                     src="../assets/music-note.png"
                     alt="Play Button"
                     className="download-btn" //todo change this
-                    onClick={() => this.fetchSound(sound)}
+                    onClick={() => this.streamSound(sound)}
                   />
                 </td>
                 <td>{getSoundName(sound)}</td>
@@ -277,7 +293,7 @@ class Sounds extends React.Component {
                   style={{ width: "3em", height: "3em" }}
                 />
               </a>
-              <p id={sound} key={i} onClick={() => this.fetchSound(sound)}>
+              <p id={sound} key={i} onClick={() => this.streamSound(sound)}>
                 {getSoundName(sound)}
               </p>
               <p>BPM</p>

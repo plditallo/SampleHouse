@@ -6,6 +6,7 @@ create a docs for the API
 
 Future Features
 - ADMIN FUNCTIONALITY --> UPDATE DATABASE
+    -REFACTOR TO NOT USE DYNAMODB USE TAGS IN LOCAL DB AND DON'T PULL SOUNDLIST FROM S3 BUCKET (ONLY STREAM)
 - pull youtube videos automatically YOUTUBE-API
 - update subscription plan instead of cancel/resubscribe
 - author page (for creators of the sounds)
