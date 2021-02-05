@@ -11,6 +11,7 @@ class Sounds extends React.Component {
       curMaxPage: 1,
       maxPage: null,
       soundsList: [],
+      dynamoSoundList: [],
       nextContinuationToken: "",
       isTruncated: false,
       covers: {},
@@ -103,13 +104,19 @@ class Sounds extends React.Component {
             authorization: this.state.token,
           },
           body: JSON.stringify(sounds),
-        }).then(async (resp) => console.log("sound data", await resp.json()));
-      })
-      .then(() => this.setState({ ...this.state, loadingSoundList: false }));
-    // .then(async (sounds) => {
-    //   // console.log("stringify", JSON.stringify(sounds));
-
-    // });
+        })
+          .then(async (resp) => await resp.json())
+          .then((dynamoSoundArr) =>
+            this.setState({
+              ...this.state,
+              dynamoSoundList: [
+                ...this.state.dynamoSoundList,
+                ...dynamoSoundArr,
+              ],
+              loadingSoundList: false,
+            })
+          );
+      });
   }
 
   async streamSound(path) {
