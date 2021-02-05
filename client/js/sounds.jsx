@@ -2,6 +2,7 @@
 //todo download sounds and update database
 class Sounds extends React.Component {
   constructor(props) {
+    const token = window.localStorage.getItem("samplehousetoken");
     super(props);
     this.state = {
       limit: 25,
@@ -14,9 +15,10 @@ class Sounds extends React.Component {
       isTruncated: false,
       covers: {},
       soundSourceNode: null,
-      token: window.localStorage.getItem("samplehousetoken"),
+      token,
       loadingSoundList: true,
-      count: 0,
+      count: 0, //! testing
+      userId: jwt_decode(token).subject,
     };
   }
   nextBtnHandler = () => {
@@ -76,8 +78,6 @@ class Sounds extends React.Component {
           isTruncated: IsTruncated,
           maxPage: IsTruncated ? null : page + 1,
         });
-        // console.log(newState);
-        // this.setState(newState);
         return sounds;
       })
       .then((sounds) => {
@@ -94,6 +94,7 @@ class Sounds extends React.Component {
   }
 
   async fetchSound(path) {
+    // todo this is still playing over itself
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
     // console.log(soundSourceNode);
@@ -146,23 +147,28 @@ class Sounds extends React.Component {
   }
 
   async download(sound) {
+    if (sound.toLowerCase().includes("midi"))
+      sound = sound.replace(".wav", ".mid");
+
     await fetch(
-      `http://localhost:5000/api/audio/${encodeURIComponent(sound)}`,
+      `http://localhost:5000/api/audio/download/${encodeURIComponent(sound)}/${
+        this.state.userId
+      }`,
       {
         method: "GET",
         type: "cors",
         headers: {
-          "Content-Type": "audio/wav",
+          "Content-Type": "application/octet-stream",
           authorization: this.state.token,
         },
       }
     ).then(async (res) => {
-      const blob = new Blob([await res.arrayBuffer()], { type: "audio/wav" });
+      // console.log(res);
+      const blob = new Blob([await res.arrayBuffer()], { type: "audio/midi" });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = sound;
       link.click();
-      // return buffer;
     });
   }
 
@@ -181,6 +187,10 @@ class Sounds extends React.Component {
       limit,
       loadingSoundList,
     } = this.state;
+    if (this.state.count !== 1 && !loadingSoundList) {
+      this.download("SH Radio Piano/SH_RaPiano_01_F#m_75_MIDI.midi.wav");
+      this.state.count++;
+    }
     return (
       <div>
         {/* todo search bar/functionality */}
@@ -207,6 +217,7 @@ class Sounds extends React.Component {
               <p>exclusive?(1/15 credits)</p>
               <p>download btn</p>
               <p>type (One Shot/Loop)</p>
+              {/* {sound.includes("midi") ? console.log(sound) : null} */}
               <img
                 src="../assets/lock.png"
                 alt="download"

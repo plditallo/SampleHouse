@@ -1,5 +1,7 @@
 const router = require("express").Router();
-const s3Client = require("s3").createClient()
+const userDb = require("../../../database/model/userModel");
+const soundDb = require("../../../database/model/soundDownloadModel");
+const s3Client = require("s3").createClient();
 const AWS = require('aws-sdk')
 AWS.config.update({
     region: 'us-west-1'
@@ -49,17 +51,7 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:key", (req, res) => {
-    const downloadStream = s3Client.downloadStream({
-        Bucket: 'samplehouse',
-        Key: `packs/${req.params.key}`
-    });
-    downloadStream.on('Error', () => res.status(404).send('Not Found'))
-    downloadStream.on('httpHeaders',
-        (statusCode, headers, resp) =>
-        res.set({
-            'Content-Type': headers['content-type']
-        }));
-    downloadStream.pipe(res); // Pipe download stream to response
+    downloadStream(res, req.params.key).pipe(res) // Pipe download stream to response
 })
 
 router.get("/cover/:key", (req, res) => {
@@ -71,7 +63,7 @@ router.get("/cover/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `covers/${key}.png`,
     }, (err, data) => {
-        if (err) console.error("Error /cover", err)
+        if (err) console.error("Error /cover key:", key, err)
         // else console.log("Success", data.Body)
         if (data) res.status(200).json(data.Body)
     })
@@ -91,6 +83,23 @@ router.get("/tag/:key", (req, res) => {
     })
 })
 
+router.get("/download/:key/:userId", (req, res) => {
+    const {
+        key,
+        userId
+    } = req.params;
+    console.log("download", {
+        key,
+        userId
+    })
+
+
+
+
+
+    // downloadStream(res, key).pipe(res) // Pipe download stream to response
+})
+
 router.use("/", (req, res) => {
     res.status(200).json({
         Route: "Sound Route up"
@@ -98,3 +107,17 @@ router.use("/", (req, res) => {
 });
 
 module.exports = router;
+
+function downloadStream(res, key) {
+    const downloadStream = s3Client.downloadStream({
+        Bucket: 'samplehouse',
+        Key: `packs/${key}`
+    });
+    downloadStream.on('Error', () => res.status(404).send('Not Found'))
+    downloadStream.on('httpHeaders',
+        (statusCode, headers, resp) =>
+        res.set({
+            'Content-Type': headers['content-type']
+        }));
+    return downloadStream
+}
