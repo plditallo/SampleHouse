@@ -19,6 +19,7 @@ class Sounds extends React.Component {
       loadingSoundList: true,
       count: 0, //! testing
       userId: jwt_decode(token).subject,
+      message: "",
     };
   }
   nextBtnHandler = () => {
@@ -163,7 +164,10 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => {
-      // console.log(res);
+      if (res.status === 222) {
+        const data = await res.json();
+        return this.setState({ ...this.state, message: data.msg });
+      }
       const blob = new Blob([await res.arrayBuffer()], { type: "audio/midi" });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -178,6 +182,7 @@ class Sounds extends React.Component {
   }
   // todo scroll to top after page change
   render() {
+    console.log(this.state.message);
     const {
       soundsList,
       covers,
@@ -187,10 +192,10 @@ class Sounds extends React.Component {
       limit,
       loadingSoundList,
     } = this.state;
-    if (this.state.count !== 1 && !loadingSoundList) {
-      this.download("SH Radio Piano/SH_RaPiano_01_F#m_75_MIDI.midi.wav");
-      this.state.count++;
-    }
+    // if (this.state.count !== 1 && !loadingSoundList) {
+    //   this.download("SH Radio Piano/SH_RaPiano_01_F#m_75_MIDI.midi.wav");
+    //   this.state.count++;
+    // }
     return (
       <div>
         {/* todo search bar/functionality */}

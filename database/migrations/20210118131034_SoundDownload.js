@@ -4,8 +4,8 @@ exports.up = function (knex) {
         tbl.increments("id").primary();
         tbl.string("name").notNullable();
         tbl.string("userId").notNullable().references("User.id");
-        tbl.date("download_at").notNullable()
-        tbl.boolean("exclusive").default(false)
+        tbl.date("downloaded_at").notNullable()
+        tbl.boolean("exclusive").default(false) //* account downloads color/has been downloaded or not
     })
 };
 

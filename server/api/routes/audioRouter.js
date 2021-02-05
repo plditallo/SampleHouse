@@ -115,33 +115,44 @@ router.get("/download/:key/:userId", async (req, res) => {
             }
         }
     }
-    try {
-        dynamoSound = await dynamoDbClient.getItem(querySearchSchema).promise();
-        dynamoSound = dynamoSound.Item
-    } catch (err) {
-        handleGetItemError(err);
-    }
-    const creditCost = dynamoSound.exclusive.BOOL ? 15 : 1;
+    //todo update dynamoDb download count
+    // check all exclusive sounds if they have been downloaded before (other users)
 
     userDb.getUserById(userId).then(([user]) => {
-        // console.log(user)
+        console.log({
+            user
+        })
         if (user)
-            soundDb.checkDownloadByUser(userId, key).then(([res]) => {
-                console.log(res)
-                if (!res) {
-                    //todo get sound from dynamoDb
-                    // soundDb.insertDownload()
-                } else {
-                    console.log("downloaded")
-                }
+            soundDb.checkDownloadByUser(userId, soundName).then(async ([resp]) => {
+                console.log({
+                    resp
+                })
+                if (!resp) {
+                    console.log("no resp")
+                    try {
+                        dynamoSound = await dynamoDbClient.getItem(querySearchSchema).promise();
+                        dynamoSound = dynamoSound.Item
+                    } catch (err) {
+                        handleGetItemError(err);
+                    }
+                    const exclusive = dynamoSound.exclusive.BOOL;
+                    const creditCost = exclusive ? 15 : 1
+                    if (user.balance - creditCost < 0) return res.status(222).json({
+                        msg: "Credit balance is insufficient."
+                    })
+                    user.balance -= creditCost
+                    soundDb.insertDownload({
+                        name: soundName,
+                        userId,
+                        downloaded_at: Date.now(),
+                        exclusive
+                    }).then(null)
+                    userDb.updateUser(user).then(null)
+                } else console.log("already downloaded")
+                // downloadStream(res, key).pipe(res) // Pipe download stream to response
             })
         else console.log("no user found")
     })
-
-
-
-
-    // downloadStream(res, key).pipe(res) // Pipe download stream to response
 })
 
 router.use("/", (req, res) => {
@@ -165,11 +176,6 @@ function downloadStream(res, key) {
         }));
     return downloadStream
 }
-
-
-
-
-
 
 //! DynamoDB ERRORS
 // Handles errors during GetItem execution. Use recommendations in error messages below to 
