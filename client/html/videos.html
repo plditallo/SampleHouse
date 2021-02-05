@@ -10,11 +10,11 @@
     <script src="../js/utils/jwt-decode.js"></script>
     <script src="../js/utils/jwt-verify.js"></script>
     <!--! Uncomment to verify token to access page -->
-    <!-- <script type="module">
+    <script type="module">
       const token = window.localStorage.getItem("samplehousetoken");
       if (!token || (token && !jwt_verify(jwt_decode(token))))
         window.location = "index.html";
-    </script> -->
+    </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
@@ -24,53 +24,33 @@
     <!-- todo this page -->
     <!-- store data in DynamoDb? -->
     <script>
-      const mockResp = [
-        {
-          title: "Deep Focus - Music For Studying, Concentration and Work",
-          description:
-            "This relaxing music to study combines soothing ambient music with beautiful nature images, so you can play in the background while you focus on your exams. Please feel free to leave your comments and suggestions and to share your love by liking this video and subscribing to our channel.",
-          src: "https://www.youtube.com/embed/oPVte6aMprI",
-        },
-        {
-          title: "Monster Pacific Ocean Grouper Fishing",
-          description:
-            "In this episode of BlacktipH, we go fishing for monster pacific grouper at Casa Vieja Lodge in Guatemala. The day started with Josh and Franz catching bait. Franz uses a triple hook chicken rig with multiple bait species on the hooks. Once we got to the spot, I was immediately hooked up to the first grouper of the day!",
-          src: "https://www.youtube.com/embed/pgYEX_sa2p0",
-        },
-        {
-          title: "Looney Tunes",
-          description:
-            "This Classic Remastered and Restored Looney Tunes Compilation features over 5 hours of Bugs Bunny, Daffy Duck, Porky Pig & More from the golden-era of cartoon shorts. These Newly remastered & restored by 8thManDVD Cartoon Classics! Studios in 1080p.",
-          src: "https://www.youtube.com/embed/4wEO_JuON9E",
-        },
-      ];
       const videoDiv = document.getElementById("videos");
-      // fetch("http://localhost:5000/api/product/offers", {
-      //   method: "GET",
-      //   type: "cors",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     authorization: this.state.token,
-      //   },
-      // })
-      //   .then(async (res) => await res.json())
-      //   .then((resp) => {
-      //     console.log(resp);
-      mockResp.forEach((e) => {
-        const video = document.createElement("div");
-        video.className = "video"; //? chain on createElement?
-        const title = document.createElement("h3");
-        title.innerText = e.title;
-        const iframe = document.createElement("iframe");
-        iframe.src = e.src;
-        const desc = document.createElement("p");
-        desc.innerText = e.description;
-        video.appendChild(title);
-        video.appendChild(iframe);
-        video.appendChild(desc);
-        videoDiv.appendChild(video);
-      });
-      // });
+      const token = window.localStorage.getItem("samplehousetoken");
+      fetch("http://localhost:5000/api/videos", {
+        method: "GET",
+        type: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      })
+        .then(async (res) => await res.json())
+        .then((resp) =>
+          resp.forEach((e) => {
+            const video = document.createElement("div");
+            video.className = "video"; //? chain on createElement?
+            const title = document.createElement("h3");
+            title.innerText = e.title;
+            const iframe = document.createElement("iframe");
+            iframe.src = e.url;
+            const desc = document.createElement("p");
+            desc.innerText = e.description;
+            video.appendChild(title);
+            video.appendChild(iframe);
+            video.appendChild(desc);
+            videoDiv.appendChild(video);
+          })
+        );
     </script>
 
     <footer id="footer"></footer>

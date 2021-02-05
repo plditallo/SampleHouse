@@ -22,7 +22,7 @@ router.use("/audio", restricted, audioRouter)
 router.use("/contact", contactRouter)
 router.use("/paypal", payPalRouter)
 router.use("/product", restricted, productRouter)
-router.use("/video", restricted, videoRouter)
+router.use("/videos", restricted, videoRouter)
 
 router.use("/", (req, res) => {
   res.status(200).json({
