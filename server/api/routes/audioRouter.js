@@ -57,7 +57,7 @@ router.get("/", (req, res) => {
     });
 })
 
-router.get("/:key", (req, res) => {
+router.get("/stream/:key", (req, res) => {
     downloadStream(res, req.params.key).pipe(res) // Pipe download stream to response
 })
 
@@ -96,18 +96,15 @@ router.get("/download/:key/:userId", async (req, res) => {
         key,
         userId
     } = req.params;
-
-    AWS.config.update({ //!testing on localhost only
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
-    })
-    const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
+    // console.log({
+    //     key
+    // })
 
     const soundPack = key.split("/")[0]
     const soundName = key.split("/")[1]
-    let dynamoSound;
+
     // Create the input for getItem call
-    const querySearchSchema = {
+    const querySchema = {
         "TableName": "Sounds",
         "Key": {
             "pack": {
@@ -122,23 +119,17 @@ router.get("/download/:key/:userId", async (req, res) => {
     // check all exclusive sounds if they have been downloaded before (other users)
 
     userDb.getUserById(userId).then(([user]) => {
-        console.log({
-            user
-        })
+        // console.log({
+        //     user
+        // })
         if (user)
             soundDb.checkDownloadByUser(userId, soundName).then(async ([resp]) => {
                 console.log({
                     resp
                 })
                 if (!resp) {
-                    console.log("no resp")
-                    try {
-                        dynamoSound = await dynamoDbClient.getItem(querySearchSchema).promise();
-                        dynamoSound = dynamoSound.Item
-                    } catch (err) {
-                        return handleGetItemError(err);
-                    }
-                    console.log(dynamoSound)
+                    console.log("not downloaded")
+                    const dynamoSound = await getDynamoSound(querySchema)
                     const exclusive = dynamoSound.exclusive.BOOL;
                     const creditCost = exclusive ? 15 : 1
                     console.log("balance before", user.balance)
@@ -147,13 +138,14 @@ router.get("/download/:key/:userId", async (req, res) => {
                     })
                     user.balance -= creditCost
                     console.log("balance after", user.balance)
-                    await soundDb.insertDownload({
-                        name: soundName,
-                        userId,
-                        downloaded_at: Date.now(),
-                        exclusive
-                    }).then(console.log("insertSound")) //!null
-                    await userDb.updateUser(user).then(console.log("updateUser")) //!null
+                    // await soundDb.insertDownload({
+                    //     name: soundName,
+                    //     userId,
+                    //     downloaded_at: Date.now(),
+                    //     exclusive
+                    // }).then(console.log("insertSound")) //!null
+                    // await userDb.updateUser(user).then(console.log("updateUser")) //!null
+                    //? todo is the page refreshing because of an update to the user?
                 } else console.log("already downloaded")
                 console.log("download stream")
                 downloadStream(res, key).pipe(res) // Pipe download stream to response
@@ -182,4 +174,19 @@ function downloadStream(res, key) {
             'Content-Type': headers['content-type']
         }));
     return downloadStream
+}
+
+async function getDynamoSound(querySchema) {
+    AWS.config.update({ //!testing on localhost only
+        region: 'localhost',
+        endpoint: 'http://localhost:8000'
+    })
+    const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
+
+    try {
+        const fetchedSound = await dynamoDbClient.getItem(querySchema).promise();
+        return fetchedSound.Item
+    } catch (err) {
+        return handleGetItemError(err);
+    }
 }

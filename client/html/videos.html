@@ -21,8 +21,6 @@
 
     <!--! Content goes here -->
     <div id="videos"></div>
-    <!-- todo this page -->
-    <!-- store data in DynamoDb? -->
     <script>
       const videoDiv = document.getElementById("videos");
       const token = window.localStorage.getItem("samplehousetoken");
@@ -33,24 +31,23 @@
           "Content-Type": "application/json",
           authorization: token,
         },
-      })
-        .then(async (res) => await res.json())
-        .then((resp) =>
-          resp.forEach((e) => {
-            const video = document.createElement("div");
-            video.className = "video"; //? chain on createElement?
-            const title = document.createElement("h3");
-            title.innerText = e.title;
-            const iframe = document.createElement("iframe");
-            iframe.src = e.url;
-            const desc = document.createElement("p");
-            desc.innerText = e.description;
-            video.appendChild(title);
-            video.appendChild(iframe);
-            video.appendChild(desc);
-            videoDiv.appendChild(video);
-          })
-        );
+      }).then(async (resp) => {
+        resp = await resp.json();
+        resp.forEach((e) => {
+          const video = document.createElement("div");
+          video.className = "video"; //? chain on createElement?
+          const title = document.createElement("h3");
+          title.innerText = e.title;
+          const iframe = document.createElement("iframe");
+          iframe.src = e.url;
+          const desc = document.createElement("p");
+          desc.innerText = e.description;
+          video.appendChild(title);
+          video.appendChild(iframe);
+          video.appendChild(desc);
+          videoDiv.appendChild(video);
+        });
+      });
     </script>
 
     <footer id="footer"></footer>

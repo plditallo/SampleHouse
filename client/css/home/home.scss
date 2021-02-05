@@ -1,0 +1,17 @@
+@import "../utils/mixins.scss";
+
+#sounds {
+  .download-btn {
+    width: 2em;
+    height: 2em;
+  }
+  .sound-wrapper {
+    .sound {
+      display: flex;
+      align-items: center;
+      p {
+        margin: 0 0.5em;
+      }
+    }
+  }
+}

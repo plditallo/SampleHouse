@@ -1,0 +1,18 @@
+#sounds .download-btn {
+  width: 2em;
+  height: 2em;
+}
+
+#sounds .sound-wrapper .sound {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#sounds .sound-wrapper .sound p {
+  margin: 0 0.5em;
+}
+/*# sourceMappingURL=home.css.map */

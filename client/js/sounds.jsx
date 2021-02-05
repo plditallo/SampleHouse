@@ -5,7 +5,7 @@ class Sounds extends React.Component {
     const token = window.localStorage.getItem("samplehousetoken");
     super(props);
     this.state = {
-      limit: 25,
+      limit: 3,
       offset: 0,
       page: 1,
       curMaxPage: 1,
@@ -17,7 +17,6 @@ class Sounds extends React.Component {
       soundSourceNode: null,
       token,
       loadingSoundList: true,
-      count: 0, //! testing
       userId: jwt_decode(token).subject,
       message: "",
     };
@@ -37,7 +36,6 @@ class Sounds extends React.Component {
   };
 
   prevBtnHandler = () => {
-    // console.log("BACK");
     window.scrollTo(0, 0);
     const { limit, offset, page } = this.state;
     if (page > 1)
@@ -72,9 +70,13 @@ class Sounds extends React.Component {
           return window.localStorage.removeItem("samplehousetoken");
 
         const { IsTruncated, sounds, NextContinuationToken } = data;
+        const wavSoundList = [];
+        sounds.forEach((e) => {
+          if (e.endsWith(".wav")) wavSoundList.push(e);
+        });
         this.setState({
           ...this.state,
-          soundsList: [...soundsList, ...sounds],
+          soundsList: [...soundsList, ...wavSoundList],
           nextContinuationToken: IsTruncated ? NextContinuationToken : "",
           isTruncated: IsTruncated,
           maxPage: IsTruncated ? null : page + 1,
@@ -95,20 +97,23 @@ class Sounds extends React.Component {
   }
 
   async fetchSound(path) {
-    // todo this is still playing over itself
+    // todo this is still playing over itself?
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
     // console.log(soundSourceNode);
     // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
-    await fetch(`http://localhost:5000/api/audio/${encodeURIComponent(path)}`, {
-      method: "GET",
-      type: "cors",
-      headers: {
-        "Content-Type": "application/octet-stream",
-        authorization: this.state.token,
-      },
-    }).then(async (Data) => {
+    await fetch(
+      `http://localhost:5000/api/audio/stream/${encodeURIComponent(path)}`,
+      {
+        method: "GET",
+        type: "cors",
+        headers: {
+          "Content-Type": "application/octet-stream",
+          authorization: this.state.token,
+        },
+      }
+    ).then(async (Data) => {
       const context = new AudioContext();
       const source = context.createBufferSource(); //Create Sound Source
       this.setState({ ...this.state, soundSourceNode: source });
@@ -147,6 +152,8 @@ class Sounds extends React.Component {
     }
   }
 
+  async fetchSoundData(sound) {}
+
   async download(sound) {
     if (sound.toLowerCase().includes("midi"))
       sound = sound.replace(".wav", ".mid");
@@ -168,13 +175,15 @@ class Sounds extends React.Component {
         const data = await res.json();
         return this.setState({ ...this.state, message: data.msg });
       }
-      const blob = new Blob([await res.arrayBuffer()], { type: "audio/midi" });
+      const blob = new Blob([await res.arrayBuffer()], {
+        type: `audio/${sound.includes("midi") ? "midi" : "wav"}`,
+      });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = sound;
       link.click();
       console.log("link clicked");
-      // todo this is refreshing the page for some reason...
+      // todo this is refreshing the page for some reason... (I think the update user function)
     });
   }
 
@@ -200,20 +209,70 @@ class Sounds extends React.Component {
     //   this.state.count++;
     // }
     return (
-      <div>
+      <div className="sound-wrapper">
         {/* todo search bar/functionality */}
+        {/* todo color exclusive different color */}
         {loadingSoundList ? <div className="loader" /> : null}
         {message ? <h2>{message}</h2> : null}
-
-        {soundsList.slice(offset, offset + limit).map((sound, i) => {
+        <table>
+          <thead>
+            <tr>
+              <th>cover</th>
+              <th>sound</th>
+              <th>BPM</th>
+              <th>KEY</th>
+              <th>Instrument_type</th>
+              <th>type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {soundsList.slice(offset, offset + limit).map((sound, i) => (
+              <tr key={i}>
+                {console.log(sound)}
+                <td>
+                  <a href={`#${getCoverName(sound)}`}>
+                    <img
+                      id="cover"
+                      src={covers[getCoverName(sound)]}
+                      style={{ width: "3em", height: "3em" }}
+                    />
+                  </a>
+                </td>
+                <td>
+                  <img
+                    src="../assets/music-note.png"
+                    alt="Play Button"
+                    className="download-btn" //todo change this
+                    onClick={() => this.fetchSound(sound)}
+                  />
+                </td>
+                <td>{getSoundName(sound)}</td>
+                <td>bpm</td>
+                <td>key</td>
+                <td>instrument</td>
+                <td>loop</td>
+                <td>
+                  <img
+                    src="../assets/download-icon.png"
+                    alt="download"
+                    onClick={() => this.download(sound)}
+                    className="download-btn"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {/*{soundsList.slice(offset, offset + limit).map((sound, i) => {
           // console.log(Object.entries(sound)[0][0]);
           // sound = Object.entries(sound)[0][0];
-          return sound.endsWith(".wav") ? (
-            <div className="sound" key={i} style={{ display: "flex" }}>
-              {/* todo link this to a packs page */}
+          return (
+            <div className="sound" key={i}>
+              {/* todo link this to a packs page 
+              {i === 0 ? <h2>Cover</h2> : null}
               <a href={`#${getCoverName(sound)}`}>
                 <img
-                  id="testImg"
+                  id="cover"
                   src={covers[getCoverName(sound)]}
                   style={{ width: "3em", height: "3em" }}
                 />
@@ -225,17 +284,16 @@ class Sounds extends React.Component {
               <p>KEY</p>
               <p>Instrument_type</p>
               <p>exclusive?(1/15 credits)</p>
-              <p>download btn</p>
               <p>type (One Shot/Loop)</p>
-              {/* {sound.includes("midi") ? console.log(sound) : null} */}
               <img
-                src="../assets/lock.png"
+                src="../assets/download-icon.png"
                 alt="download"
                 onClick={() => this.download(sound)}
+                className="download"
               />
             </div>
-          ) : null;
-        })}
+          );
+        })} */}
         <div className="pagination">
           <button
             onClick={page > 1 ? this.prevBtnHandler : null}

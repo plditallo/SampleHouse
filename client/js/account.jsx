@@ -1,6 +1,4 @@
 "use strict";
-// todo how to navigate here?
-// todo download sounds w/o charging credits
 class Account extends React.Component {
   constructor(props) {
     super(props);
