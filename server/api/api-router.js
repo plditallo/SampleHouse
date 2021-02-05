@@ -9,6 +9,7 @@ const audioRouter = require("./routes/audioRouter");
 const contactRouter = require("./routes/contact");
 const payPalRouter = require("./routes/payPal");
 const productRouter = require("./routes/productRouter");
+const videoRouter = require("./routes/videoRouter");
 
 //* MIDDLEWARE
 const restricted = require("./middleware/restricted");
@@ -21,6 +22,7 @@ router.use("/audio", restricted, audioRouter)
 router.use("/contact", contactRouter)
 router.use("/paypal", payPalRouter)
 router.use("/product", restricted, productRouter)
+router.use("/video", restricted, videoRouter)
 
 router.use("/", (req, res) => {
   res.status(200).json({
