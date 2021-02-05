@@ -133,23 +133,27 @@ router.get("/download/:key/:userId", async (req, res) => {
                         dynamoSound = await dynamoDbClient.getItem(querySearchSchema).promise();
                         dynamoSound = dynamoSound.Item
                     } catch (err) {
-                        handleGetItemError(err);
+                        return handleGetItemError(err);
                     }
+                    console.log(dynamoSound)
                     const exclusive = dynamoSound.exclusive.BOOL;
                     const creditCost = exclusive ? 15 : 1
-                    if (user.balance - creditCost < 0) return res.status(222).json({
+                    console.log("balance before", user.balance)
+                    if ((user.balance - creditCost) < 0) return res.status(222).json({
                         msg: "Credit balance is insufficient."
                     })
                     user.balance -= creditCost
-                    soundDb.insertDownload({
+                    console.log("balance after", user.balance)
+                    await soundDb.insertDownload({
                         name: soundName,
                         userId,
                         downloaded_at: Date.now(),
                         exclusive
-                    }).then(null)
-                    userDb.updateUser(user).then(null)
+                    }).then(console.log("insertSound")) //!null
+                    await userDb.updateUser(user).then(console.log("updateUser")) //!null
                 } else console.log("already downloaded")
-                // downloadStream(res, key).pipe(res) // Pipe download stream to response
+                console.log("download stream")
+                downloadStream(res, key).pipe(res) // Pipe download stream to response
             })
         else console.log("no user found")
     })

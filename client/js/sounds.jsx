@@ -173,6 +173,8 @@ class Sounds extends React.Component {
       link.href = window.URL.createObjectURL(blob);
       link.download = sound;
       link.click();
+      console.log("link clicked");
+      // todo this is refreshing the page for some reason...
     });
   }
 
@@ -191,6 +193,7 @@ class Sounds extends React.Component {
       offset,
       limit,
       loadingSoundList,
+      message,
     } = this.state;
     // if (this.state.count !== 1 && !loadingSoundList) {
     //   this.download("SH Radio Piano/SH_RaPiano_01_F#m_75_MIDI.midi.wav");
@@ -200,6 +203,7 @@ class Sounds extends React.Component {
       <div>
         {/* todo search bar/functionality */}
         {loadingSoundList ? <div className="loader" /> : null}
+        {message ? <h2>{message}</h2> : null}
 
         {soundsList.slice(offset, offset + limit).map((sound, i) => {
           // console.log(Object.entries(sound)[0][0]);
