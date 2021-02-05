@@ -20,19 +20,22 @@ class Sounds extends React.Component {
     };
   }
   nextBtnHandler = () => {
+    window.scrollTo(0, 0);
     const { limit, offset, page, curMaxPage, isTruncated } = this.state;
-    if (page === curMaxPage && isTruncated) this.fetchSoundList();
+    const needToFetch = page === curMaxPage && isTruncated;
+    if (needToFetch) this.fetchSoundList();
     this.setState({
       ...this.state,
       offset: offset + limit,
       page: page + 1,
       curMaxPage: page === curMaxPage ? curMaxPage + 1 : curMaxPage,
-      loadingSoundList: true,
+      loadingSoundList: needToFetch,
     });
   };
 
   prevBtnHandler = () => {
     // console.log("BACK");
+    window.scrollTo(0, 0);
     const { limit, offset, page } = this.state;
     if (page > 1)
       this.setState({
@@ -143,7 +146,7 @@ class Sounds extends React.Component {
   }
 
   async download(sound) {
-    return await fetch(
+    await fetch(
       `http://localhost:5000/api/audio/${encodeURIComponent(sound)}`,
       {
         method: "GET",
