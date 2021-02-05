@@ -2,15 +2,20 @@ const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
 const soundDb = require("../../../database/model/soundDownloadModel");
 const s3Client = require("s3").createClient();
-const AWS = require('aws-sdk')
+const AWS = require('aws-sdk');
 AWS.config.update({
-    region: 'us-west-1'
+    region: "us-west-1"
 })
 // Create S3 service object
 const s3 = new AWS.S3({
     apiVersion: '2006-03-01'
 });
-// todo find out how to download full files from S3
+
+// Create the DynamoDB Client with the region you want
+// const dynamoDbClient = new AWS.DynamoDB(); //todo to go off localhost
+// Use the following config instead when using DynamoDB Local
+// AWS.config.update({region: 'localhost', endpoint: 'http://localhost:8000', accessKeyId: 'access_key_id', secretAccessKey: 'secret_access_key'});
+
 
 router.get("/", (req, res) => {
     const {
@@ -40,7 +45,6 @@ router.get("/", (req, res) => {
         }) => {
             if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key.replace(Prefix, ""))
         })
-        // console.log(Sounds)
         if (data) res.status(200).json({
             IsTruncated,
             sounds,
@@ -83,16 +87,56 @@ router.get("/tag/:key", (req, res) => {
     })
 })
 
-router.get("/download/:key/:userId", (req, res) => {
+router.get("/download/:key/:userId", async (req, res) => {
+    console.log(req.params);
     const {
         key,
         userId
     } = req.params;
-    console.log("download", {
-        key,
-        userId
-    })
 
+    AWS.config.update({ //!testing on localhost only
+        region: 'localhost',
+        endpoint: 'http://localhost:8000'
+    })
+    const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
+
+    const soundPack = key.split("/")[0]
+    const soundName = key.split("/")[1]
+    let dynamoSound;
+    // Create the input for getItem call
+    const querySearchSchema = {
+        "TableName": "Sounds",
+        "Key": {
+            "pack": {
+                "S": soundPack
+            },
+            "name": {
+                "S": soundName
+            }
+        }
+    }
+    try {
+        dynamoSound = await dynamoDbClient.getItem(querySearchSchema).promise();
+        dynamoSound = dynamoSound.Item
+    } catch (err) {
+        handleGetItemError(err);
+    }
+    const creditCost = dynamoSound.exclusive.BOOL ? 15 : 1;
+
+    userDb.getUserById(userId).then(([user]) => {
+        // console.log(user)
+        if (user)
+            soundDb.checkDownloadByUser(userId, key).then(([res]) => {
+                console.log(res)
+                if (!res) {
+                    //todo get sound from dynamoDb
+                    // soundDb.insertDownload()
+                } else {
+                    console.log("downloaded")
+                }
+            })
+        else console.log("no user found")
+    })
 
 
 
@@ -120,4 +164,61 @@ function downloadStream(res, key) {
             'Content-Type': headers['content-type']
         }));
     return downloadStream
+}
+
+
+
+
+
+
+//! DynamoDB ERRORS
+// Handles errors during GetItem execution. Use recommendations in error messages below to 
+// add error handling specific to your application use-case. 
+function handleGetItemError(err) {
+    if (!err) {
+        console.error('Encountered error object was empty');
+        return;
+    }
+    if (!err.code) {
+        console.error(`An exception occurred, investigate and configure retry strategy. Error: ${JSON.stringify(err)}`);
+        return;
+    }
+    // here are no API specific errors to handle for GetItem, common DynamoDB API errors are handled below
+    handleCommonErrors(err);
+}
+
+function handleCommonErrors(err) {
+    switch (err.code) {
+        case 'InternalServerError':
+            console.error(`Internal Server Error, generally safe to retry with exponential back-off. Error: ${err.message}`);
+            return;
+        case 'ProvisionedThroughputExceededException':
+            console.error(`Request rate is too high. If you're using a custom retry strategy make sure to retry with exponential back-off. ` +
+                `Otherwise consider reducing frequency of requests or increasing provisioned capacity for your table or secondary index. Error: ${err.message}`);
+            return;
+        case 'ResourceNotFoundException':
+            console.error(`One of the tables was not found, verify table exists before retrying. Error: ${err.message}`);
+            return;
+        case 'ServiceUnavailable':
+            console.error(`Had trouble reaching DynamoDB. generally safe to retry with exponential back-off. Error: ${err.message}`);
+            return;
+        case 'ThrottlingException':
+            console.error(`Request denied due to throttling, generally safe to retry with exponential back-off. Error: ${err.message}`);
+            return;
+        case 'UnrecognizedClientException':
+            console.error(`The request signature is incorrect most likely due to an invalid AWS access key ID or secret key, fix before retrying. ` +
+                `Error: ${err.message}`);
+            return;
+        case 'ValidationException':
+            console.error(`The input fails to satisfy the constraints specified by DynamoDB, ` +
+                `fix input before retrying. Error: ${err.message}`);
+            return;
+        case 'RequestLimitExceeded':
+            console.error(`Throughput exceeds the current throughput limit for your account, ` +
+                `increase account level throughput before retrying. Error: ${err.message}`);
+            return;
+        default:
+            console.error(`An exception occurred, investigate and configure retry strategy. Error: ${err.message}`);
+            return;
+    }
 }

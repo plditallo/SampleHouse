@@ -201,6 +201,7 @@ class Sounds extends React.Component {
           // sound = Object.entries(sound)[0][0];
           return sound.endsWith(".wav") ? (
             <div className="sound" key={i} style={{ display: "flex" }}>
+              {/* todo link this to a packs page */}
               <a href={`#${getCoverName(sound)}`}>
                 <img
                   id="testImg"
