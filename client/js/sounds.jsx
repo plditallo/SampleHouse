@@ -5,7 +5,7 @@ class Sounds extends React.Component {
     const token = window.localStorage.getItem("samplehousetoken");
     super(props);
     this.state = {
-      limit: 3,
+      limit: 300,
       offset: 0,
       page: 1,
       curMaxPage: 1,
@@ -175,8 +175,6 @@ class Sounds extends React.Component {
     }
   }
 
-  async fetchSoundData(sound) {}
-
   async download(sound) {
     if (sound.toLowerCase().includes("midi"))
       sound = sound.replace(".wav", ".mid");
@@ -206,7 +204,7 @@ class Sounds extends React.Component {
       link.download = sound;
       link.click();
       console.log("link clicked");
-      // todo this is refreshing the page for some reason... (I think the update user function)
+      // todo this is refreshing when an update in the database occurs
     });
   }
 
@@ -214,11 +212,11 @@ class Sounds extends React.Component {
     this.fetchSoundList();
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
-  // todo scroll to top after page change
   render() {
     // console.log(this.state.message);
     const {
       soundsList,
+      dynamoSoundList,
       covers,
       page,
       maxPage,
@@ -227,10 +225,6 @@ class Sounds extends React.Component {
       loadingSoundList,
       message,
     } = this.state;
-    // if (this.state.count !== 1 && !loadingSoundList) {
-    //   this.download("SH Radio Piano/SH_RaPiano_01_F#m_75_MIDI.midi.wav");
-    //   this.state.count++;
-    // }
     return (
       <div className="sound-wrapper">
         {/* todo search bar/functionality */}
@@ -249,41 +243,71 @@ class Sounds extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {soundsList.slice(offset, offset + limit).map((sound, i) => (
-              <tr key={i}>
-                {/* {console.log(sound)} */}
-                <td>
-                  <a href={`#${getCoverName(sound)}`}>
-                    <img
-                      id="cover"
-                      src={covers[getCoverName(sound)]}
-                      style={{ width: "3em", height: "3em" }}
-                    />
-                  </a>
-                </td>
-                <td>
-                  <img
-                    src="../assets/music-note.png"
-                    alt="Play Button"
-                    className="download-btn" //todo change this
-                    onClick={() => this.streamSound(sound)}
-                  />
-                </td>
-                <td>{getSoundName(sound)}</td>
-                <td>bpm</td>
-                <td>key</td>
-                <td>instrument</td>
-                <td>loop</td>
-                <td>
-                  <img
-                    src="../assets/download-icon.png"
-                    alt="download"
-                    onClick={() => this.download(sound)}
-                    className="download-btn"
-                  />
-                </td>
-              </tr>
-            ))}
+            {soundsList.slice(offset, offset + limit).map((sound, i) => {
+              const soundData = dynamoSoundList.find((e) =>
+                e ? e.name.S === getSoundName(sound) : null
+              );
+              //only pull songs that are in dynamoDb
+              if (soundData)
+                return (
+                  <tr
+                    key={i}
+                    className={soundData.exclusive.BOOL ? "exclusive" : null}
+                  >
+                    <td>
+                      <a href={`#${getCoverName(sound)}`}>
+                        <img
+                          id="cover"
+                          src={covers[getCoverName(sound)]}
+                          style={{ width: "3em", height: "3em" }}
+                        />
+                      </a>
+                    </td>
+                    <td>
+                      <img
+                        src="../assets/music-note.png"
+                        alt="Play Button"
+                        className="download-btn" //todo change this
+                        onClick={() => this.streamSound(sound)}
+                      />
+                    </td>
+                    <td>{getSoundName(sound)}</td>
+                    <td>{soundData.tempo ? soundData.tempo.N : "null"}</td>
+                    <td>{soundData.key ? soundData.key.S : "null"}</td>
+                    <td>
+                      {soundData.instrument_type
+                        ? Array(soundData.instrument_type.SS).map((e) => {
+                            if (e.length > 1) {
+                              let i = 1;
+                              let str = "";
+                              // console.log(e);
+                              e.forEach((el) => {
+                                if (i !== e.length) {
+                                  str += `${el}, `;
+                                  i++;
+                                } else return (str += el);
+                              });
+                              return str;
+                            } else return e;
+                            // if (e.length > 1 && i !== e.length) {
+                            //   console.log(e, e.length, i);
+                            //   i++;
+                            //   return `${e}, `;
+                          })
+                        : "null"}
+                    </td>
+                    <td>{soundData.type ? soundData.type.S : "null"}</td>
+                    <td>
+                      <img
+                        src="../assets/download-icon.png"
+                        alt="download"
+                        onClick={() => this.download(sound)}
+                        className="download-btn"
+                      />
+                    </td>
+                  </tr>
+                );
+            })}
           </tbody>
         </table>
         {/*{soundsList.slice(offset, offset + limit).map((sound, i) => {

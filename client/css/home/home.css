@@ -15,4 +15,8 @@
 #sounds .sound-wrapper .sound p {
   margin: 0 0.5em;
 }
+
+#sounds table {
+  text-align: center;
+}
 /*# sourceMappingURL=home.css.map */

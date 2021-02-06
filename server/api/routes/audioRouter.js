@@ -102,9 +102,6 @@ router.get("/download/:key/:userId", async (req, res) => {
         key,
         userId
     } = req.params;
-    // console.log({
-    //     key
-    // })
 
     const soundPack = key.split("/")[0]
     const soundName = key.split("/")[1]
@@ -136,6 +133,7 @@ router.get("/download/:key/:userId", async (req, res) => {
                 if (!resp) {
                     console.log("not downloaded")
                     const dynamoSound = await getDynamoSound(querySchema)
+                    user.balance = 50; //!testing
                     const exclusive = dynamoSound.exclusive.BOOL;
                     const creditCost = exclusive ? 15 : 1
                     console.log("balance before", user.balance)
@@ -144,14 +142,16 @@ router.get("/download/:key/:userId", async (req, res) => {
                     })
                     user.balance -= creditCost
                     console.log("balance after", user.balance)
-                    // await soundDb.insertDownload({
+                    // soundDb.insertDownload({
                     //     name: soundName,
                     //     userId,
                     //     downloaded_at: Date.now(),
                     //     exclusive
-                    // }).then(console.log("insertSound")) //!null
-                    // await userDb.updateUser(user).then(console.log("updateUser")) //!null
-                    //? todo is the page refreshing because of an update to the user?
+                    // }).then(() => {
+                    //     console.log("insertSound")
+                    //       userDb.updateUser(user).then(console.log("updateUser")) //!null
+                    // })
+                    //? todo the client is refreshing because of an update to the userDb or soundDb
                 } else console.log("already downloaded")
                 console.log("download stream")
                 downloadStream(res, key).pipe(res) // Pipe download stream to response
