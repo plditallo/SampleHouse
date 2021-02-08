@@ -7,27 +7,27 @@ html {
     text-decoration: none;
   }
   nav {
-    @include breakpoint(xxs) {
-      background: red !important;
-    }
-    @include breakpoint(xs) {
-      background: orange !important;
-    }
-    @include breakpoint(s) {
-      background: yellow !important;
-    }
-    @include breakpoint(m) {
-      background: green !important;
-    }
-    @include breakpoint(l) {
-      background: blue !important;
-    }
-    @include breakpoint(xl) {
-      background: purple !important;
-    }
-    @include breakpoint(xxl) {
-      background: white !important;
-    }
+    // @include breakpoint(xxs) {
+    //   background: red !important;
+    // }
+    // @include breakpoint(xs) {
+    //   background: orange !important;
+    // }
+    // @include breakpoint(s) {
+    //   background: yellow !important;
+    // }
+    // @include breakpoint(m) {
+    //   background: green !important;
+    // }
+    // @include breakpoint(l) {
+    //   background: blue !important;
+    // }
+    // @include breakpoint(xl) {
+    //   background: purple !important;
+    // }
+    // @include breakpoint(xxl) {
+    //   background: white !important;
+    // }
   }
 
   body {
@@ -56,7 +56,7 @@ html {
         }
       }
     }
-    .loader {
+    .load-spinner {
       border: 16px solid $lightGrey; /* Light grey */
       border-top: 16px solid $lightBlue; /* Blue */
       border-radius: 50%;

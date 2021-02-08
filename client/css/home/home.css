@@ -1,3 +1,21 @@
+#sounds {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#sounds .exclusive {
+  color: #00bdf5;
+  background: #00bdf5;
+}
+
 #sounds .download-btn {
   width: 2em;
   height: 2em;

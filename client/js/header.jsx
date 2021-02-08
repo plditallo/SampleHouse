@@ -20,7 +20,7 @@ class Header extends React.Component {
         <a href={!loggedIn ? "index.html#" : "home.html#"}>
           <div className="logo">
             <img
-              src="../assets/sample_house_logo.png"
+              src="../assets/sample_house_logo-chrome.png"
               alt="sample.House Logo"
             />
             <h1>SampleHouse</h1>

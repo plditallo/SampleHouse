@@ -1,6 +1,13 @@
 @import "../utils/mixins.scss";
 
 #sounds {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .exclusive {
+    color: $lightBlue;
+    background: $lightBlue;
+  }
   .download-btn {
     width: 2em;
     height: 2em;

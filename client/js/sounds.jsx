@@ -18,20 +18,31 @@ class Sounds extends React.Component {
       soundSourceNode: null,
       token,
       loadingSoundList: true,
+      loadingSoundStream: false,
       userId: jwt_decode(token).subject,
       message: "",
     };
   }
   nextBtnHandler = () => {
     window.scrollTo(0, 0);
-    const { limit, offset, page, curMaxPage, isTruncated } = this.state;
+    const {
+      limit,
+      offset,
+      page,
+      curMaxPage,
+      isTruncated,
+      nextContinuationToken,
+    } = this.state;
     const needToFetch = page === curMaxPage && isTruncated;
     if (needToFetch) this.fetchSoundList();
     this.setState({
       ...this.state,
       offset: offset + limit,
       page: page + 1,
-      curMaxPage: page === curMaxPage ? curMaxPage + 1 : curMaxPage,
+      curMaxPage:
+        page === curMaxPage && nextContinuationToken
+          ? curMaxPage + 1
+          : curMaxPage,
       loadingSoundList: needToFetch,
     });
   };
@@ -119,10 +130,13 @@ class Sounds extends React.Component {
       });
   }
 
-  async streamSound(path) {
+  async streamSound(path, evt) {
     // todo this is still playing over itself?
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
+    this.setState({ ...this.state, loadingSoundStream: true });
+    const target = evt.target.classList;
+    target.add("load-spinner");
     // console.log(soundSourceNode);
     // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
@@ -139,7 +153,12 @@ class Sounds extends React.Component {
     ).then(async (Data) => {
       const context = new AudioContext();
       const source = context.createBufferSource(); //Create Sound Source
-      this.setState({ ...this.state, soundSourceNode: source });
+      this.setState({
+        ...this.state,
+        soundSourceNode: source,
+        loadingSoundStream: false,
+      });
+      target.remove("load-spinner");
       return context.decodeAudioData(await Data.arrayBuffer(), (buffer) => {
         source.buffer = buffer;
         source.connect(context.destination);
@@ -223,19 +242,24 @@ class Sounds extends React.Component {
       offset,
       limit,
       loadingSoundList,
+      loadingSoundStream,
       message,
     } = this.state;
+    // console.log(this.state);
     return (
       <div className="sound-wrapper">
         {/* todo search bar/functionality */}
         {/* todo color exclusive different color */}
-        {loadingSoundList ? <div className="loader" /> : null}
+        {loadingSoundList ? ( //! testing, remove || loadingSoundStream
+          <div className="load-spinner" />
+        ) : null}
         {message ? <h2>{message}</h2> : null}
         <table>
           <thead>
             <tr>
               <th>cover</th>
-              <th>sound</th>
+              <th></th>
+              <th>File Name</th>
               <th>BPM</th>
               <th>KEY</th>
               <th>Instrument_type</th>
@@ -244,10 +268,15 @@ class Sounds extends React.Component {
           </thead>
           <tbody>
             {soundsList.slice(offset, offset + limit).map((sound, i) => {
-              const soundData = dynamoSoundList.find((e) =>
-                e ? e.name.S === getSoundName(sound) : null
-              );
-              //only pull songs that are in dynamoDb
+              const soundData = dynamoSoundList.find((e) => {
+                // e //!testing for exclusives
+                //   ? e.exclusive.BOOL
+                //     ? console.log(true)
+                //     : console.log(false)
+                //   : null;
+                return e ? e.name.S === getSoundName(sound) : null;
+              });
+              //!only pull songs that are in dynamoDb
               if (soundData)
                 return (
                   <tr
@@ -267,8 +296,8 @@ class Sounds extends React.Component {
                       <img
                         src="../assets/music-note.png"
                         alt="Play Button"
-                        className="download-btn" //todo change this
-                        onClick={() => this.streamSound(sound)}
+                        className={"play-btn"}
+                        onClick={(evt) => this.streamSound(sound, evt)}
                       />
                     </td>
                     <td>{getSoundName(sound)}</td>
@@ -289,10 +318,6 @@ class Sounds extends React.Component {
                               });
                               return str;
                             } else return e;
-                            // if (e.length > 1 && i !== e.length) {
-                            //   console.log(e, e.length, i);
-                            //   i++;
-                            //   return `${e}, `;
                           })
                         : "null"}
                     </td>
@@ -310,37 +335,6 @@ class Sounds extends React.Component {
             })}
           </tbody>
         </table>
-        {/*{soundsList.slice(offset, offset + limit).map((sound, i) => {
-          // console.log(Object.entries(sound)[0][0]);
-          // sound = Object.entries(sound)[0][0];
-          return (
-            <div className="sound" key={i}>
-              {/* todo link this to a packs page 
-              {i === 0 ? <h2>Cover</h2> : null}
-              <a href={`#${getCoverName(sound)}`}>
-                <img
-                  id="cover"
-                  src={covers[getCoverName(sound)]}
-                  style={{ width: "3em", height: "3em" }}
-                />
-              </a>
-              <p id={sound} key={i} onClick={() => this.streamSound(sound)}>
-                {getSoundName(sound)}
-              </p>
-              <p>BPM</p>
-              <p>KEY</p>
-              <p>Instrument_type</p>
-              <p>exclusive?(1/15 credits)</p>
-              <p>type (One Shot/Loop)</p>
-              <img
-                src="../assets/download-icon.png"
-                alt="download"
-                onClick={() => this.download(sound)}
-                className="download"
-              />
-            </div>
-          );
-        })} */}
         <div className="pagination">
           <button
             onClick={page > 1 ? this.prevBtnHandler : null}
@@ -351,7 +345,9 @@ class Sounds extends React.Component {
           {page}
           <button
             onClick={page === maxPage ? null : this.nextBtnHandler}
-            style={{ color: page === maxPage ? "grey" : "red" }}
+            style={{
+              color: page === maxPage ? "grey" : "red",
+            }}
           >
             Next
           </button>
