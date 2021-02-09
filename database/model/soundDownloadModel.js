@@ -4,6 +4,7 @@ module.exports = {
     insertDownload,
     getDownloadsByUser,
     checkDownloadByUser,
+    getExclusiveDownloads,
     getSoundDownloadCount
 }
 
@@ -22,7 +23,19 @@ function checkDownloadByUser(userId, name) {
         userId,
         name
     })
-} //todo check this function
+}
+
+function getExclusiveDownloads() {
+    return db("SoundDownload").where({
+        exclusive: true
+    })
+}
+
+// function checkExclusiveDownload(name) {
+//     return db("SoundDownload").where({
+//         exclusive: true
+//     })
+// }
 
 function getSoundDownloadCount(name) {
     return db("SoundDownload").where({

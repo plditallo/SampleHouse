@@ -222,8 +222,23 @@ class Sounds extends React.Component {
       link.href = window.URL.createObjectURL(blob);
       link.download = sound;
       link.click();
-      console.log("link clicked");
+      console.log("link clicked for download");
       // todo this is refreshing when an update in the database occurs
+    });
+  }
+
+  downloadTest(evt) {
+    console.log(evt);
+    fetch(`http://localhost:5000/api/audio/test/${this.state.userId}`, {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: this.state.token,
+      },
+    }).then(async (res) => {
+      console.log("RESPONSE HERE", res);
+      console.log("AWAIT RESPONSE", await res.json());
     });
   }
 
@@ -245,14 +260,10 @@ class Sounds extends React.Component {
       loadingSoundStream,
       message,
     } = this.state;
-    // console.log(this.state);
     return (
       <div className="sound-wrapper">
         {/* todo search bar/functionality */}
         {/* todo color exclusive different color */}
-        {loadingSoundList ? ( //! testing, remove || loadingSoundStream
-          <div className="load-spinner" />
-        ) : null}
         {message ? <h2>{message}</h2> : null}
         <table>
           <thead>
@@ -266,14 +277,13 @@ class Sounds extends React.Component {
               <th>type</th>
             </tr>
           </thead>
+          {loadingSoundList ? <div className="load-spinner" /> : null}
           <tbody>
             {soundsList.slice(offset, offset + limit).map((sound, i) => {
               const soundData = dynamoSoundList.find((e) => {
-                // e //!testing for exclusives
-                //   ? e.exclusive.BOOL
-                //     ? console.log(true)
-                //     : console.log(false)
-                //   : null;
+                e //!testing for exclusives
+                  ? console.log(e.exclusive.BOOL)
+                  : null;
                 return e ? e.name.S === getSoundName(sound) : null;
               });
               //!only pull songs that are in dynamoDb
@@ -300,7 +310,9 @@ class Sounds extends React.Component {
                         onClick={(evt) => this.streamSound(sound, evt)}
                       />
                     </td>
-                    <td>{getSoundName(sound)}</td>
+                    <td onClick={(evt) => this.downloadTest(evt)}>
+                      {getSoundName(sound)}
+                    </td>
                     <td>{soundData.tempo ? soundData.tempo.N : "null"}</td>
                     <td>{soundData.key ? soundData.key.S : "null"}</td>
                     <td>

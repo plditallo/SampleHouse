@@ -127,13 +127,12 @@ router.get("/download/:key/:userId", async (req, res) => {
         // })
         if (user)
             soundDb.checkDownloadByUser(userId, soundName).then(async ([resp]) => {
-                console.log({
-                    resp
-                })
                 if (!resp) {
+                    // todo check exclusive downloads
+                    // soundDb.getExclusiveDownloads()
                     console.log("not downloaded")
                     const dynamoSound = await getDynamoSound(querySchema)
-                    user.balance = 50; //!testing
+                    user.balance = 15; //!testing
                     const exclusive = dynamoSound.exclusive.BOOL;
                     const creditCost = exclusive ? 15 : 1
                     console.log("balance before", user.balance)
@@ -153,10 +152,23 @@ router.get("/download/:key/:userId", async (req, res) => {
                     // })
                     //? todo the client is refreshing because of an update to the userDb or soundDb
                 } else console.log("already downloaded")
-                console.log("download stream")
                 downloadStream(res, key).pipe(res) // Pipe download stream to response
             })
         else console.log("no user found")
+    })
+})
+
+router.get("/test/:userId", (req, res) => {
+    const {
+        userId
+    } = req.params
+    userDb.getUserById(userId).then(async ([user]) => {
+        console.log({
+            user
+        })
+        // console.log(userDb.updateUser(user))
+        // if (user) await userDb.updateUser(user)
+        res.status(200).json(user)
     })
 })
 

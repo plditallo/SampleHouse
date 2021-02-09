@@ -40,7 +40,8 @@
     "start": "node index.js",
     "dev": "concurrently 'yarn start' 'cd client && yarn start'",
     "client": "cd client && yarn start",
-    "dbreset": "knex migrate:rollback && knex migrate:latest && knex seed:run"
+    "dbreset": "knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "dynamo": "cd /Users/braden/Documents/Programming/utils/dynamodb_local_latest && java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb"
   },
   "jest": {
     "testEnvironment": "node",
