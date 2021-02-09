@@ -228,7 +228,7 @@ class Sounds extends React.Component {
   }
 
   downloadTest(evt) {
-    console.log(evt);
+    // console.log(evt);
     fetch(`http://localhost:5000/api/audio/test/${this.state.userId}`, {
       method: "GET",
       type: "cors",

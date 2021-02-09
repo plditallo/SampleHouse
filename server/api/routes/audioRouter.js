@@ -119,7 +119,7 @@ router.get("/download/:key/:userId", async (req, res) => {
         }
     }
     //todo update dynamoDb download count
-    // check all exclusive sounds if they have been downloaded before (other users)
+    //todo check all exclusive sounds if they have been downloaded before (other users)
 
     userDb.getUserById(userId).then(([user]) => {
         // console.log({
@@ -141,15 +141,13 @@ router.get("/download/:key/:userId", async (req, res) => {
                     })
                     user.balance -= creditCost
                     console.log("balance after", user.balance)
-                    // soundDb.insertDownload({
-                    //     name: soundName,
-                    //     userId,
-                    //     downloaded_at: Date.now(),
-                    //     exclusive
-                    // }).then(() => {
-                    //     console.log("insertSound")
-                    //       userDb.updateUser(user).then(console.log("updateUser")) //!null
-                    // })
+                    await soundDb.insertDownload({
+                        name: soundName,
+                        userId,
+                        downloaded_at: Date.now(),
+                        exclusive
+                    })
+                    await userDb.updateUser(user)
                     //? todo the client is refreshing because of an update to the userDb or soundDb
                 } else console.log("already downloaded")
                 downloadStream(res, key).pipe(res) // Pipe download stream to response
