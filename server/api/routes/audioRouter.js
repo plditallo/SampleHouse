@@ -2,8 +2,12 @@ const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
 const soundDb = require("../../../database/model/soundDownloadModel");
 const {
-    handleGetItemError
-} = require("../utils/dynamoDbErrors");
+    getSounds,
+    getSoundBy
+} = require("../../../database/model/soundModel");
+// const {
+//     handleGetItemError
+// } = require("../utils/dynamoDbErrors");
 const s3Client = require("s3").createClient();
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -20,51 +24,66 @@ const s3 = new AWS.S3({
 // AWS.config.update({region: 'localhost', endpoint: 'http://localhost:8000', accessKeyId: 'access_key_id', secretAccessKey: 'secret_access_key'});
 
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
     const {
         limit = 25,
+            offset,
             ContinuationToken
     } = req.query;
-
-    s3.listObjectsV2({
-        Bucket: 'samplehouse',
-        Prefix: 'packs/',
-        // Delimiter: "/", //used to not go 'deeper'
-        MaxKeys: limit,
-        // StartAfter: 'packs/SH Essential Drums/SH_Essential_Kick_07.wav',
-        ContinuationToken: ContinuationToken.length ? ContinuationToken.replaceAll(" ", "+") : null
-    }, (err, data) => {
-        if (err) console.error("Error /", err);
-        // else console.log("Success", data)
-        const {
-            NextContinuationToken,
-            Contents,
-            IsTruncated,
-            Prefix
-        } = data;
-        const sounds = [];
-        Contents.forEach(({
-            Key
-        }) => {
-            if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key.replace(Prefix, ""))
-        })
-        if (data) res.status(200).json({
-            IsTruncated,
-            sounds,
-            NextContinuationToken,
-            Prefix
-        })
+    console.log({
+        limit,
+        offset
     });
+
+    const sounds = await getSounds(limit, offset)
+    // sounds = sounds.filter(e => e.name.endsWith(".wav"))
+    if (sounds) res.status(200).send(sounds)
+    else res.status(500).json({
+        "msg": "unable to fetch sounds"
+    })
+
+
+
+    // s3.listObjectsV2({
+    //     Bucket: 'samplehouse',
+    //     Prefix: 'packs/',
+    //     // Delimiter: "/", //used to not go 'deeper'
+    //     MaxKeys: limit,
+    //     // StartAfter: 'packs/SH Essential Drums/SH_Essential_Kick_07.wav',
+    //     ContinuationToken: ContinuationToken.length ? ContinuationToken.replaceAll(" ", "+") : null
+    // }, (err, data) => {
+    //     if (err) console.error("Error /", err);
+    //     // else console.log("Success", data)
+    //     const {
+    //         NextContinuationToken,
+    //         Contents,
+    //         IsTruncated,
+    //         Prefix
+    //     } = data;
+    //     const sounds = [];
+    //     Contents.forEach(({
+    //         Key
+    //     }) => {
+    //         if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key.replace(Prefix, ""))
+    //     })
+    //     if (data) res.status(200).json({
+    //         IsTruncated,
+    //         sounds,
+    //         NextContinuationToken,
+    //         Prefix
+    //     })
+    // });
 })
 
 router.get("/stream/:key", (req, res) => {
-    downloadStream(res, req.params.key).pipe(res) // Pipe download stream to response
+    const key = req.params.key;
+    //! key: SH Essential Drums/SH_Essential_Hat_01.wav
+    downloadStream(res, key).pipe(res) // Pipe download stream to response
 })
 
 router.get("/cover/:key", (req, res) => {
-    const {
-        key
-    } = req.params
+    const key = req.params.key;
+    //! key: 'SH Essential Drums'
 
     s3.getObject({
         Bucket: 'samplehouse',
@@ -76,75 +95,73 @@ router.get("/cover/:key", (req, res) => {
     })
 })
 
-router.post("/tags", async (req, res) => {
-    const soundsArr = req.body;
-    const dynamoSoundList = [];
-    soundsArr.forEach(async e => {
-        const dynamoSound = await getDynamoSound({
-            "TableName": "Sounds",
-            "Key": {
-                "pack": {
-                    "S": e.split("/")[0] //soundPack
-                },
-                "name": {
-                    "S": e.split("/")[1] //soundName
-                }
-            }
-        })
-        dynamoSoundList.push(dynamoSound);
-        if (dynamoSoundList.length === soundsArr.length) res.status(200).send(dynamoSoundList)
-    })
-})
+// router.post("/tags", async (req, res) => {
+//     const soundsArr = req.body;
+//     const dynamoSoundList = [];
+//     soundsArr.forEach(async e => {
+//         const dynamoSound = await getDynamoSound({
+//             "TableName": "Sounds",
+//             "Key": {
+//                 "pack": {
+//                     "S": e.split("/")[0] //soundPack
+//                 },
+//                 "name": {
+//                     "S": e.split("/")[1] //soundName
+//                 }
+//             }
+//         })
+//         dynamoSoundList.push(dynamoSound);
+//         if (dynamoSoundList.length === soundsArr.length) res.status(200).send(dynamoSoundList)
+//     })
+// })
 
 router.get("/download/:key", async (req, res) => {
-    console.log(req.params);
-    const {
-        key
-    } = req.params;
-    const {
-        user
-    } = req;
     console.log("download route")
-    const soundPack = key.split("/")[0]
-    const soundName = key.split("/")[1]
+    const key = req.params.key;
+    console.log(key)
+    //! key: 'SH Essential Drums/SH_Essential_Hat_01.wav'
+    const user = req.user;
+    // const soundPack = key.split("/")[0]
+    // const soundName = key.split("/")[1]
 
-    // Create the input for getItem call
-    const querySchema = {
-        "TableName": "Sounds",
-        "Key": {
-            "pack": {
-                "S": soundPack
-            },
-            "name": {
-                "S": soundName
-            }
-        }
-    }
+    // // Create the input for getItem call
+    // const querySchema = {
+    //     "TableName": "Sounds",
+    //     "Key": {
+    //         "pack": {
+    //             "S": soundPack
+    //         },
+    //         "name": {
+    //             "S": soundName
+    //         }
+    //     }
+    // }
     //todo update dynamoDb download count
     //todo check all exclusive sounds if they have been downloaded before (other users)
-    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundName)
+    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundId)
     // todo check exclusive downloads -> soundDb.getExclusiveDownloads()
     if (!previousDownload) {
         console.log("not downloaded")
-        const dynamoSound = await getDynamoSound(querySchema);
-        const exclusive = dynamoSound.exclusive.BOOL;
-        const creditCost = exclusive ? 15 : 1;
-        console.log("balance before", user.balance); //! testing
-        if ((user.balance - creditCost) < 0) return res.status(222).json({
-            msg: "Credit balance is insufficient."
-        });
-        user.balance -= creditCost;
-        console.log("balance after", user.balance); //! testing
+        // const dynamoSound = await getDynamoSound(querySchema);
+        // const exclusive = dynamoSound.exclusive.BOOL;
+        // const creditCost = exclusive ? 15 : 1;
+        // console.log("balance before", user.balance); //! testing
+        // if ((user.balance - creditCost) < 0) return res.status(222).json({
+        //     msg: "Credit balance is insufficient."
+        // });
+        // user.balance -= creditCost;
+        // console.log("balance after", user.balance); //! testing
         // await soundDb.insertDownload({
         //     name: soundName,
         //     userId: user.id,
         //     downloaded_at: Date.now(),
         //     exclusive
         // })
-        await userDb.updateUser(user)
+        // await userDb.updateUser(user)
         // Pipe download stream to response
     } else console.log("already downloaded") //! testing
-    downloadStream(res, key).pipe(res)
+    // downloadStream(res, key).pipe(res)
+    res.status(200).end()
 })
 //? todo the client is refreshing because of an update to the userDb or soundDb
 
@@ -172,17 +189,17 @@ function downloadStream(res, key) {
     return downloadStream
 }
 
-async function getDynamoSound(querySchema) {
-    AWS.config.update({ //!testing on localhost only
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
-    })
-    const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
+// async function getDynamoSound(querySchema) {
+//     AWS.config.update({ //!testing on localhost only
+//         region: 'localhost',
+//         endpoint: 'http://localhost:8000'
+//     })
+//     const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
 
-    try {
-        const fetchedSound = await dynamoDbClient.getItem(querySchema).promise();
-        return fetchedSound.Item
-    } catch (err) {
-        return handleGetItemError(err);
-    }
-}
+//     try {
+//         const fetchedSound = await dynamoDbClient.getItem(querySchema).promise();
+//         return fetchedSound.Item
+//     } catch (err) {
+//         return handleGetItemError(err);
+//     }
+// }

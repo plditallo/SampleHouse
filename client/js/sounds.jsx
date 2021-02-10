@@ -5,14 +5,12 @@ class Sounds extends React.Component {
     const token = window.localStorage.getItem("samplehousetoken");
     super(props);
     this.state = {
-      limit: 300,
+      limit: 10,
       offset: 0,
       page: 1,
       curMaxPage: 1,
       maxPage: null,
-      soundsList: [],
-      dynamoSoundList: [],
-      nextContinuationToken: "",
+      soundList: [],
       isTruncated: false,
       covers: {},
       soundSourceNode: null,
@@ -23,6 +21,7 @@ class Sounds extends React.Component {
       message: "",
     };
   }
+  //! key = SH%20Essential%20Drums%2FSH_Essential_Hat_02.wav
   nextBtnHandler = () => {
     window.scrollTo(0, 0);
     const {
@@ -59,11 +58,16 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList() {
-    const { limit, nextContinuationToken, soundsList, page } = this.state;
-    await fetch(
-      `http://localhost:5000/api/audio?limit=${
-        limit + 1
-      }&ContinuationToken=${nextContinuationToken}`,
+    const {
+      limit,
+      offset,
+      // nextContinuationToken,
+      soundList,
+      page,
+    } = this.state;
+
+    const { status, sounds } = await fetch(
+      `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}`,
       {
         method: "GET",
         type: "cors",
@@ -72,71 +76,108 @@ class Sounds extends React.Component {
           authorization: this.state.token,
         },
       }
-    )
-      .then(async (res) => ({
-        status: res.status,
-        data: await res.json(),
-      }))
-      .then(({ status, data }) => {
-        if (status !== 200)
-          return window.localStorage.removeItem("samplehousetoken");
+    ).then(async (res) => ({
+      status: res.status,
+      sounds: await res.json(),
+    }));
 
-        const { IsTruncated, sounds, NextContinuationToken } = data;
-        const wavSoundList = [];
-        sounds.forEach((e) => {
-          if (e.endsWith(".wav")) wavSoundList.push(e);
-        });
-        this.setState({
-          ...this.state,
-          soundsList: [...soundsList, ...wavSoundList],
-          nextContinuationToken: IsTruncated ? NextContinuationToken : "",
-          isTruncated: IsTruncated,
-          maxPage: IsTruncated ? null : page + 1,
-        });
-        return wavSoundList;
-      })
-      .then((sounds) => {
-        const coverList = [];
-        sounds.forEach(async (e) => {
-          const cover = getCoverName(e);
-          if (!coverList.includes(cover)) {
-            coverList.push(cover);
-            this.fetchCover(cover);
-          }
-        });
-        return sounds;
-      })
-      .then(async (sounds) => {
-        await fetch(`http://localhost:5000/api/audio/tags`, {
-          method: "POST",
-          type: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: this.state.token,
-          },
-          body: JSON.stringify(sounds),
-        })
-          .then(async (resp) => await resp.json())
-          .then((dynamoSoundArr) =>
-            this.setState({
-              ...this.state,
-              dynamoSoundList: [
-                ...this.state.dynamoSoundList,
-                ...dynamoSoundArr,
-              ],
-              loadingSoundList: false,
-            })
-          );
-      });
+    if (status !== 200)
+      return window.localStorage.removeItem("samplehousetoken");
+
+    const packList = [];
+    sounds.forEach(async (e) => {
+      if (!packList.includes(e.pack)) {
+        console.log("packList", e.pack);
+        packList.push(e.pack);
+        this.fetchCover(e.pack);
+      }
+    });
+    const isTruncated = sounds.length < limit;
+    console.log({ isTruncated });
+    this.setState({
+      ...this.state,
+      soundList: [...soundList, ...sounds],
+      isTruncated,
+      maxPage: IsTruncated ? null : page + 1,
+    });
+
+    // await fetch(
+    //   `http://localhost:5000/api/audio?limit=${
+    //     limit + 1
+    //   }&ContinuationToken=${nextContinuationToken}`,
+    //   {
+    //     method: "GET",
+    //     type: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       authorization: this.state.token,
+    //     },
+    //   }
+    // )
+    //   .then(async (res) => ({
+    //     status: res.status,
+    //     data: await res.json(),
+    //   }))
+    // .then(({ status, data }) => {
+    //   if (status !== 200)
+    //     return window.localStorage.removeItem("samplehousetoken");
+
+    // const { IsTruncated, sounds, NextContinuationToken } = data;
+    // const wavSoundList = [];
+    // sounds.forEach((e) => {
+    //   if (e.endsWith(".wav")) wavSoundList.push(e);
+    // });
+    // this.setState({
+    //   ...this.state,
+    //   soundList: [...soundList, ...wavSoundList],
+    //   nextContinuationToken: IsTruncated ? NextContinuationToken : "",
+    //   isTruncated: IsTruncated,
+    //   maxPage: IsTruncated ? null : page + 1,
+    // });
+    // return wavSoundList;
+    // })
+    // .then((sounds) => {
+    //   const coverList = [];
+    //   sounds.forEach(async (e) => {
+    //     const cover = getPackName(e);
+    //     if (!coverList.includes(cover)) {
+    //       coverList.push(cover);
+    //       this.fetchCover(cover);
+    //     }
+    //   });
+    //   return sounds;
+    // })
+    // .then(async (sounds) => {
+    //   await fetch(`http://localhost:5000/api/audio/tags`, {
+    //     method: "POST",
+    //     type: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       authorization: this.state.token,
+    //     },
+    //     body: JSON.stringify(sounds),
+    //   })
+    //     .then(async (resp) => await resp.json())
+    //     .then((dynamoSoundArr) =>
+    //       this.setState({
+    //         ...this.state,
+    //         dynamoSoundList: [
+    //           ...this.state.dynamoSoundList,
+    //           ...dynamoSoundArr,
+    //         ],
+    //         loadingSoundList: false,
+    //       })
+    //     );
+    // });
   }
 
   async streamSound(path, evt) {
-    // todo this is still playing over itself?
+    // todo this is still playing over itself when spammed?
     const { soundSourceNode } = this.state;
     if (soundSourceNode) soundSourceNode.stop(0);
     this.setState({ ...this.state, loadingSoundStream: true });
-    const target = evt.target.classList;
-    target.add("load-spinner");
+    const loadingSpinner = evt.target.classList;
+    loadingSpinner.add("load-spinner");
 
     const data = await fetch(
       `http://localhost:5000/api/audio/stream/${encodeURIComponent(path)}`,
@@ -157,7 +198,7 @@ class Sounds extends React.Component {
       soundSourceNode: source,
       loadingSoundStream: false,
     });
-    target.remove("load-spinner");
+    loadingSpinner.remove("load-spinner");
     return context.decodeAudioData(await data.arrayBuffer(), (buffer) => {
       source.buffer = buffer;
       source.connect(context.destination);
@@ -180,6 +221,7 @@ class Sounds extends React.Component {
       );
       res = await res.json();
       const url = "data:image/png;base64," + encode(res.data);
+      console.log("fetch cover url", url);
       this.setState({
         ...this.state,
         covers: {
@@ -193,6 +235,7 @@ class Sounds extends React.Component {
   async download(sound) {
     if (sound.toLowerCase().includes("midi"))
       sound = sound.replace(".wav", ".mid");
+    console.log({ sound });
 
     const res = await fetch(
       `http://localhost:5000/api/audio/download/${encodeURIComponent(sound)}`,
@@ -226,8 +269,9 @@ class Sounds extends React.Component {
   }
   render() {
     // console.log(this.state.message);
+    console.log(this.state);
     const {
-      soundsList,
+      soundList,
       dynamoSoundList,
       covers,
       page,
@@ -257,69 +301,65 @@ class Sounds extends React.Component {
           </thead>
           {loadingSoundList ? <div className="load-spinner" /> : null}
           <tbody>
-            {soundsList.slice(offset, offset + limit).map((sound, i) => {
-              const soundData = dynamoSoundList.find((e) => {
-                // e //!testing for exclusives
-                //   ? console.log(e.exclusive.BOOL)
-                //   : null;
-                return e ? e.name.S === getSoundName(sound) : null;
-              });
-              //!only pull songs that are in dynamoDb
-              if (soundData)
-                return (
-                  <tr
-                    key={i}
-                    className={soundData.exclusive.BOOL ? "exclusive" : null}
-                  >
-                    <td>
-                      <a href={`#${getCoverName(sound)}`}>
-                        <img
-                          id="cover"
-                          src={covers[getCoverName(sound)]}
-                          style={{ width: "3em", height: "3em" }}
-                        />
-                      </a>
-                    </td>
-                    <td>
+            {soundList.slice(offset, offset + limit).map((sound, i) => {
+              //only pull songs that are in dynamoDb
+              // const soundData = dynamoSoundList.find((e) => {
+              //   // e //!testing for exclusives
+              //   //   ? console.log(e.exclusive.BOOL)
+              //   //   : null;
+              //   return e ? e.name.S === getSoundName(sound) : null;
+              // });
+              return (
+                <tr key={i} className={sound.exclusive ? "exclusive" : null}>
+                  <td>
+                    <a href={`#${sound.pack}`}>
                       <img
-                        src="../assets/music-note.png"
-                        alt="Play Button"
-                        className={"play-btn"}
-                        onClick={(evt) => this.streamSound(sound, evt)}
+                        id="cover"
+                        src={covers[sound.pack]}
+                        style={{ width: "3em", height: "3em" }}
                       />
-                    </td>
-                    <td>{getSoundName(sound)}</td>
-                    <td>{soundData.tempo ? soundData.tempo.N : ""}</td>
-                    <td>{soundData.key ? soundData.key.S : ""}</td>
-                    <td>
-                      {soundData.instrument_type
-                        ? Array(soundData.instrument_type.SS).map((e) => {
-                            if (e.length > 1) {
-                              let i = 1;
-                              let str = "";
-                              // console.log(e);
-                              e.forEach((el) => {
-                                if (i !== e.length) {
-                                  str += `${el}, `;
-                                  i++;
-                                } else return (str += el);
-                              });
-                              return str;
-                            } else return e;
-                          })
-                        : "null"}
-                    </td>
-                    <td>{soundData.type ? soundData.type.S : "null"}</td>
-                    <td>
-                      <img
-                        src="../assets/download-icon.png"
-                        alt="download"
-                        onClick={() => this.download(sound)}
-                        className="download-btn"
-                      />
-                    </td>
-                  </tr>
-                );
+                    </a>
+                  </td>
+                  <td>
+                    <img
+                      src="../assets/music-note.png"
+                      alt="Play Button"
+                      className={"play-btn"}
+                      onClick={(evt) => this.streamSound(sound, evt)}
+                    />
+                  </td>
+                  <td>{sound.name}</td>
+                  <td>{soundData.tempo ? soundData.tempo.N : ""}</td>
+                  <td>{soundData.key ? soundData.key.S : ""}</td>
+                  <td>
+                    {soundData.instrument_type
+                      ? Array(soundData.instrument_type.SS).map((e) => {
+                          if (e.length > 1) {
+                            let i = 1;
+                            let str = "";
+                            // console.log(e);
+                            e.forEach((el) => {
+                              if (i !== e.length) {
+                                str += `${el}, `;
+                                i++;
+                              } else return (str += el);
+                            });
+                            return str;
+                          } else return e;
+                        })
+                      : "null"}
+                  </td>
+                  <td>{soundData.type ? soundData.type.S : "null"}</td>
+                  <td>
+                    <img
+                      src="../assets/download-icon.png"
+                      alt="download"
+                      onClick={() => this.download(sound)}
+                      className="download-btn"
+                    />
+                  </td>
+                </tr>
+              );
             })}
           </tbody>
         </table>
@@ -355,7 +395,7 @@ function encode(data) {
   return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
 }
 
-function getCoverName(path) {
+function getPackName(path) {
   return path.slice(0, path.indexOf("/"));
 }
 function getSoundName(path) {
