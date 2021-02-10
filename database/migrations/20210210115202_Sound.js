@@ -15,7 +15,6 @@ exports.up = function (knex) {
         tbl.integer("download_count").default(0)
         tbl.date("date_added").notNullable()
         tbl.date("date_modified");
-
     })
 };
 

@@ -2,6 +2,7 @@ const db = require("../database-config");
 
 module.exports = {
     insertSound,
+    getSoundCount,
     getSounds,
     getSoundBy,
     updateSound,
@@ -10,6 +11,10 @@ module.exports = {
 
 function insertSound(sound) {
     return db("Sound").insert(sound)
+}
+
+function getSoundCount() {
+    return db("Sound").count()
 }
 
 function getSounds(limit, offset) {

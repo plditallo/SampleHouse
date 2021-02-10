@@ -3,7 +3,8 @@ const userDb = require("../../../database/model/userModel");
 const soundDb = require("../../../database/model/soundDownloadModel");
 const {
     getSounds,
-    getSoundBy
+    getSoundBy,
+    getSoundCount
 } = require("../../../database/model/soundModel");
 // const {
 //     handleGetItemError
@@ -26,9 +27,8 @@ const s3 = new AWS.S3({
 
 router.get("/", async (req, res) => {
     const {
+        offset,
         limit = 25,
-            offset,
-            ContinuationToken
     } = req.query;
     console.log({
         limit,
@@ -75,8 +75,14 @@ router.get("/", async (req, res) => {
     // });
 })
 
+router.get("/count", async (req, res) => {
+    const [count] = await getSoundCount()
+    res.status(200).json(count['count(*)'])
+});
+
 router.get("/stream/:key", (req, res) => {
     const key = req.params.key;
+    console.log("stream", key)
     //! key: SH Essential Drums/SH_Essential_Hat_01.wav
     downloadStream(res, key).pipe(res) // Pipe download stream to response
 })
@@ -175,7 +181,6 @@ router.use("/", (req, res) => {
 module.exports = router;
 
 function downloadStream(res, key) {
-    console.log("DownloadStream Function")
     const downloadStream = s3Client.downloadStream({
         Bucket: 'samplehouse',
         Key: `packs/${key}`
