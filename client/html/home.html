@@ -15,11 +15,19 @@
       if (!token || (token && !jwt_verify(jwt_decode(token))))
         window.location = "index.html";
     </script>
-    <!-- <script type="text/javascript">
-      window.onbeforeunload = function () {
-        return "Cancel unload?";
-      };
-    </script> -->
+    <script type="text/javascript">
+      // window.addEventListener("beforeunload", (event) => {
+      //   // Cancel the event as stated by the standard.
+      //   event.preventDefault();
+      //   // Older browsers supported custom message
+      //   event.returnValue = "test";
+      //   return "testtest";
+      // });
+      // window.onbeforeunload = (evt) => {
+      //   console.log("unload", evt);
+      //   return "Cancel unload?";
+      // };
+    </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
