@@ -70,7 +70,7 @@ router.get("/cover/:key", (req, res) => {
         Bucket: 'samplehouse',
         Key: `covers/${key}.png`,
     }, (err, data) => {
-        if (err) console.error("Error /cover key:", key, err)
+        // if (err) console.error("Error /cover key:", key, err)//! out for testing
         // else console.log("Success", data.Body)
         if (data) res.status(200).json(data.Body)
     })
@@ -96,13 +96,15 @@ router.post("/tags", async (req, res) => {
     })
 })
 
-router.get("/download/:key/:userId", async (req, res) => {
+router.get("/download/:key", async (req, res) => {
     console.log(req.params);
     const {
-        key,
-        userId
+        key
     } = req.params;
-
+    const {
+        user
+    } = req;
+    console.log("download route")
     const soundPack = key.split("/")[0]
     const soundName = key.split("/")[1]
 
@@ -120,55 +122,32 @@ router.get("/download/:key/:userId", async (req, res) => {
     }
     //todo update dynamoDb download count
     //todo check all exclusive sounds if they have been downloaded before (other users)
-
-    userDb.getUserById(userId).then(([user]) => {
-        // console.log({
-        //     user
+    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundName)
+    // todo check exclusive downloads -> soundDb.getExclusiveDownloads()
+    if (!previousDownload) {
+        console.log("not downloaded")
+        const dynamoSound = await getDynamoSound(querySchema);
+        const exclusive = dynamoSound.exclusive.BOOL;
+        const creditCost = exclusive ? 15 : 1;
+        console.log("balance before", user.balance); //! testing
+        if ((user.balance - creditCost) < 0) return res.status(222).json({
+            msg: "Credit balance is insufficient."
+        });
+        user.balance -= creditCost;
+        console.log("balance after", user.balance); //! testing
+        // await soundDb.insertDownload({
+        //     name: soundName,
+        //     userId: user.id,
+        //     downloaded_at: Date.now(),
+        //     exclusive
         // })
-        if (user)
-            soundDb.checkDownloadByUser(userId, soundName).then(async ([resp]) => {
-                if (!resp) {
-                    // todo check exclusive downloads
-                    // soundDb.getExclusiveDownloads()
-                    console.log("not downloaded")
-                    const dynamoSound = await getDynamoSound(querySchema)
-                    user.balance = 15; //!testing
-                    const exclusive = dynamoSound.exclusive.BOOL;
-                    const creditCost = exclusive ? 15 : 1
-                    console.log("balance before", user.balance)
-                    if ((user.balance - creditCost) < 0) return res.status(222).json({
-                        msg: "Credit balance is insufficient."
-                    })
-                    user.balance -= creditCost
-                    console.log("balance after", user.balance)
-                    await soundDb.insertDownload({
-                        name: soundName,
-                        userId,
-                        downloaded_at: Date.now(),
-                        exclusive
-                    })
-                    await userDb.updateUser(user)
-                    //? todo the client is refreshing because of an update to the userDb or soundDb
-                } else console.log("already downloaded")
-                downloadStream(res, key).pipe(res) // Pipe download stream to response
-            })
-        else console.log("no user found")
-    })
+        await userDb.updateUser(user)
+        // Pipe download stream to response
+    } else console.log("already downloaded") //! testing
+    downloadStream(res, key).pipe(res)
 })
+//? todo the client is refreshing because of an update to the userDb or soundDb
 
-router.get("/test/:userId", (req, res) => {
-    const {
-        userId
-    } = req.params
-    userDb.getUserById(userId).then(async ([user]) => {
-        console.log({
-            user
-        })
-        // console.log(userDb.updateUser(user))
-        // if (user) await userDb.updateUser(user)
-        res.status(200).json(user)
-    })
-})
 
 router.use("/", (req, res) => {
     res.status(200).json({
@@ -179,6 +158,7 @@ router.use("/", (req, res) => {
 module.exports = router;
 
 function downloadStream(res, key) {
+    console.log("DownloadStream Function")
     const downloadStream = s3Client.downloadStream({
         Bucket: 'samplehouse',
         Key: `packs/${key}`

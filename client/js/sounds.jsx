@@ -137,10 +137,8 @@ class Sounds extends React.Component {
     this.setState({ ...this.state, loadingSoundStream: true });
     const target = evt.target.classList;
     target.add("load-spinner");
-    // console.log(soundSourceNode);
-    // if (path.endsWith(".mid")) console.log("fetchSound-.mid", path);
 
-    await fetch(
+    const data = await fetch(
       `http://localhost:5000/api/audio/stream/${encodeURIComponent(path)}`,
       {
         method: "GET",
@@ -150,26 +148,26 @@ class Sounds extends React.Component {
           authorization: this.state.token,
         },
       }
-    ).then(async (Data) => {
-      const context = new AudioContext();
-      const source = context.createBufferSource(); //Create Sound Source
-      this.setState({
-        ...this.state,
-        soundSourceNode: source,
-        loadingSoundStream: false,
-      });
-      target.remove("load-spinner");
-      return context.decodeAudioData(await Data.arrayBuffer(), (buffer) => {
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(context.currentTime);
-      });
+    );
+
+    const context = new AudioContext();
+    const source = context.createBufferSource(); //Create Sound Source
+    this.setState({
+      ...this.state,
+      soundSourceNode: source,
+      loadingSoundStream: false,
+    });
+    target.remove("load-spinner");
+    return context.decodeAudioData(await data.arrayBuffer(), (buffer) => {
+      source.buffer = buffer;
+      source.connect(context.destination);
+      source.start(context.currentTime);
     });
   }
 
   async fetchCover(cover) {
     if (!(cover in this.state.covers)) {
-      await fetch(
+      let res = await fetch(
         `http://localhost:5000/api/audio/cover/${encodeURIComponent(cover)}`,
         {
           method: "GET",
@@ -179,18 +177,16 @@ class Sounds extends React.Component {
             authorization: this.state.token,
           },
         }
-      )
-        .then(async (res) => await res.json())
-        .then(({ data }) => {
-          const url = "data:image/png;base64," + encode(data);
-          this.setState({
-            ...this.state,
-            covers: {
-              ...this.state.covers,
-              [cover]: url,
-            },
-          });
-        });
+      );
+      res = await res.json();
+      const url = "data:image/png;base64," + encode(res.data);
+      this.setState({
+        ...this.state,
+        covers: {
+          ...this.state.covers,
+          [cover]: url,
+        },
+      });
     }
   }
 
@@ -198,10 +194,8 @@ class Sounds extends React.Component {
     if (sound.toLowerCase().includes("midi"))
       sound = sound.replace(".wav", ".mid");
 
-    await fetch(
-      `http://localhost:5000/api/audio/download/${encodeURIComponent(sound)}/${
-        this.state.userId
-      }`,
+    const res = await fetch(
+      `http://localhost:5000/api/audio/download/${encodeURIComponent(sound)}`,
       {
         method: "GET",
         type: "cors",
@@ -210,36 +204,20 @@ class Sounds extends React.Component {
           authorization: this.state.token,
         },
       }
-    ).then(async (res) => {
-      if (res.status === 222) {
-        const data = await res.json();
-        return this.setState({ ...this.state, message: data.msg });
-      }
-      const blob = new Blob([await res.arrayBuffer()], {
-        type: `audio/${sound.includes("midi") ? "midi" : "wav"}`,
-      });
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = sound;
-      link.click();
-      console.log("link clicked for download");
-      // todo this is refreshing when an update in the database occurs
+    );
+    if (res.status === 222) {
+      const data = await res.json();
+      return this.setState({ ...this.state, message: data.msg });
+    }
+    const blob = new Blob([await res.arrayBuffer()], {
+      type: `audio/${sound.includes("midi") ? "midi" : "wav"}`,
     });
-  }
-
-  downloadTest(evt) {
-    // console.log(evt);
-    fetch(`http://localhost:5000/api/audio/test/${this.state.userId}`, {
-      method: "GET",
-      type: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: this.state.token,
-      },
-    }).then(async (res) => {
-      console.log("RESPONSE HERE", res);
-      console.log("AWAIT RESPONSE", await res.json());
-    });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = sound;
+    link.click();
+    console.log("link clicked for download");
+    // todo this is refreshing when an update in the database occurs
   }
 
   async componentDidMount() {
@@ -281,9 +259,9 @@ class Sounds extends React.Component {
           <tbody>
             {soundsList.slice(offset, offset + limit).map((sound, i) => {
               const soundData = dynamoSoundList.find((e) => {
-                e //!testing for exclusives
-                  ? console.log(e.exclusive.BOOL)
-                  : null;
+                // e //!testing for exclusives
+                //   ? console.log(e.exclusive.BOOL)
+                //   : null;
                 return e ? e.name.S === getSoundName(sound) : null;
               });
               //!only pull songs that are in dynamoDb
@@ -310,11 +288,9 @@ class Sounds extends React.Component {
                         onClick={(evt) => this.streamSound(sound, evt)}
                       />
                     </td>
-                    <td onClick={(evt) => this.downloadTest(evt)}>
-                      {getSoundName(sound)}
-                    </td>
-                    <td>{soundData.tempo ? soundData.tempo.N : "null"}</td>
-                    <td>{soundData.key ? soundData.key.S : "null"}</td>
+                    <td>{getSoundName(sound)}</td>
+                    <td>{soundData.tempo ? soundData.tempo.N : ""}</td>
+                    <td>{soundData.key ? soundData.key.S : ""}</td>
                     <td>
                       {soundData.instrument_type
                         ? Array(soundData.instrument_type.SS).map((e) => {

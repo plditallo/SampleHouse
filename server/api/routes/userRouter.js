@@ -240,7 +240,7 @@ router.use("/", (req, res) => {
 
 module.exports = router;
 
-//? send sub expiry time in payload for VST?
+//todo send userType (admin/moderator/user)
 function generateToken(user) {
     // console.log(user)
     const {

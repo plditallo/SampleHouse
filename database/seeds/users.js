@@ -15,7 +15,7 @@ exports.seed = function (knex) {
         first_name: "Jack",
         last_name: "Barry",
         role: "testing",
-        balance: 2,
+        balance: 20,
         created: Date.now()
       }, {
         id: "de4fc280-59d4-11eb-aff7-07250d070e64",

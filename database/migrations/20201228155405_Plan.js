@@ -9,7 +9,7 @@ exports.up = function (knex) {
         tbl.string("price").notNullable()
         tbl.integer("day_length").default(30)
         tbl.string("product_type").default("plan")
-        tbl.specificType('included', 'text ARRAY');
+        tbl.specificType('included', 'text ARRAY')
         tbl.integer("discount")
     })
 };

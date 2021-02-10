@@ -10,8 +10,8 @@ module.exports = {
     removeUser
 }
 
-function insertUser(data) {
-    return db("User").insert(data)
+function insertUser(user) {
+    return db("User").insert(user)
 }
 
 function getUserById(id) {
@@ -38,13 +38,8 @@ function getUserByPayPalTransactionId(payPal_transaction_id) {
     })
 }
 
-
 function updateUser(user) {
-    return db("User").update(user)
-        .where(
-            "id", user.id
-        )
-
+    return db("User").update(user).where("id", user.id)
 }
 
 function removeUser(id) {
