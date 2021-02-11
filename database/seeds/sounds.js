@@ -147,7 +147,7 @@ exports.seed = function (knex) {
           ]
         },
         {
-          name: "SH_ExoFlute_DesertedIsland_F# m_80.wav ",
+          name: "SH_ExoFlute_DesertedIsland_F#m_80.wav",
           exclusive: false,
           instrument_type: [
             "flute"

@@ -24,6 +24,7 @@
     "knex": "^0.21.5",
     "mysql": "^2.18.1",
     "nodemailer": "^6.4.17",
+    "path": "^0.12.7",
     "paypal-ipn": "^3.0.0",
     "paypal-node-sdk": "^2.0.2",
     "paypal-rest-sdk": "^1.8.1",

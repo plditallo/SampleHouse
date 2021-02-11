@@ -7,7 +7,7 @@ class Footer extends React.Component {
       loggedIn: false,
     };
   }
-
+  //todo anchor tag for bsm with auto not 100%
   componentDidMount() {
     const token = window.localStorage.getItem("samplehousetoken");
     if (token && jwt_verify(jwt_decode(token)))

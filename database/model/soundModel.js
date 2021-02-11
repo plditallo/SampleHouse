@@ -5,6 +5,7 @@ module.exports = {
     getSoundCount,
     getSounds,
     getSoundBy,
+    getTags,
     updateSound,
     removeSound
 }
@@ -23,6 +24,10 @@ function getSounds(limit, offset) {
 
 function getSoundBy(column, value) {
     return db("Sound").where(column, value)
+}
+
+function getTags() {
+    return db("Sound").tags
 }
 
 function updateSound(sound) {

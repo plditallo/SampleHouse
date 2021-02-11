@@ -12,11 +12,13 @@ class Sounds extends React.Component {
       maxPages: null,
       soundList: [],
       covers: {},
+      tags: [],
       soundSourceNode: null,
       token,
+      userId: jwt_decode(token).subject,
+      userBalance: null,
       loadingSoundList: true,
       loadingSoundStream: false,
-      userId: jwt_decode(token).subject,
       message: "",
     };
   }
@@ -178,8 +180,15 @@ class Sounds extends React.Component {
       }
     );
     if (res.status === 222) {
+      //* insufficient balance
       const data = await res.json();
       return this.setState({ ...this.state, message: data.msg });
+    } else if (res.status === 225) {
+      const creditCost = sound.exclusive ? 15 : 1;
+      this.setState({
+        ...this.state,
+        userBalance: this.state.userBalance - creditCost,
+      });
     }
     const blob = new Blob([await res.arrayBuffer()], {
       type: `audio/${sound.name.includes("midi") ? "midi" : "wav"}`,
@@ -193,7 +202,7 @@ class Sounds extends React.Component {
   }
 
   async componentDidMount() {
-    const { token, limit, offset } = this.state;
+    const { token, limit, offset, userId } = this.state;
     const soundCount = await fetch(`http://localhost:5000/api/audio/count`, {
       method: "GET",
       type: "cors",
@@ -202,17 +211,27 @@ class Sounds extends React.Component {
         authorization: token,
       },
     }).then(async (res) => await res.json());
+
+    const user = await fetch(`http://localhost:5000/api/user/${userId}`, {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(async (res) => await res.json());
+
     this.setState({
       ...this.state,
       maxPages: Math.ceil(soundCount / limit),
+      userBalance: user.balance,
     });
     this.fetchSoundList(offset);
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
   }
+
   render() {
     const {
       soundList,
-      dynamoSoundList,
       covers,
       page,
       maxPages,
@@ -221,13 +240,17 @@ class Sounds extends React.Component {
       loadingSoundList,
       loadingSoundStream,
       message,
+      userBalance,
+      tags,
     } = this.state;
+    console.log(tags);
     return (
       <div className="sound-wrapper">
         {/* todo search bar/functionality */}
         {/* todo color exclusive different color */}
         {message ? <h2>{message}</h2> : null}
         {loadingSoundList ? <div className="load-spinner" /> : null}
+        <h3>{userBalance} credits</h3>
         <table>
           <thead>
             <tr>
@@ -238,6 +261,8 @@ class Sounds extends React.Component {
               <th>KEY</th>
               <th>Instrument_type</th>
               <th>type</th>
+              <th></th>
+              <th>edit</th>
             </tr>
           </thead>
           <tbody>
@@ -277,6 +302,9 @@ class Sounds extends React.Component {
                       onClick={() => this.download(sound)}
                       className="download-btn"
                     />
+                  </td>
+                  <td>
+                    <button>edit</button>
                   </td>
                 </tr>
               );
