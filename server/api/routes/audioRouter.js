@@ -134,13 +134,13 @@ router.get("/download/:key", async (req, res) => {
         });
         user.balance -= creditCost;
         // console.log("balance after", user.balance); //! testing
-        // await downloadDb.insertDownload({
-        //     name: soundName,
-        //     userId: user.id,
-        //     downloaded_at: Date.now(),
-        //     exclusive
-        // })
-        // await userDb.updateUser(user)
+        await downloadDb.insertDownload({ //todo THIS IS REFRESHING THE PAGE WHEN DATABASE IS UPDATED
+            name: soundName,
+            userId: user.id,
+            downloaded_at: Date.now(),
+            exclusive
+        })
+        await userDb.updateUser(user) //todo THIS IS REFRESHING THE PAGE WHEN DATABASE IS UPDATED
     } else console.log("already downloaded") //! testing
     downloadStream(res, key).pipe(res); //Pipe download stream to response
 })
