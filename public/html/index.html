@@ -3,6 +3,10 @@
 <!--? todo can you navigate without the .html in url?-->
 <html lang="en">
   <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google.com"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/core.css" text="text/css" />
@@ -137,7 +141,7 @@
     ></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!--* Load React components -->
-    <script type="text/babel" src="../js/header.jsx"></script>
+    <script type="text/babel" src="../js/header.js"></script>
     <script type="text/babel" src="../js/sticky-nav.jsx"></script>
     <script type="text/babel" src="../js/hamburgerMenu.jsx"></script>
     <script type="text/babel" src="../js/product.jsx"></script>
