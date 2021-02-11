@@ -22,6 +22,7 @@ class Sounds extends React.Component {
   }
 
   nextBtnHandler = () => {
+    this.stopStreaming();
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
     const needToFetch = page === maxPageFetched && page <= maxPages;
@@ -40,6 +41,7 @@ class Sounds extends React.Component {
   };
 
   prevBtnHandler = () => {
+    this.stopStreaming();
     window.scrollTo(0, 0);
     const { limit, offset, page } = this.state;
     if (page > 1)
@@ -67,7 +69,6 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
-    console.log("fetch", sounds); //! testing
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -87,7 +88,9 @@ class Sounds extends React.Component {
 
   async streamSound(sound, evt) {
     // todo this is still playing over itself when spammed?
-    if (this.state.soundSourceNode) soundSourceNode.stop(0);
+    // const { soundSourceNode } = this.state;
+    // if (soundSourceNode) soundSourceNode.stop(0);
+    this.stopStreaming();
     this.setState({ ...this.state, loadingSoundStream: true });
 
     const loadingSpinner = evt.target.classList;
@@ -127,6 +130,11 @@ class Sounds extends React.Component {
     });
   }
 
+  stopStreaming() {
+    const { soundSourceNode } = this.state;
+    if (soundSourceNode) soundSourceNode.stop(0);
+  }
+
   async fetchCover(cover) {
     // todo change to a post w/ cover list
     if (!(cover in this.state.covers)) {
@@ -156,8 +164,6 @@ class Sounds extends React.Component {
   async download(sound) {
     if (sound.name.toLowerCase().includes("midi"))
       sound.name = sound.name.replace(".wav", ".mid");
-    console.log("download:", sound);
-
     const res = await fetch(
       `http://localhost:5000/api/audio/download/${encodeURIComponent(
         `${sound.pack}/${sound.name}`
@@ -176,11 +182,11 @@ class Sounds extends React.Component {
       return this.setState({ ...this.state, message: data.msg });
     }
     const blob = new Blob([await res.arrayBuffer()], {
-      type: `audio/${sound.includes("midi") ? "midi" : "wav"}`,
+      type: `audio/${sound.name.includes("midi") ? "midi" : "wav"}`,
     });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = sound;
+    link.download = sound.name;
     link.click();
     console.log("link clicked for download");
     // todo this is refreshing when an update in the database occurs
@@ -236,7 +242,6 @@ class Sounds extends React.Component {
           </thead>
           <tbody>
             {soundList.slice(offset, offset + limit).map((sound, i) => {
-              console.log(sound.id);
               return (
                 <tr key={i} className={sound.exclusive ? "exclusive" : null}>
                   <td>

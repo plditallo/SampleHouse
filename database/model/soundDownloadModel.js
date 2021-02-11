@@ -18,19 +18,19 @@ function getDownloadsByUser(userId) {
     })
 }
 
-function checkDownloadByUser(userId, id) {
+function checkDownloadByUser(userId, name) {
     return db("SoundDownload").where({
         userId,
-        id
+        name
     })
 }
 
-function checkExclusiveDownload(id) {
-    return db("SoundDownload").where(id)
+function checkExclusiveDownload(name) {
+    return db("SoundDownload").where(name)
 }
 
-function getSoundDownloadCount(id) {
+function getSoundDownloadCount(name) {
     return db("SoundDownload").where({
-        id
+        name
     })
 }

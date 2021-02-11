@@ -30,10 +30,6 @@ router.get("/", async (req, res) => {
         offset,
         limit = 25,
     } = req.query;
-    console.log({
-        limit,
-        offset
-    });
 
     const sounds = await getSounds(limit, offset)
     // sounds = sounds.filter(e => e.name.endsWith(".wav"))
@@ -41,8 +37,6 @@ router.get("/", async (req, res) => {
     else res.status(500).json({
         "msg": "unable to fetch sounds"
     })
-
-
 
     // s3.listObjectsV2({
     //     Bucket: 'samplehouse',
@@ -127,24 +121,11 @@ router.get("/download/:key", async (req, res) => {
     console.log(key)
     //! key: 'SH Essential Drums/SH_Essential_Hat_01.wav'
     const user = req.user;
-    // const soundPack = key.split("/")[0]
-    // const soundName = key.split("/")[1]
-
-    // // Create the input for getItem call
-    // const querySchema = {
-    //     "TableName": "Sounds",
-    //     "Key": {
-    //         "pack": {
-    //             "S": soundPack
-    //         },
-    //         "name": {
-    //             "S": soundName
-    //         }
-    //     }
-    // }
+    const soundPack = key.split("/")[0]
+    const soundName = key.split("/")[1]
     //todo update dynamoDb download count
     //todo check all exclusive sounds if they have been downloaded before (other users)
-    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundId)
+    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundName)
     // todo check exclusive downloads -> soundDb.getExclusiveDownloads()
     if (!previousDownload) {
         console.log("not downloaded")
@@ -166,11 +147,9 @@ router.get("/download/:key", async (req, res) => {
         // await userDb.updateUser(user)
         // Pipe download stream to response
     } else console.log("already downloaded") //! testing
-    // downloadStream(res, key).pipe(res)
-    res.status(200).end()
+    downloadStream(res, key).pipe(res);
 })
 //? todo the client is refreshing because of an update to the userDb or soundDb
-
 
 router.use("/", (req, res) => {
     res.status(200).json({
