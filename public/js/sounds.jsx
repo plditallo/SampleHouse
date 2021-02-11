@@ -19,7 +19,7 @@ class Sounds extends React.Component {
       loadingSoundList: true,
       loadingSoundStream: false,
       message: "",
-      tagFilter: [],
+      tagFilters: [],
     };
   }
 
@@ -55,7 +55,7 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList(offset) {
-    const { soundList, soundCount, limit } = this.state;
+    const { soundList, limit } = this.state;
 
     const { status, sounds } = await fetch(
       `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}`,
@@ -90,10 +90,7 @@ class Sounds extends React.Component {
 
   async streamSound(sound, evt) {
     // todo this is still playing over itself when spammed?
-    // const { soundSourceNode } = this.state;
-    // if (soundSourceNode) soundSourceNode.stop(0);
     this.stopStreaming();
-    // this.setState({ ...this.state, loadingSoundStream: true });
 
     const loadingSpinner = evt.target.classList;
     loadingSpinner.add("load-spinner");
@@ -205,10 +202,15 @@ class Sounds extends React.Component {
   }
 
   toggleTagFilter = (tag) => {
-    let tagFilter = this.state.tagFilter;
-    if (!tagFilter.includes(tag)) tagFilter.push(tag);
-    else tagFilter = tagFilter.filter((e) => e !== tag);
-    this.setState({ ...this.state, tagFilter });
+    let tagFilters = this.state.tagFilters;
+    if (!tagFilters.includes(tag)) tagFilters.push(tag);
+    else tagFilters = tagFilters.filter((e) => e !== tag);
+    this.setState({ ...this.state, tagFilters });
+  };
+
+  componentWillUpdate = (nextProps, nextState) => {
+    if (nextState.tagFilters.length) {
+    }
   };
 
   async componentDidMount() {
@@ -262,9 +264,9 @@ class Sounds extends React.Component {
       message,
       user,
       tags,
-      tagFilter,
+      tagFilters,
     } = this.state;
-    console.log(tagFilter);
+    console.log(tagFilters);
     return (
       <div className="home-wrapper">
         {/* todo search bar/functionality */}

@@ -30,7 +30,9 @@ router.get("/", async (req, res) => {
     const {
         offset,
         limit = 25,
+        tags
     } = req.query;
+    console.log(tags)
 
     const sounds = await getSounds(limit, offset)
     // sounds = sounds.filter(e => e.name.endsWith(".wav"))
