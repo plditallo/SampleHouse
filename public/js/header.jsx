@@ -17,7 +17,7 @@ class Header extends React.Component {
     const { loggedIn } = this.state;
     return (
       <div>
-        <a href={!loggedIn ? "index.html#" : "home.html#"}>
+        <a href={!loggedIn ? "/#" : "home#"}>
           <div className="logo">
             <img
               src="../assets/sample_house_logo-chrome.png"
@@ -34,16 +34,16 @@ class Header extends React.Component {
             </a>
             {!loggedIn ? (
               <div className="buttons">
-                <a href="authentication.html#" className="login-btn">
+                <a href="authentication#" className="login-btn">
                   LOGIN
                 </a>
-                <a href="authentication.html#">SIGN UP</a>
+                <a href="authentication#">SIGN UP</a>
               </div>
             ) : (
               <div className="buttons">
-                <a href="account.html" className="profile-btn"></a>
+                <a href="account" className="profile-btn"></a>
                 <a
-                  href="index.html"
+                  href="/"
                   onClick={() =>
                     window.localStorage.removeItem("samplehousetoken")
                   }
@@ -57,28 +57,28 @@ class Header extends React.Component {
             {!loggedIn ? (
               <ul>
                 <li>
-                  <a href="index.html#">HOME</a>
+                  <a href="/#">HOME</a>
                 </li>
                 <li>
-                  <a href="index.html#about">ABOUT</a>
+                  <a href="/#about">ABOUT</a>
                 </li>
                 <li>
-                  <a href="index.html#products">PRODUCTS</a>
+                  <a href="/#products">PRODUCTS</a>
                 </li>
                 <li>
-                  <a href="index.html#pricing">PRICING</a>
+                  <a href="/#pricing">PRICING</a>
                 </li>
                 <li>
-                  <a href="index.html#faq">FAQ's</a>
+                  <a href="/#faq">FAQ's</a>
                 </li>
                 <li>
-                  <a href="contact.html">CONTACT</a>
+                  <a href="contact">CONTACT</a>
                 </li>
               </ul>
             ) : (
               <ul>
                 <li>
-                  <a href="home.html#">SOUNDS</a>
+                  <a href="home#">SOUNDS</a>
                 </li>
                 <li>
                   <a href="#PLUGINS">PLUGINS</a>
@@ -100,7 +100,7 @@ class Header extends React.Component {
                   </a>
                 </li>
                 <li>
-                  <a href="contact.html">CONTACT</a>
+                  <a href="contact">CONTACT</a>
                 </li>
               </ul>
             )}

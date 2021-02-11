@@ -75,7 +75,7 @@ class resetPassword extends React.Component {
       //* redirect to login page and autofill email
       // ? Save as a hash and send over? (only if refresh on 200)
       else window.location.hash = "#resetSuccess";
-      // window.location.hash = `authentication.html#forgot=${this.state.email}`;
+      // window.location.hash = `authentication#forgot=${this.state.email}`;
     });
   };
 
@@ -111,7 +111,7 @@ class resetPassword extends React.Component {
           errorMsg: errMsg,
           redirecting: errTypeHash === "token-expired" ? true : false,
           redirectingPage: "forgot password",
-          redirectingUrl: `forgot-password.html#forgot=${this.state.email}`,
+          redirectingUrl: `forgot-password#forgot=${this.state.email}`,
         });
       } else if (window.location.hash.includes("#resetSuccess")) {
         localRedirectingState = true;
@@ -120,12 +120,12 @@ class resetPassword extends React.Component {
           successMsg: "Password has been successfully been changed.",
           redirecting: true,
           redirectingPage: "login",
-          redirectingUrl: `authentication.html#emailSucReset=${this.state.email}`,
+          redirectingUrl: `authentication#emailSucReset=${this.state.email}`,
         });
         // todo add redirect w/ timeout
       }
       //* redirect to authentication form if no token
-    } else window.location = "authentication.html";
+    } else window.location = "authentication";
     if (localRedirectingState)
       setTimeout(() => {
         console.log("REDIRECT");
@@ -141,7 +141,7 @@ class resetPassword extends React.Component {
     //   });
     //   window.location.hash = "#";
     //   setTimeout(
-    //     () => (window.location = `authentication.html#forgot=${hash}`),
+    //     () => (window.location = `authentication#forgot=${hash}`),
     //     5000
     //   );
     // }

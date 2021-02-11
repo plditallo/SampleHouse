@@ -1,5 +1,5 @@
 "use strict";
-
+// todo paypal
 // todo setup subscription upgrade/downgrade
 // todo message for cancel/resubscribe for upgrade/downgrade current subscription will last duration 30 days after init purchase
 class Subscriptions extends React.Component {
@@ -185,9 +185,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
             user_id,
             subscriptionID,
           }),
-        }).then(
-          () => (window.location = `success.html#subscribe-${plan_name}`)
-        );
+        }).then(() => (window.location = `success#subscribe-${plan_name}`));
       },
       onCancel: function (data) {
         console.log("onCancel", data);
@@ -198,7 +196,7 @@ function createPayPalButtons(plan_id, plan_name, user_id) {
       },
       onError: function (err) {
         console.log(err);
-        window.location = "404.html#error";
+        window.location = "404#error";
       },
     })
     .render("#paypal-button-container");
@@ -231,8 +229,8 @@ async function updateSubscription(subscription_id, plan_id) {
     .then(async (res) => {
       if (res.status !== 200) return (window.location.hash = "error");
       return await res.json();
-      // if (status === 204) return (window.location = "success.html#cancel");
-      // else return (window.location = "404.html#error");
+      // if (status === 204) return (window.location = "success#cancel");
+      // else return (window.location = "404#error");
     })
     .then((resp) => {
       const link = resp["links"].find((e) => e.rel === "approve").href;

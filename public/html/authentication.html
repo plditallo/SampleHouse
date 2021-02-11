@@ -12,7 +12,7 @@
     <script src="../js/utils/jwt-verify.js"></script>
     <script type="module">
       const token = window.localStorage.getItem("samplehousetoken");
-      if (token && jwt_verify(jwt_decode(token))) window.location = "home.html";
+      if (token && jwt_verify(jwt_decode(token))) window.location = "home";
     </script>
     <header id="header"></header>
     <nav id="sticky-nav"></nav>

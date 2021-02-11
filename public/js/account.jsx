@@ -29,8 +29,8 @@ class Account extends React.Component {
         },
       }
     ).then(({ status }) => {
-      if (status === 204) return (window.location = "success.html#unsubscribe");
-      else return (window.location = "404.html#error");
+      if (status === 204) return (window.location = "success#unsubscribe");
+      else return (window.location = "404#error");
     });
   };
 
@@ -82,7 +82,7 @@ class Account extends React.Component {
         ) : (
           <p className="plan">
             You are not currently subscribed to a plan.{" "}
-            <a href="subscriptions.html">Click here to view subscriptions.</a>
+            <a href="subscriptions">Click here to view subscriptions.</a>
           </p>
         )}
         <p className="balance">Your balance is: {balance} credits.</p>

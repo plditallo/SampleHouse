@@ -7,7 +7,6 @@ const serveRouter = require("./api/routes/serveRouter");
 configureMiddleware(app);
 app.use("/api", apiRouter);
 app.use("/", serveRouter)
-app.use(express.static('public'))
 
 
 module.exports = app;

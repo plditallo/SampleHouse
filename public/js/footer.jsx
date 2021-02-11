@@ -19,7 +19,7 @@ class Footer extends React.Component {
     return (
       <div>
         <div className="top">
-          <a href={!loggedIn ? "index.html#" : "home.html#"}>
+          <a href={!loggedIn ? "/#" : "home#"}>
             <div className="logo">
               <img
                 src="../assets/sample_house_logo.png"
@@ -31,7 +31,7 @@ class Footer extends React.Component {
           <div className="right">
             <p>
               Contact us through our
-              <a href="contact.html">CONTACT FORM</a>
+              <a href="contact">CONTACT FORM</a>
               or E-mail at:
               <a href="mailto:support@sample.house">support@sample.house.</a>
             </p>

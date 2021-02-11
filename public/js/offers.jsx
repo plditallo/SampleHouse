@@ -106,7 +106,7 @@ class Offers extends React.Component {
     ) : (
       <h2 className="no-subscription">
         Only active subscribers can take advantage of offers. You can subscribe{" "}
-        <a href="subscriptions.html">here</a>.
+        <a href="subscriptions">here</a>.
       </h2>
     );
   }
@@ -160,7 +160,7 @@ function createPayPalButtons(offer, user_id) {
               user_id,
               transaction_id,
             }),
-          }).then(() => (window.location = `success.html#offer-${offer.name}`));
+          }).then(() => (window.location = `success#offer-${offer.name}`));
         });
       },
       onCancel: function (data) {
@@ -170,7 +170,7 @@ function createPayPalButtons(offer, user_id) {
       },
       onError: function (err) {
         console.log(err);
-        window.location = "404.html#error";
+        window.location = "404#error";
       },
     })
     .render("#paypal-button-container");

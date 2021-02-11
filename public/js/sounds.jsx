@@ -286,7 +286,13 @@ class Sounds extends React.Component {
                       onClick={(evt) => this.streamSound(sound, evt)}
                     />
                   </td>
-                  <td>{sound.name}</td>
+                  <td>
+                    {sound.name}
+                    <br />
+                    {typeof sound.instrument_type === "string"
+                      ? sound.instrument_type.replace(",", ", ")
+                      : null}
+                  </td>
                   <td>{sound.tempo}</td>
                   <td>{sound.key}</td>
                   <td>

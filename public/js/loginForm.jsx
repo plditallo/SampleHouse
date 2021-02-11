@@ -52,7 +52,7 @@ class LoginForm extends React.Component {
           this.setState({ ...this.state, errorMsg: data.msg });
         else {
           window.localStorage.setItem("samplehousetoken", data.token);
-          window.location.href = "home.html";
+          window.location.href = "home";
         }
       });
   };
@@ -152,9 +152,7 @@ class LoginForm extends React.Component {
           required
         />
         {/* //todo check if all links are accessible via TAB (tab-index?) */}
-        <a
-          href={`forgot-password.html${logEmail ? "#forgot=" + logEmail : ""}`}
-        >
+        <a href={`forgot-password${logEmail ? "#forgot=" + logEmail : ""}`}>
           Forgot Password?
         </a>
         <button type="submit">

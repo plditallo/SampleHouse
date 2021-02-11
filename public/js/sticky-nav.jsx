@@ -20,41 +20,41 @@ class StickyNav extends React.Component {
       <nav>
         {!loggedIn ? (
           <ul>
-            <a href="index.html#">
+            <a href="/#">
               <img
                 src="../assets/sample_house_logo.png"
                 alt="SoundHouse Logo"
               />
             </a>
             <li>
-              <a href="index.html#">HOME</a>
+              <a href="/#">HOME</a>
             </li>
             <li>
-              <a href="index.html#about">ABOUT</a>
+              <a href="/#about">ABOUT</a>
             </li>
             <li>
-              <a href="index.html#products">PRODUCTS</a>
+              <a href="/#products">PRODUCTS</a>
             </li>
             <li>
-              <a href="index.html#pricing">PRICING</a>
+              <a href="/#pricing">PRICING</a>
             </li>
             <li>
-              <a href="index.html#faq">FAQ's</a>
+              <a href="/#faq">FAQ's</a>
             </li>
             <li>
-              <a href="contact.html">CONTACT</a>
+              <a href="contact">CONTACT</a>
             </li>
           </ul>
         ) : (
           <ul>
-            <a href="home.html#">
+            <a href="home#">
               <img
                 src="../assets/sample_house_logo.png"
                 alt="SoundHouse Logo"
               />
             </a>
             <li>
-              <a href="home.html#">SOUNDS</a>
+              <a href="home#">SOUNDS</a>
             </li>
             <li>
               <a href="#PLUGINS">PLUGINS</a>
@@ -71,10 +71,12 @@ class StickyNav extends React.Component {
               {/* youtube private channel link */}
             </li>
             <li>
-              <a href="https://discord.gg/GwTBeZjb" target="_blank">DISCORD</a>
+              <a href="https://discord.gg/GwTBeZjb" target="_blank">
+                DISCORD
+              </a>
             </li>
             <li>
-              <a href="contact.html">CONTACT</a>
+              <a href="contact">CONTACT</a>
             </li>
           </ul>
         )}

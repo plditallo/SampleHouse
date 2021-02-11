@@ -48,28 +48,28 @@ class HamburgerMenu extends React.Component {
           {!loggedIn ? (
             <ul id="menu">
               <li>
-                <a href="index.html#">HOME</a>
+                <a href="/#">HOME</a>
               </li>
               <li>
-                <a href="index.html#about">ABOUT</a>
+                <a href="/#about">ABOUT</a>
               </li>
               <li>
-                <a href="index.html#products">PRODUCTS</a>
+                <a href="/#products">PRODUCTS</a>
               </li>
               <li>
-                <a href="index.html#pricing">PRICING</a>
+                <a href="/#pricing">PRICING</a>
               </li>
               <li>
-                <a href="index.html#faq">FAQ's</a>
+                <a href="/#faq">FAQ's</a>
               </li>
               <li>
-                <a href="contact.html">CONTACT</a>
+                <a href="contact">CONTACT</a>
               </li>
             </ul>
           ) : (
             <ul id="menu">
               <li>
-                <a href="home.html#">SOUNDS</a>
+                <a href="home#">SOUNDS</a>
               </li>
               <li>
                 <a href="#PLUGINS">PLUGINS</a>
@@ -91,7 +91,7 @@ class HamburgerMenu extends React.Component {
                 </a>
               </li>
               <li>
-                <a href="contact.html">CONTACT</a>
+                <a href="contact">CONTACT</a>
               </li>
             </ul>
           )}
@@ -99,14 +99,14 @@ class HamburgerMenu extends React.Component {
         <div className="right">
           {!loggedIn ? (
             <div className="actions">
-              <a href="authentication.html#">LOGIN</a>
-              <a href="authentication.html#">SIGN UP</a>
+              <a href="authentication#">LOGIN</a>
+              <a href="authentication#">SIGN UP</a>
             </div>
           ) : (
             <div className="actions">
-              <a href="account.html" className="profile-btn"></a>
+              <a href="account" className="profile-btn"></a>
               <a
-                href="index.html"
+                href="/"
                 onClick={() =>
                   window.localStorage.removeItem("samplehousetoken")
                 }
@@ -115,7 +115,7 @@ class HamburgerMenu extends React.Component {
               </a>
             </div>
           )}
-          <a href={!loggedIn ? "index.html#" : "home.html#"}>
+          <a href={!loggedIn ? "/#" : "home#"}>
             <img src="../assets/sample_house_logo.png" alt="SampleHouse Logo" />
           </a>
         </div>
