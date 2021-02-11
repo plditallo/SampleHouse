@@ -57,7 +57,7 @@ class Header extends React.Component {
             {!loggedIn ? (
               <ul>
                 <li>
-                  <a href="/#">HOME</a>
+                  <a href="/">HOME</a>
                 </li>
                 <li>
                   <a href="/#about">ABOUT</a>
@@ -81,15 +81,17 @@ class Header extends React.Component {
                   <a href="home#">SOUNDS</a>
                 </li>
                 <li>
+                  {/* //todo */}
                   <a href="#PLUGINS">PLUGINS</a>
                   {/* download link for VST IMG w/ Title, Desc w/ download button*/}
                 </li>
                 <li>
+                  {/* //todo */}
                   <a href="#SAMPLEPACKS">SAMPLEPACKS</a>
                   {/* grid out with pack's img and title --> packs page */}
                 </li>
                 <li>
-                  <a href="#VIDEOS">VIDEOS</a>
+                  <a href="/videos">VIDEOS</a>
                   {/* grid out video w/ img and title */}
                   {/* tier 2+ only, w/ upgrade btn  and go back btn-->  */}
                   {/* youtube private channel link */}

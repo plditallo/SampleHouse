@@ -27,7 +27,7 @@ module.exports = app => {
   app.use(express.static('public'))
   app.use(expressCspHeader({
     directives: {
-      'default-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com'],
+      'default-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com', "www.youtube.com"],
       'script-src': [SELF, INLINE, 'unpkg.com', 'www.paypal.com', 'www.sandbox.paypal.com'],
       'style-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com'],
       'img-src': [SELF, 'data:'],
@@ -38,5 +38,4 @@ module.exports = app => {
 
   // HTTP response header will be defined as:
   // "Content-Security-Policy: default-src 'none'; img-src 'self';"
-
 };

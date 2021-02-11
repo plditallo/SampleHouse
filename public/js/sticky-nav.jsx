@@ -65,7 +65,7 @@ class StickyNav extends React.Component {
               {/* grid out with pack's img and title --> packs page */}
             </li>
             <li>
-              <a href="#VIDEOS">VIDEOS</a>
+              <a href="videos">VIDEOS</a>
               {/* grid out video w/ img and title */}
               {/* tier 2+ only, w/ upgrade btn  and go back btn-->  */}
               {/* youtube private channel link */}
