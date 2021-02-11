@@ -1,9 +1,9 @@
 @import "../utils/mixins.scss";
 
 #sounds {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
   .exclusive {
     color: $lightBlue;
     background: $lightBlue;
@@ -12,13 +12,24 @@
     width: 2em;
     height: 2em;
   }
-  .sound-wrapper {
+  .home-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    // justify-content: space-between;
+
     .sound {
       display: flex;
       align-items: center;
       p {
         margin: 0 0.5em;
       }
+    }
+    .search-wrapper {
+      display: flex;
+    }
+    .sound-wrapper {
+      display: flex;
     }
   }
   table {

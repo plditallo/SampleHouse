@@ -1,16 +1,3 @@
-#sounds {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
 #sounds .exclusive {
   color: #00bdf5;
   background: #00bdf5;
@@ -21,7 +8,18 @@
   height: 2em;
 }
 
-#sounds .sound-wrapper .sound {
+#sounds .home-wrapper {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#sounds .home-wrapper .sound {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -30,8 +28,20 @@
           align-items: center;
 }
 
-#sounds .sound-wrapper .sound p {
+#sounds .home-wrapper .sound p {
   margin: 0 0.5em;
+}
+
+#sounds .home-wrapper .search-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#sounds .home-wrapper .sound-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 #sounds table {

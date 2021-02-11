@@ -222,6 +222,7 @@ router.get("/:id", (req, res) => {
             userData.active_subscription = user.active_subscription;
             userData.balance = user.balance;
             userData.payPal_subscription_id = user.payPal_subscription_id;
+            userData.role = user.role;
             if (user.active_subscription)
                 getSubscriberById(user.id).then(([sub]) => {
                     userData.currentPlanId = sub.plan_id;

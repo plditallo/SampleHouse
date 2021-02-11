@@ -1,5 +1,4 @@
 "use strict";
-//todo download sounds and update database
 class Sounds extends React.Component {
   constructor(props) {
     const token = window.localStorage.getItem("samplehousetoken");
@@ -20,6 +19,7 @@ class Sounds extends React.Component {
       loadingSoundList: true,
       loadingSoundStream: false,
       message: "",
+      tagFilter: [],
     };
   }
 
@@ -93,7 +93,7 @@ class Sounds extends React.Component {
     // const { soundSourceNode } = this.state;
     // if (soundSourceNode) soundSourceNode.stop(0);
     this.stopStreaming();
-    this.setState({ ...this.state, loadingSoundStream: true });
+    // this.setState({ ...this.state, loadingSoundStream: true });
 
     const loadingSpinner = evt.target.classList;
     loadingSpinner.add("load-spinner");
@@ -122,7 +122,7 @@ class Sounds extends React.Component {
     this.setState({
       ...this.state,
       soundSourceNode: source,
-      loadingSoundStream: false,
+      // loadingSoundStream: false,
     });
     loadingSpinner.remove("load-spinner");
     return context.decodeAudioData(await data.arrayBuffer(), (buffer) => {
@@ -204,6 +204,13 @@ class Sounds extends React.Component {
     // todo this is refreshing when an update in the database occurs
   }
 
+  toggleTagFilter = (tag) => {
+    let tagFilter = this.state.tagFilter;
+    if (!tagFilter.includes(tag)) tagFilter.push(tag);
+    else tagFilter = tagFilter.filter((e) => e !== tag);
+    this.setState({ ...this.state, tagFilter });
+  };
+
   async componentDidMount() {
     const { token, limit, offset, userId } = this.state;
     const soundCount = await fetch(`http://localhost:5000/api/audio/count`, {
@@ -251,87 +258,105 @@ class Sounds extends React.Component {
       offset,
       limit,
       loadingSoundList,
-      loadingSoundStream,
+      // loadingSoundStream,
       message,
       user,
       tags,
+      tagFilter,
     } = this.state;
+    console.log(tagFilter);
     return (
-      <div className="sound-wrapper">
+      <div className="home-wrapper">
         {/* todo search bar/functionality */}
         {/* todo color exclusive different color */}
+        <div className="search-wrapper">
+          <h1>SOUNDS</h1>
+          <div className="search-bar">SEARCH</div>
+          <h3>{user.balance} credits</h3>
+        </div>
         {message ? <h2>{message}</h2> : null}
         {loadingSoundList ? <div className="load-spinner" /> : null}
-        <h3>{user.balance} credits</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>cover</th>
-              <th></th>
-              <th>File Name</th>
-              <th>BPM</th>
-              <th>KEY</th>
-              <th>Instrument_type</th>
-              <th>type</th>
-              <th></th>
-              {/* <th></th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {soundList.slice(offset, offset + limit).map((sound, i) => {
-              return (
-                <tr key={i} className={sound.exclusive ? "exclusive" : null}>
-                  <td>
-                    <a href={`#${sound.pack}`}>
+        <div className="sound-wrapper">
+          <aside>
+            <h2>Tags</h2>
+            <ul className="tag-filter">
+              {tags.map((e, i) => (
+                <li key={i} onClick={() => this.toggleTagFilter(e)}>
+                  {e}
+                </li>
+              ))}
+            </ul>
+          </aside>
+          <table>
+            <thead>
+              <tr>
+                <th>cover</th>
+                <th></th>
+                <th>File Name</th>
+                <th>BPM</th>
+                <th>KEY</th>
+                <th>Instrument_type</th>
+                <th>type</th>
+                <th></th>
+                {/* <th></th> */}
+              </tr>
+            </thead>
+            <tbody>
+              {soundList.slice(offset, offset + limit).map((sound, i) => {
+                return (
+                  <tr key={i} className={sound.exclusive ? "exclusive" : null}>
+                    <td>
+                      <a href={`#${sound.pack}`}>
+                        <img
+                          id="cover"
+                          src={covers[sound.pack]}
+                          style={{ width: "3em", height: "3em" }}
+                        />
+                      </a>
+                    </td>
+                    <td>
                       <img
-                        id="cover"
-                        src={covers[sound.pack]}
-                        style={{ width: "3em", height: "3em" }}
+                        src="../assets/music-note.png"
+                        alt="Play Button"
+                        className={"play-btn"}
+                        onClick={(evt) => this.streamSound(sound, evt)}
                       />
-                    </a>
-                  </td>
-                  <td>
-                    <img
-                      src="../assets/music-note.png"
-                      alt="Play Button"
-                      className={"play-btn"}
-                      onClick={(evt) => this.streamSound(sound, evt)}
-                    />
-                  </td>
-                  <td>
-                    <p className="name">{sound.name}</p>
-                    {typeof sound.instrument_type === "string"
-                      ? sound.instrument_type.split(",").map((e, i) => (
-                          <span key={i} className="tag">
-                            {e}
-                          </span>
-                        ))
-                      : null}
-                    {/* {typeof sound.instrument_type === "string"
+                    </td>
+                    <td>
+                      <p className="name">{sound.name}</p>
+                      {typeof sound.instrument_type === "string"
+                        ? sound.instrument_type.split(",").map((e, i) => (
+                            <span key={i} className="tag">
+                              {e}
+                            </span>
+                          ))
+                        : null}
+                      {/* {typeof sound.instrument_type === "string"
                       ? sound.instrument_type.replace(",", ", ")
                       : null} */}
-                  </td>
-                  <td className="tempo">{sound.tempo}</td>
-                  <td className="key">{sound.key}</td>
-                  <td className="instrument-type">
-                    {typeof sound.instrument_type === "string"
-                      ? sound.instrument_type.replace(",", ", ")
-                      : null}
-                  </td>
-                  <td className="type">{sound.type}</td>
-                  <td>
-                    <img
-                      src="../assets/download-icon.png"
-                      alt="download"
-                      onClick={() => this.download(sound)}
-                      className="download-btn"
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="tempo">{sound.tempo}</td>
+                    <td className="key">{sound.key}</td>
+                    <td className="instrument-type">
+                      {typeof sound.instrument_type === "string"
+                        ? sound.instrument_type.replace(",", ", ")
+                        : null}
+                    </td>
+                    <td className="type">{sound.type}</td>
+                    <td>
+                      <img
+                        src="../assets/download-icon.png"
+                        alt="download"
+                        onClick={() => this.download(sound)}
+                        className="download-btn"
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         <div className="pagination">
           <button
             onClick={page > 1 ? this.prevBtnHandler : null}
