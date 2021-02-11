@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const userDb = require("../../../database/model/userModel");
-const soundDb = require("../../../database/model/soundDownloadModel");
+const downloadDb = require("../../../database/model/soundDownloadModel");
 const {
     getSounds,
     getSoundBy,
@@ -116,40 +116,35 @@ router.get("/cover/:key", (req, res) => {
 // })
 
 router.get("/download/:key", async (req, res) => {
-    console.log("download route")
     const key = req.params.key;
     console.log(key)
-    //! key: 'SH Essential Drums/SH_Essential_Hat_01.wav'
     const user = req.user;
-    const soundPack = key.split("/")[0]
     const soundName = key.split("/")[1]
     //todo update dynamoDb download count
     //todo check all exclusive sounds if they have been downloaded before (other users)
-    const [previousDownload] = await soundDb.checkDownloadByUser(user.id, soundName)
-    // todo check exclusive downloads -> soundDb.getExclusiveDownloads()
+    const [previousDownload] = await downloadDb.checkDownloadByUser(user.id, soundName)
+    // todo check exclusive downloads -> downloadDb.getExclusiveDownloads()
     if (!previousDownload) {
-        console.log("not downloaded")
-        // const dynamoSound = await getDynamoSound(querySchema);
-        // const exclusive = dynamoSound.exclusive.BOOL;
-        // const creditCost = exclusive ? 15 : 1;
+        console.log("not downloaded");
+        const [sound] = await getSoundBy("name", soundName)
+        const creditCost = sound.exclusive ? 15 : 1;
         // console.log("balance before", user.balance); //! testing
-        // if ((user.balance - creditCost) < 0) return res.status(222).json({
-        //     msg: "Credit balance is insufficient."
-        // });
-        // user.balance -= creditCost;
+        if ((user.balance - creditCost) < 0) return res.status(222).json({
+            msg: "Credit balance is insufficient."
+        });
+        user.balance -= creditCost;
         // console.log("balance after", user.balance); //! testing
-        // await soundDb.insertDownload({
+        // await downloadDb.insertDownload({
         //     name: soundName,
         //     userId: user.id,
         //     downloaded_at: Date.now(),
         //     exclusive
         // })
         // await userDb.updateUser(user)
-        // Pipe download stream to response
     } else console.log("already downloaded") //! testing
-    downloadStream(res, key).pipe(res);
+    downloadStream(res, key).pipe(res); //Pipe download stream to response
 })
-//? todo the client is refreshing because of an update to the userDb or soundDb
+//? todo the client is refreshing because of an update to the userDb or downloadDb
 
 router.use("/", (req, res) => {
     res.status(200).json({
