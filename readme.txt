@@ -4,6 +4,10 @@ change all localhost --> Heroku
 LIVE IPN https://developer.paypal.com/docs/api-basics/notifications/ipn/
 create a docs for the API
 precompile your scripts for production - https://babeljs.io/docs/setup/
+check all links
+upadte manifest
+update sitemap
+
 
 
 Future Features

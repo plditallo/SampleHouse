@@ -16,7 +16,7 @@ class Sounds extends React.Component {
       soundSourceNode: null,
       token,
       userId: jwt_decode(token).subject,
-      userBalance: null,
+      user: {},
       loadingSoundList: true,
       loadingSoundStream: false,
       message: "",
@@ -187,7 +187,10 @@ class Sounds extends React.Component {
       const creditCost = sound.exclusive ? 15 : 1;
       this.setState({
         ...this.state,
-        userBalance: this.state.userBalance - creditCost,
+        user: {
+          ...this.state.user,
+          balance: this.state.user.balance - creditCost,
+        },
       });
     }
     const blob = new Blob([await res.arrayBuffer()], {
@@ -220,10 +223,20 @@ class Sounds extends React.Component {
       },
     }).then(async (res) => await res.json());
 
+    const tags = await fetch("http://localhost:5000/api/audio/tags", {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: token,
+      },
+    }).then(async (res) => await res.json());
+
     this.setState({
       ...this.state,
       maxPages: Math.ceil(soundCount / limit),
-      userBalance: user.balance,
+      user,
+      tags,
     });
     this.fetchSoundList(offset);
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -240,17 +253,16 @@ class Sounds extends React.Component {
       loadingSoundList,
       loadingSoundStream,
       message,
-      userBalance,
+      user,
       tags,
     } = this.state;
-    console.log(tags);
     return (
       <div className="sound-wrapper">
         {/* todo search bar/functionality */}
         {/* todo color exclusive different color */}
         {message ? <h2>{message}</h2> : null}
         {loadingSoundList ? <div className="load-spinner" /> : null}
-        <h3>{userBalance} credits</h3>
+        <h3>{user.balance} credits</h3>
         <table>
           <thead>
             <tr>
@@ -262,7 +274,7 @@ class Sounds extends React.Component {
               <th>Instrument_type</th>
               <th>type</th>
               <th></th>
-              <th>edit</th>
+              {/* <th></th> */}
             </tr>
           </thead>
           <tbody>
@@ -287,20 +299,26 @@ class Sounds extends React.Component {
                     />
                   </td>
                   <td>
-                    {sound.name}
-                    <br />
+                    <p className="name">{sound.name}</p>
+                    {typeof sound.instrument_type === "string"
+                      ? sound.instrument_type.split(",").map((e, i) => (
+                          <span key={i} className="tag">
+                            {e}
+                          </span>
+                        ))
+                      : null}
+                    {/* {typeof sound.instrument_type === "string"
+                      ? sound.instrument_type.replace(",", ", ")
+                      : null} */}
+                  </td>
+                  <td className="tempo">{sound.tempo}</td>
+                  <td className="key">{sound.key}</td>
+                  <td className="instrument-type">
                     {typeof sound.instrument_type === "string"
                       ? sound.instrument_type.replace(",", ", ")
                       : null}
                   </td>
-                  <td>{sound.tempo}</td>
-                  <td>{sound.key}</td>
-                  <td>
-                    {typeof sound.instrument_type === "string"
-                      ? sound.instrument_type.replace(",", ", ")
-                      : null}
-                  </td>
-                  <td>{sound.type}</td>
+                  <td className="type">{sound.type}</td>
                   <td>
                     <img
                       src="../assets/download-icon.png"
@@ -308,9 +326,6 @@ class Sounds extends React.Component {
                       onClick={() => this.download(sound)}
                       className="download-btn"
                     />
-                  </td>
-                  <td>
-                    <button>edit</button>
                   </td>
                 </tr>
               );

@@ -27,7 +27,7 @@ function getSoundBy(column, value) {
 }
 
 function getTags() {
-    return db("Sound").tags
+    return db("Sound").select("tags")
 }
 
 function updateSound(sound) {

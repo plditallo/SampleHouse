@@ -76,9 +76,12 @@ router.get("/count", async (req, res) => {
 });
 
 router.get("/tags", async (req, res) => {
-    const tags = await getTags()
-    console.log(tags)
-    res.status(200).json(tags)
+    const tagsList = [];
+    const tagsFetched = await getTags()
+    tagsFetched.forEach(({
+        tags
+    }) => tags ? tags.split(",").forEach(e => tagsList.includes(e) ? null : tagsList.push(e)) : null)
+    res.status(200).json(tagsList)
     // res.status(200).json(count['count(*)'])
 
 });
