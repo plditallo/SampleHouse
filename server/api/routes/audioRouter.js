@@ -4,6 +4,7 @@ const downloadDb = require("../../../database/model/soundDownloadModel");
 const {
     getSounds,
     getSoundBy,
+    getSoundsByTag,
     getSoundCount,
     getTags
 } = require("../../../database/model/soundModel");
@@ -32,10 +33,14 @@ router.get("/", async (req, res) => {
         limit = 25,
         tags
     } = req.query;
-    console.log(tags)
 
-    const sounds = await getSounds(limit, offset)
+    let sounds = [];
+    if (tags === "null") sounds = await getSounds(limit, offset);
+    else sounds = await getSoundsByTag(limit, offset, tags)
     // sounds = sounds.filter(e => e.name.endsWith(".wav"))
+    console.log({
+        sounds
+    })
     if (sounds) res.status(200).send(sounds)
     else res.status(500).json({
         "msg": "unable to fetch sounds"

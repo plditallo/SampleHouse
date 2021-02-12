@@ -54,11 +54,13 @@ class Sounds extends React.Component {
       });
   };
 
-  async fetchSoundList(offset) {
+  async fetchSoundList(offset, tags) {
     const { soundList, limit } = this.state;
 
     const { status, sounds } = await fetch(
-      `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}`,
+      `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}&tags=${
+        tags ? tags : null
+      }`,
       {
         method: "GET",
         type: "cors",
@@ -201,16 +203,16 @@ class Sounds extends React.Component {
     // todo this is refreshing when an update in the database occurs
   }
 
-  toggleTagFilter = (tag) => {
+  toggleTagFilter = async (tag) => {
     let tagFilters = this.state.tagFilters;
     if (!tagFilters.includes(tag)) tagFilters.push(tag);
     else tagFilters = tagFilters.filter((e) => e !== tag);
     this.setState({ ...this.state, tagFilters });
-  };
-
-  componentWillUpdate = (nextProps, nextState) => {
-    if (nextState.tagFilters.length) {
-    }
+    const filteredList = await this.fetchSoundList(
+      this.state.offset,
+      tagFilters
+    );
+    console.log({ filteredList });
   };
 
   async componentDidMount() {
