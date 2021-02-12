@@ -56,10 +56,10 @@ class Sounds extends React.Component {
 
   async fetchSoundList(offset, tags) {
     const { soundList, limit } = this.state;
-
+    console.log(tags);
     const { status, sounds } = await fetch(
       `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}&tags=${
-        tags ? tags : null
+        tags ? tags : ""
       }`,
       {
         method: "GET",
@@ -73,6 +73,8 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
+    console.log("here", { status, sounds });
+    if (tags && tags.length) return { status, sounds };
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -207,12 +209,12 @@ class Sounds extends React.Component {
     let tagFilters = this.state.tagFilters;
     if (!tagFilters.includes(tag)) tagFilters.push(tag);
     else tagFilters = tagFilters.filter((e) => e !== tag);
-    this.setState({ ...this.state, tagFilters });
-    const filteredList = await this.fetchSoundList(
+    const { status, sounds } = await this.fetchSoundList(
       this.state.offset,
       tagFilters
     );
-    console.log({ filteredList });
+    console.log({ status, sounds });
+    this.setState({ ...this.state, tagFilters });
   };
 
   async componentDidMount() {

@@ -10,7 +10,7 @@ module.exports = {
     updateSound,
     removeSound
 }
-
+//! .whereIn and LIKE for search functionality
 function insertSound(sound) {
     return db("Sound").insert(sound)
 }

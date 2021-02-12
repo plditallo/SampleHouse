@@ -33,18 +33,14 @@ router.get("/", async (req, res) => {
         limit = 25,
         tags
     } = req.query;
-
-    let sounds = [];
-    if (tags === "null") sounds = await getSounds(limit, offset);
-    else sounds = await getSoundsByTag(limit, offset, tags)
-    // sounds = sounds.filter(e => e.name.endsWith(".wav"))
     console.log({
-        sounds
-    })
-    if (sounds) res.status(200).send(sounds)
-    else res.status(500).json({
-        "msg": "unable to fetch sounds"
-    })
+        tags
+    }, tags.length)
+    let sounds = [];
+    if (tags.length === 0) sounds = await getSounds(limit, offset);
+    else sounds = await getSoundsByTag(limit, offset, tags)
+
+    return res.status(200).send(sounds)
 
     // s3.listObjectsV2({
     //     Bucket: 'samplehouse',
