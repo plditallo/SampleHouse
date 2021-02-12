@@ -57,11 +57,11 @@ html {
       }
     }
     .load-spinner {
-      border: 16px solid $lightGrey; /* Light grey */
-      border-top: 16px solid $lightBlue; /* Blue */
+      border: 1em solid $lightGrey; /* Light grey */
+      border-top: 1em solid $lightBlue; /* Blue */
       border-radius: 50%;
-      width: 120px;
-      height: 120px;
+      width: 4em;
+      height: 4em;
       -webkit-animation: spin 2s linear infinite;
       animation: spin 2s linear infinite;
     }

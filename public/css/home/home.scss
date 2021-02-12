@@ -4,10 +4,6 @@
   // display: flex;
   // flex-direction: column;
   // align-items: center;
-  .exclusive {
-    color: $lightBlue;
-    background: $lightBlue;
-  }
   .download-btn {
     width: 2em;
     height: 2em;
@@ -32,7 +28,7 @@
       display: flex;
       h2 {
       }
-      .tag-filter {
+      .filter {
         list-style: none;
         padding: 0;
         .selected {
@@ -44,7 +40,39 @@
       }
     }
   }
-  table {
+  .table-wrapper {
     text-align: center;
+    table {
+      text-align: center;
+      thead {
+      }
+      tbody {
+        .exclusive {
+          color: goldenrod;
+        }
+        .play-btn {
+          // height: 1em;
+          padding: 0.25em;
+          border: 0.5em solid transparent;
+        }
+        .stream-spinner {
+          border: 0.5em dotted $lightGrey; /* Light grey */
+          border-top: 0.5em dotted $lightBlue; /* Blue */
+          border-radius: 50%;
+          // width: 2;
+          // height: 2;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+        }
+        .name {
+        }
+        .tag {
+          padding: 0.125em 0.25em;
+          margin-right: 0.25em;
+          border: 1px solid black;
+          border-radius: 15%;
+        }
+      }
+    }
   }
 }

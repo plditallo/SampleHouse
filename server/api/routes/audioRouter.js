@@ -6,7 +6,7 @@ const {
     getSoundBy,
     getSoundsByTag,
     getSoundCount,
-    getTags
+    getColumn,
 } = require("../../../database/model/soundModel");
 // const {
 //     handleGetItemError
@@ -39,9 +39,9 @@ router.get("/", async (req, res) => {
     let sounds = [];
     if (tags.length === 0) sounds = await getSounds(limit, offset);
     else sounds = await getSoundsByTag(limit, offset, tags)
-    console.log(sounds.length, {
-        sounds
-    })
+    // console.log(sounds.length, {
+    //     sounds
+    // })
     return res.status(200).send(sounds)
 
     // s3.listObjectsV2({
@@ -82,18 +82,42 @@ router.get("/count", async (req, res) => {
 
 router.get("/tags", async (req, res) => {
     const tagsList = [];
-    const tagsFetched = await getTags()
+    const tagsFetched = await getColumn("tags")
     tagsFetched.forEach(({
         tags
     }) => tags ? tags.split(",").forEach(e => tagsList.includes(e) ? null : tagsList.push(e)) : null)
     res.status(200).json(tagsList)
-    // res.status(200).json(count['count(*)'])
-
 });
+
+router.get("/instruments", async (req, res) => {
+    const instrumentList = [];
+    const instrumentsFetched = await getColumn("instrument_type")
+    instrumentsFetched.forEach(({
+        instrument_type
+    }) => instrument_type ? instrument_type.split(",").forEach(e =>
+        instrumentList.includes(e) ? null : instrumentList.push(e)
+    ) : null)
+    res.status(200).json(instrumentList)
+});
+
+// router.get("/column/:column", async (req, res) => {
+//     const column = req.params.column;
+//     const itemList = [];
+//     const itemsFetched = await getColumn(column);
+//     itemsFetched.forEach(({
+//         column
+//     }) => console.log(e))
+//     // itemsFetched.forEach(({
+//     //     column
+//     // }) => tags ? tags.split(",").forEach(e => itemList.includes(e) ? null : itemList.push(e)) : null)
+//     // console.log(itemsFetched)
+//     // res.status(200).json(itemList)
+//     // res.status(200).json(count['count(*)'])
+// });
 
 router.get("/stream/:key", (req, res) => {
     const key = req.params.key;
-    console.log("stream", key)
+    console.log("/stream", key)
     //! key: SH Essential Drums/SH_Essential_Hat_01.wav
     downloadStream(res, key).pipe(res) // Pipe download stream to response
 })

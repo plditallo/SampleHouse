@@ -76,13 +76,13 @@ html body .logo h1 {
 }
 
 html body .load-spinner {
-  border: 16px solid #c3c1c1;
+  border: 1em solid #c3c1c1;
   /* Light grey */
-  border-top: 16px solid #00bdf5;
+  border-top: 1em solid #00bdf5;
   /* Blue */
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 4em;
+  height: 4em;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }

@@ -17,8 +17,7 @@ router.get("/:file", (req, res) => {
     if (otherPaths.auth.includes(file)) file = "authentication";
 
     const filePath = path.join(htmlRoot + `/${file}.html`);
-    console.log("FILE", file) //! testing
-    console.log("EXISTS", fs.existsSync(filePath)) //! testing
+    console.log("FILE:", file, "EXISTS:", fs.existsSync(filePath)) //! testing
     if (fs.existsSync(filePath)) {
         if (file.includes(".html") || !file.includes(".ico")) res.sendFile(filePath);
     } else res.sendFile(path.join(htmlRoot + "/404.html"))

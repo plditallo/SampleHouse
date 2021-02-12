@@ -6,7 +6,7 @@ module.exports = {
     getSounds,
     getSoundBy,
     getSoundsByTag,
-    getTags,
+    getColumn,
     updateSound,
     removeSound
 }
@@ -28,8 +28,8 @@ function getSoundBy(column, value) {
 }
 
 
-function getTags() {
-    return db("Sound").select("tags")
+function getColumn(column) {
+    return db("Sound").select(column)
 }
 
 function updateSound(sound) {

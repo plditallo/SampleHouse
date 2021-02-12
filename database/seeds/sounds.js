@@ -6,7 +6,7 @@ exports.seed = function (knex) {
       return knex('Sound').insert([{
           s3_uri: "s3://samplehouse/packs/SH Essential Drums/SH_Essential_Hat_01.wav",
           name: "SH_Essential_Hat_01.wav",
-          exclusive: false,
+          exclusive: true,
           instrument_type: [
             "drums",
             "high hat"
@@ -50,7 +50,7 @@ exports.seed = function (knex) {
         },
         {
           name: "SH_RaPiano_02_Ebm_85_MIDI.midi.mid",
-          exclusive: false,
+          exclusive: true,
           instrument_type: [
             "piano"
           ],
@@ -80,7 +80,7 @@ exports.seed = function (knex) {
             "tropical",
             "tropical house"
           ],
-          exclusive: false,
+          exclusive: true,
           tempo: 105,
           instrument_type: [
             "marimba",
