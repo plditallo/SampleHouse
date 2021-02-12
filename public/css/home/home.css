@@ -44,6 +44,19 @@
   display: flex;
 }
 
+#sounds .home-wrapper .sound-wrapper .tag-filter {
+  list-style: none;
+  padding: 0;
+}
+
+#sounds .home-wrapper .sound-wrapper .tag-filter .selected {
+  color: #00bdf5;
+}
+
+#sounds .home-wrapper .sound-wrapper .tag-filter .reset-tags {
+  color: red;
+}
+
 #sounds table {
   text-align: center;
 }

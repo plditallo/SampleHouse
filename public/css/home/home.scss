@@ -30,6 +30,18 @@
     }
     .sound-wrapper {
       display: flex;
+      h2 {
+      }
+      .tag-filter {
+        list-style: none;
+        padding: 0;
+        .selected {
+          color: $lightBlue;
+        }
+        .reset-tags {
+          color: red;
+        }
+      }
     }
   }
   table {

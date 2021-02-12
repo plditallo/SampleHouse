@@ -289,11 +289,17 @@ class Sounds extends React.Component {
             <h2>Tags</h2>
             <ul className="tag-filter">
               {tags.map((e, i) => (
-                <li key={i} onClick={() => this.toggleTagFilter(e)}>
+                <li
+                  key={i}
+                  onClick={() => this.toggleTagFilter(e)}
+                  className={tagFilters.includes(e) ? "selected" : ""}
+                >
                   {e}
                 </li>
               ))}
-              <li onClick={() => this.resetTagFilter()}>reset</li>
+              <li onClick={() => this.resetTagFilter()} className="reset-tags">
+                reset
+              </li>
             </ul>
           </aside>
           <table>
