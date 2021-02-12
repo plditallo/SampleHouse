@@ -42,37 +42,37 @@ function removeSound(id) {
 }
 
 
-function getSoundsByTag(limit, offset, tags) {
+function getSoundsByTag(tags) {
     // todo tags
     console.log(tags) // tags = "tag1,tag2,tag3"
     tags = tags.split(",") // tags = ["tag1","tag2","tag3"]
     switch (tags.length) {
         case 1:
-            return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`);
+            return db("Sound").where("tags", "like", `%${tags}%`);
         case 2:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
         case 3:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
         case 4:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
                 .where("tags", "like", `%${tags[3]}%`)
         case 5:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
                 .where("tags", "like", `%${tags[3]}%`)
                 .where("tags", "like", `%${tags[4]}%`)
         case 6:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
@@ -80,7 +80,7 @@ function getSoundsByTag(limit, offset, tags) {
                 .where("tags", "like", `%${tags[4]}%`)
                 .where("tags", "like", `%${tags[5]}%`)
         case 7:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
@@ -89,7 +89,7 @@ function getSoundsByTag(limit, offset, tags) {
                 .where("tags", "like", `%${tags[5]}%`)
                 .where("tags", "like", `%${tags[6]}%`)
         case 8:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
@@ -99,7 +99,7 @@ function getSoundsByTag(limit, offset, tags) {
                 .where("tags", "like", `%${tags[6]}%`)
                 .where("tags", "like", `%${tags[7]}%`)
         case 9:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)
@@ -110,7 +110,7 @@ function getSoundsByTag(limit, offset, tags) {
                 .where("tags", "like", `%${tags[7]}%`)
                 .where("tags", "like", `%${tags[8]}%`)
         case 10:
-            return db("Sound").limit(limit).offset(offset)
+            return db("Sound")
                 .where("tags", "like", `%${tags[0]}%`)
                 .where("tags", "like", `%${tags[1]}%`)
                 .where("tags", "like", `%${tags[2]}%`)

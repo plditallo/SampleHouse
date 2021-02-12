@@ -28,7 +28,8 @@ class Sounds extends React.Component {
     this.stopStreaming();
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
-    const needToFetch = page === maxPageFetched && page <= maxPages;
+    let needToFetch = page === maxPageFetched && page <= maxPages;
+    if (this.state.tags.length) needToFetch = false;
     console.log({ needToFetch });
     if (needToFetch) this.fetchSoundList(offset + limit);
     this.setState({
@@ -83,11 +84,7 @@ class Sounds extends React.Component {
         this.fetchCover(e.pack);
       }
     });
-    // const newSoundArray = [...sounds, ...this.state.soundList];
-    // console.log({ newSoundArray });
-    // let newSoundList = Array.from(
-    //   new Set([...sounds, ...this.state.soundList])
-    // );
+
     // todo set page back to 1 after filter, pagination sorting
     console.log({ sounds });
     // console.log({ newSoundList });
@@ -99,6 +96,10 @@ class Sounds extends React.Component {
           : Array.from(new Set([...sounds, ...this.state.soundList])),
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
+      maxPages:
+        tags && tags.length
+          ? Math.ceil(sounds.length / this.state.limit)
+          : this.state.maxPages,
     });
   }
 

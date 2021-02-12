@@ -25,15 +25,11 @@ router.get("/", async (req, res) => {
         tags
     } = req.query;
     console.log({
-        limit,
-        offset
-    })
-    console.log({
         tags
     })
     let sounds = [];
     if (tags.length === 0) sounds = await getSounds(limit, offset);
-    else sounds = await getSoundsByTag(limit, offset, tags)
+    else sounds = await getSoundsByTag(tags)
     console.log(sounds.length,
         //  {sounds}
     )
