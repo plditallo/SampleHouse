@@ -27,31 +27,6 @@ function getSoundBy(column, value) {
     return db("Sound").where(column, value)
 }
 
-function getSoundsByTag(limit, offset, tags) {
-    // todo tags
-    console.log(tags)
-    tags = tags.split(",")
-    switch (tags.length) {
-        case 1:
-            return "1";
-        case 2:
-            return "2";
-        case 3:
-            return "3";
-        case 4:
-            return "4";
-        case 5:
-            return "5";
-        case 6:
-            return "6";
-        case 7:
-            return "7";
-    }
-
-    // return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`)
-    // // .whereIn("tags", [`%${tags}%`])
-
-}
 
 function getTags() {
     return db("Sound").select("tags")
@@ -65,4 +40,90 @@ function removeSound(id) {
     return db("Sound").where({
         id
     }).del();
+}
+
+
+function getSoundsByTag(limit, offset, tags) {
+    // todo tags
+    console.log(tags) // tags = "tag1,tag2,tag3"
+    tags = tags.split(",") // tags = ["tag1","tag2","tag3"]
+    switch (tags.length) {
+        case 1:
+            return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`);
+        case 2:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+        case 3:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+        case 4:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+        case 5:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+        case 6:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+                .where("tags", "like", `%${tags[5]}%`)
+        case 7:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+                .where("tags", "like", `%${tags[5]}%`)
+                .where("tags", "like", `%${tags[6]}%`)
+        case 8:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+                .where("tags", "like", `%${tags[5]}%`)
+                .where("tags", "like", `%${tags[6]}%`)
+                .where("tags", "like", `%${tags[7]}%`)
+        case 9:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+                .where("tags", "like", `%${tags[5]}%`)
+                .where("tags", "like", `%${tags[6]}%`)
+                .where("tags", "like", `%${tags[7]}%`)
+                .where("tags", "like", `%${tags[8]}%`)
+        case 10:
+            return db("Sound").limit(limit).offset(offset)
+                .where("tags", "like", `%${tags[0]}%`)
+                .where("tags", "like", `%${tags[1]}%`)
+                .where("tags", "like", `%${tags[2]}%`)
+                .where("tags", "like", `%${tags[3]}%`)
+                .where("tags", "like", `%${tags[4]}%`)
+                .where("tags", "like", `%${tags[5]}%`)
+                .where("tags", "like", `%${tags[6]}%`)
+                .where("tags", "like", `%${tags[7]}%`)
+                .where("tags", "like", `%${tags[8]}%`)
+                .where("tags", "like", `%${tags[9]}%`)
+    }
+
+    return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`)
+    // // .whereIn("tags", [`%${tags}%`])
 }

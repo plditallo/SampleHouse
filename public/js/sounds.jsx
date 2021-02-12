@@ -328,8 +328,8 @@ class Sounds extends React.Component {
                     </td>
                     <td>
                       <p className="name">{sound.name}</p>
-                      {typeof sound.instrument_type === "string"
-                        ? sound.instrument_type.split(",").map((e, i) => (
+                      {typeof sound.tags === "string"
+                        ? sound.tags.split(",").map((e, i) => (
                             <span key={i} className="tag">
                               {e}
                             </span>
