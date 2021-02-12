@@ -1,0 +1,6 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+{% comment %} //todo updateSitemap {% endcomment %}
+{% comment %} Sitemap: https://www.bluesmokedigitalandprintedmedia.com/sitemap.xml {% endcomment %}
+Crawl-Delay: 10
