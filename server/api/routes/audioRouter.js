@@ -8,9 +8,6 @@ const {
     getSoundCount,
     getColumn,
 } = require("../../../database/model/soundModel");
-// const {
-//     handleGetItemError
-// } = require("../utils/dynamoDbErrors");
 const s3Client = require("s3").createClient();
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -21,12 +18,6 @@ const s3 = new AWS.S3({
     apiVersion: '2006-03-01'
 });
 
-// Create the DynamoDB Client with the region you want
-// const dynamoDbClient = new AWS.DynamoDB(); //todo to go off localhost
-// Use the following config instead when using DynamoDB Local
-// AWS.config.update({region: 'localhost', endpoint: 'http://localhost:8000', accessKeyId: 'access_key_id', secretAccessKey: 'secret_access_key'});
-
-
 router.get("/", async (req, res) => {
     const {
         offset,
@@ -34,45 +25,19 @@ router.get("/", async (req, res) => {
         tags
     } = req.query;
     console.log({
+        limit,
+        offset
+    })
+    console.log({
         tags
-    }, tags.length)
+    })
     let sounds = [];
     if (tags.length === 0) sounds = await getSounds(limit, offset);
     else sounds = await getSoundsByTag(limit, offset, tags)
-    // console.log(sounds.length, {
-    //     sounds
-    // })
+    console.log(sounds.length,
+        //  {sounds}
+    )
     return res.status(200).send(sounds)
-
-    // s3.listObjectsV2({
-    //     Bucket: 'samplehouse',
-    //     Prefix: 'packs/',
-    //     // Delimiter: "/", //used to not go 'deeper'
-    //     MaxKeys: limit,
-    //     // StartAfter: 'packs/SH Essential Drums/SH_Essential_Kick_07.wav',
-    //     ContinuationToken: ContinuationToken.length ? ContinuationToken.replaceAll(" ", "+") : null
-    // }, (err, data) => {
-    //     if (err) console.error("Error /", err);
-    //     // else console.log("Success", data)
-    //     const {
-    //         NextContinuationToken,
-    //         Contents,
-    //         IsTruncated,
-    //         Prefix
-    //     } = data;
-    //     const sounds = [];
-    //     Contents.forEach(({
-    //         Key
-    //     }) => {
-    //         if ((Key.includes(".wav")) || Key.includes(".mid")) sounds.push(Key.replace(Prefix, ""))
-    //     })
-    //     if (data) res.status(200).json({
-    //         IsTruncated,
-    //         sounds,
-    //         NextContinuationToken,
-    //         Prefix
-    //     })
-    // });
 })
 
 router.get("/count", async (req, res) => {
@@ -195,18 +160,3 @@ function downloadStream(res, key) {
         }));
     return downloadStream
 }
-
-// async function getDynamoSound(querySchema) {
-//     AWS.config.update({ //!testing on localhost only
-//         region: 'localhost',
-//         endpoint: 'http://localhost:8000'
-//     })
-//     const dynamoDbClient = new AWS.DynamoDB(); //! testing-move to top after using localhost
-
-//     try {
-//         const fetchedSound = await dynamoDbClient.getItem(querySchema).promise();
-//         return fetchedSound.Item
-//     } catch (err) {
-//         return handleGetItemError(err);
-//     }
-// }

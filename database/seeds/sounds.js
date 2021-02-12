@@ -9,7 +9,9 @@ exports.seed = function (knex) {
           exclusive: true,
           instrument_type: [
             "drums",
-            "high hat"
+            "high hat",
+            "hats",
+
           ],
           type: "one shot",
           pack: "SH Essential Drums",
@@ -23,7 +25,7 @@ exports.seed = function (knex) {
           name: "SH_Essential_Hat_02.wav",
           exclusive: false,
           instrument_type: [
-            "drums"
+            "drums",
           ],
           type: "one shot",
           pack: "SH Essential Drums",
@@ -37,7 +39,12 @@ exports.seed = function (knex) {
           ],
           type: "one shot",
           pack: "SH Essential Drums",
-          s3_uri: "s3://samplehouse/packs/SH Essential Drums/SH_Essential_Hat_03.wav"
+          s3_uri: "s3://samplehouse/packs/SH Essential Drums/SH_Essential_Hat_03.wav",
+          tags: [
+            "closed hat",
+            "hats",
+            "hh"
+          ]
         },
         {
           name: "SH_RaPiano_01_F#m_75_MIDI.midi.mid",
@@ -52,7 +59,9 @@ exports.seed = function (knex) {
           name: "SH_RaPiano_02_Ebm_85_MIDI.midi.mid",
           exclusive: true,
           instrument_type: [
-            "piano"
+            "piano",
+            "trop",
+            "vocal chop"
           ],
           pack: "SH Radio Piano",
           s3_uri: "s3://samplehouse/packs/SH Radio Piano/SH_RaPiano_02_Ebm_85_MIDI.midi.mid"
@@ -84,7 +93,9 @@ exports.seed = function (knex) {
           tempo: 105,
           instrument_type: [
             "marimba",
-            "vocal"
+            "vocal",
+            "pop",
+            "tropical",
           ],
           type: "loop",
           pack: "SH Tropical Storm",
@@ -92,7 +103,9 @@ exports.seed = function (knex) {
           tags: [
             "pluck",
             "trop",
-            "vocal chop"
+            "vocal chop",
+            "hats",
+            "hh"
           ]
         },
         {
@@ -105,7 +118,12 @@ exports.seed = function (knex) {
           exclusive: false,
           type: "loop",
           pack: "SH Tropical Storm",
-          s3_uri: "s3://samplehouse/packs/SH Tropical Storm/SH_TropS_Instru_04_Db_95.wav"
+          s3_uri: "s3://samplehouse/packs/SH Tropical Storm/SH_TropS_Instru_04_Db_95.wav",
+          tags: [
+            "closed hat",
+            "hats",
+            "hh"
+          ]
         },
         {
           duration: 12,
@@ -114,15 +132,18 @@ exports.seed = function (knex) {
           exclusive: false,
           tempo: 75,
           instrument_type: [
-            "flute"
+            "flute", "piano",
           ],
           type: "loop",
           pack: "SH Exotic Flutes",
           key: "dm",
           tags: [
             "flute",
+            "piano",
             "lofi",
-            "woodwind"
+            "woodwind",
+            "hats",
+            "hh"
           ]
         },
         {
@@ -154,7 +175,12 @@ exports.seed = function (knex) {
           ],
           type: "loop",
           pack: "SH Exotic Flutes",
-          s3_uri: "s3://samplehouse/packs/SH Exotic Flutes/SH_ExoFlute_DesertedIsland_F#m_80.wav"
+          s3_uri: "s3://samplehouse/packs/SH Exotic Flutes/SH_ExoFlute_DesertedIsland_F#m_80.wav",
+          tags: [
+            "closed hat",
+            "hats",
+            "hh"
+          ]
         }
       ]);
     });

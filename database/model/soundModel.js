@@ -27,7 +27,6 @@ function getSoundBy(column, value) {
     return db("Sound").where(column, value)
 }
 
-
 function getColumn(column) {
     return db("Sound").select(column)
 }

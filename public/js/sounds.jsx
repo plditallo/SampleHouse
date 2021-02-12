@@ -29,7 +29,7 @@ class Sounds extends React.Component {
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
     const needToFetch = page === maxPageFetched && page <= maxPages;
-
+    console.log({ needToFetch });
     if (needToFetch) this.fetchSoundList(offset + limit);
     this.setState({
       ...this.state,
@@ -56,12 +56,11 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList(offset, tags) {
-    const { soundList, limit } = this.state;
     // console.log({ tags });
     const { status, sounds } = await fetch(
-      `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}&tags=${
-        tags ? tags : ""
-      }`,
+      `http://localhost:5000/api/audio?limit=${
+        this.state.limit
+      }&offset=${offset}&tags=${tags ? tags : ""}`,
       {
         method: "GET",
         type: "cors",
@@ -74,7 +73,6 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
-    console.log({ sounds });
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -85,14 +83,20 @@ class Sounds extends React.Component {
         this.fetchCover(e.pack);
       }
     });
-    // let newSoundList =;
+    // const newSoundArray = [...sounds, ...this.state.soundList];
+    // console.log({ newSoundArray });
+    // let newSoundList = Array.from(
+    //   new Set([...sounds, ...this.state.soundList])
+    // );
+    // todo set page back to 1 after filter, pagination sorting
+    console.log({ sounds });
     // console.log({ newSoundList });
     this.setState({
       ...this.state,
       soundList:
         tags && tags.length
           ? [...sounds]
-          : Array.from(new Set(sounds, this.state.soundList)),
+          : Array.from(new Set([...sounds, ...this.state.soundList])),
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
     });
@@ -294,6 +298,7 @@ class Sounds extends React.Component {
       instruments,
       tagFilters,
     } = this.state;
+    // console.log("map", { soundList });
     return (
       <div className="home-wrapper">
         {/* todo search bar/functionality */}
@@ -355,7 +360,8 @@ class Sounds extends React.Component {
               </thead>
               <tbody>
                 {soundList
-                  .sort()
+                  .sort((a, b) => a.pack - b.pack)
+                  // todo sort by name after pack
                   .slice(offset, offset + limit)
                   .map((sound, i) => {
                     return (
