@@ -27,7 +27,7 @@ module.exports = app => {
   app.use(express.static('public'))
   app.use(expressCspHeader({
     directives: {
-      'default-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com', "www.youtube.com"],
+      'default-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com', "www.youtube.com", "localhost:5000/api/"],
       'script-src': [SELF, INLINE, 'unpkg.com', 'www.paypal.com', 'www.sandbox.paypal.com'],
       'style-src': [SELF, INLINE, 'www.paypal.com', 'www.sandbox.paypal.com'],
       'img-src': [SELF, 'data:'],

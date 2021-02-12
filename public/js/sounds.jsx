@@ -56,7 +56,7 @@ class Sounds extends React.Component {
 
   async fetchSoundList(offset, tags) {
     const { soundList, limit } = this.state;
-    console.log(tags);
+    console.log({ tags });
     const { status, sounds } = await fetch(
       `http://localhost:5000/api/audio?limit=${limit}&offset=${offset}&tags=${
         tags ? tags : ""
@@ -73,8 +73,7 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
-    console.log("here", { status, sounds });
-    if (tags && tags.length) return { status, sounds };
+    console.log({ status, sounds });
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -87,8 +86,9 @@ class Sounds extends React.Component {
     });
     this.setState({
       ...this.state,
-      soundList: [...soundList, ...sounds],
+      soundList: tags && tags.length ? [...sounds] : [...soundList, ...sounds],
       loadingSoundList: false,
+      message: sounds.length ? "" : "No Sounds Found.",
     });
   }
 
@@ -209,12 +209,15 @@ class Sounds extends React.Component {
     let tagFilters = this.state.tagFilters;
     if (!tagFilters.includes(tag)) tagFilters.push(tag);
     else tagFilters = tagFilters.filter((e) => e !== tag);
-    const { status, sounds } = await this.fetchSoundList(
-      this.state.offset,
-      tagFilters
-    );
-    console.log({ status, sounds });
     this.setState({ ...this.state, tagFilters });
+    this.fetchSoundList(this.state.offset, tagFilters);
+  };
+
+  resetTagFilter = () => {
+    if (this.state.tagFilters.length) {
+      this.setState({ ...this.state, tagFilters: [] });
+      this.fetchSoundList(this.state.offset, []);
+    }
   };
 
   async componentDidMount() {
@@ -270,7 +273,6 @@ class Sounds extends React.Component {
       tags,
       tagFilters,
     } = this.state;
-    console.log(tagFilters);
     return (
       <div className="home-wrapper">
         {/* todo search bar/functionality */}
@@ -291,6 +293,7 @@ class Sounds extends React.Component {
                   {e}
                 </li>
               ))}
+              <li onClick={() => this.resetTagFilter()}>reset</li>
             </ul>
           </aside>
           <table>
@@ -350,6 +353,7 @@ class Sounds extends React.Component {
                     </td>
                     <td className="type">{sound.type}</td>
                     <td>
+                      {/* //todo already downloaded? */}
                       <img
                         src="../assets/download-icon.png"
                         alt="download"

@@ -39,7 +39,9 @@ router.get("/", async (req, res) => {
     let sounds = [];
     if (tags.length === 0) sounds = await getSounds(limit, offset);
     else sounds = await getSoundsByTag(limit, offset, tags)
-
+    console.log(sounds.length, {
+        sounds
+    })
     return res.status(200).send(sounds)
 
     // s3.listObjectsV2({
