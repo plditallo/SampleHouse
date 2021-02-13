@@ -21,15 +21,19 @@ class Sounds extends React.Component {
       loadingSoundStream: false,
       message: "",
       tagFilters: [],
+      userDownloads: [],
     };
   }
 
   nextBtnHandler = () => {
+    // todo not paginating to next page on init songs
+    // todo reset button
+    // todo max pages on filter on tags
     this.stopStreaming();
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
     let needToFetch = page === maxPageFetched && page <= maxPages;
-    if (this.state.tags.length) needToFetch = false;
+    if (this.state.tagFilters.length) needToFetch = false;
     console.log({ needToFetch });
     if (needToFetch) this.fetchSoundList(offset + limit);
     this.setState({
@@ -213,15 +217,14 @@ class Sounds extends React.Component {
     link.href = window.URL.createObjectURL(blob);
     link.download = sound.name;
     link.click();
-    console.log("link clicked for download");
-    // todo this is refreshing when an update in the database occurs
+    // console.log("link clicked for download");
   }
 
   toggleTagFilter = async (tag) => {
     let tagFilters = this.state.tagFilters;
     if (!tagFilters.includes(tag)) tagFilters.push(tag);
     else tagFilters = tagFilters.filter((e) => e !== tag);
-    this.setState({ ...this.state, tagFilters });
+    this.setState({ ...this.state, tagFilters, page: 1 });
     this.fetchSoundList(this.state.offset, tagFilters);
   };
 
@@ -435,7 +438,11 @@ class Sounds extends React.Component {
               </button>
               {page}
               <button
-                onClick={page === maxPages ? null : this.nextBtnHandler}
+                onClick={
+                  page === maxPages || loadingSoundList
+                    ? null
+                    : this.nextBtnHandler
+                }
                 style={{
                   color: page === maxPages ? "grey" : "red",
                 }}
