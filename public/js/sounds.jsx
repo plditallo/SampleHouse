@@ -25,7 +25,7 @@ class Sounds extends React.Component {
     };
   }
 
-  nextBtnHandler = () => {
+  nextBtnHandler = async () => {
     // todo not paginating to next page on init songs
     // todo reset button
     // todo max pages on filter on tags
@@ -35,7 +35,6 @@ class Sounds extends React.Component {
     let needToFetch = page === maxPageFetched && page <= maxPages;
     if (this.state.tagFilters.length) needToFetch = false;
     console.log({ needToFetch });
-    if (needToFetch) this.fetchSoundList(offset + limit);
     this.setState({
       ...this.state,
       offset: offset + limit,
@@ -46,6 +45,7 @@ class Sounds extends React.Component {
           : maxPageFetched,
       loadingSoundList: needToFetch,
     });
+    if (needToFetch) await this.fetchSoundList(offset + limit);
   };
 
   prevBtnHandler = () => {
@@ -62,10 +62,12 @@ class Sounds extends React.Component {
 
   async fetchSoundList(offset, tags) {
     // console.log({ tags });
+    if (tags && !tags.length) offset = 0;
+
     const { status, sounds } = await fetch(
       `http://localhost:5000/api/audio?limit=${
         this.state.limit
-      }&offset=${offset}&tags=${tags ? tags : ""}`,
+      }&offset=${offset}&tags=${tags && tags.length ? tags : ""}`,
       {
         method: "GET",
         type: "cors",
@@ -88,23 +90,28 @@ class Sounds extends React.Component {
         this.fetchCover(e.pack);
       }
     });
-
-    // todo set page back to 1 after filter, pagination sorting
+    const newSoundList = [...this.state.soundList];
+    // if (sounds)
+    sounds.forEach((e) => {
+      if (!this.state.soundList.includes(e)) newSoundList.push(e);
+    });
     console.log({ sounds });
-    // console.log({ newSoundList });
+    // const soundCount = await this.getSoundCount();
+    const soundCount = 11;
     this.setState({
       ...this.state,
-      soundList:
-        tags && tags.length
-          ? [...sounds]
-          : Array.from(new Set([...sounds, ...this.state.soundList])),
+      soundList: tags && tags.length ? sounds : newSoundList,
+      // soundList: newSoundList,
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
       maxPages:
         tags && tags.length
           ? Math.ceil(sounds.length / this.state.limit)
-          : this.state.maxPages,
+          : Math.ceil(soundCount / this.state.limit),
+      page: tags && tags.length ? 1 : this.state.page,
+      offset: tags && tags.length ? 0 : this.state.offset,
     });
+    // console.log(this.state.loadingSoundList);
   }
 
   async streamSound(sound, evt) {
@@ -224,28 +231,36 @@ class Sounds extends React.Component {
     let tagFilters = this.state.tagFilters;
     if (!tagFilters.includes(tag)) tagFilters.push(tag);
     else tagFilters = tagFilters.filter((e) => e !== tag);
-    this.setState({ ...this.state, tagFilters, page: 1 });
+    this.setState({ ...this.state, tagFilters, page: 1, offset: 0 });
     this.fetchSoundList(this.state.offset, tagFilters);
   };
 
   resetTagFilter = () => {
     if (this.state.tagFilters.length) {
-      this.setState({ ...this.state, tagFilters: [] });
-      this.fetchSoundList(this.state.offset, []);
+      this.setState({ ...this.state, tagFilters: [], page: 1, offset: 0 });
     }
+    this.fetchSoundList(this.state.offset, []);
   };
 
-  async componentDidMount() {
-    const { token, limit, offset, userId } = this.state;
-    const soundCount = await fetch(`http://localhost:5000/api/audio/count`, {
+  toggleFilterMenu = (filterType) => {
+    const selectedMenu = document.querySelector(`.${filterType}-filter`).style;
+    if (selectedMenu.display === "block") selectedMenu.display = "none";
+    else selectedMenu.display = "block";
+  };
+
+  getSoundCount = async () =>
+    fetch(`http://localhost:5000/api/audio/count`, {
       method: "GET",
       type: "cors",
       headers: {
         "Content-Type": "application/octet-stream",
-        authorization: token,
+        authorization: this.state.token,
       },
     }).then(async (res) => await res.json());
 
+  async componentDidMount() {
+    const { token, limit, offset, userId } = this.state;
+    const soundCount = await this.getSoundCount();
     const user = await fetch(`http://localhost:5000/api/user/${userId}`, {
       method: "GET",
       type: "cors",
@@ -274,7 +289,6 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => await res.json());
-
     this.setState({
       ...this.state,
       maxPages: Math.ceil(soundCount / limit),
@@ -302,7 +316,13 @@ class Sounds extends React.Component {
       instruments,
       tagFilters,
     } = this.state;
-    // console.log("map", { soundList });
+    // console.log(this.state);
+    console.log(
+      { soundList },
+      "soundListSlice",
+      soundList.sort((a, b) => a.id - b.id).slice(offset, offset + limit)
+    );
+
     return (
       <div className="home-wrapper">
         {/* todo search bar/functionality */}
@@ -316,7 +336,9 @@ class Sounds extends React.Component {
         {loadingSoundList ? <div className="load-spinner" /> : null}
         <div className="sound-wrapper">
           <aside>
-            <h2>Tags</h2>
+            {/* filterMenu.tags: !this.state.filterMenu.tags  */}
+            <h2>Filters</h2>
+            <h3 onClick={() => this.toggleFilterMenu("tag")}>Tags</h3>
             <ul className="filter tag-filter">
               {tags.map((e, i) => (
                 <li
@@ -327,11 +349,10 @@ class Sounds extends React.Component {
                   {e}
                 </li>
               ))}
-              <li onClick={() => this.resetTagFilter()} className="reset-tags">
-                reset
-              </li>
             </ul>
-            <h2>Instruments</h2>
+            <h3 onClick={() => this.toggleFilterMenu("instrument")}>
+              Instruments
+            </h3>
             <ul className="filter instrument-filter">
               {instruments.map((e, i) => (
                 <li
@@ -342,10 +363,13 @@ class Sounds extends React.Component {
                   {e}
                 </li>
               ))}
-              <li onClick={() => this.resetTagFilter()} className="reset-tags">
-                reset
-              </li>
             </ul>
+            <button
+              onClick={() => this.resetTagFilter()}
+              className="reset-tags"
+            >
+              reset filters
+            </button>
           </aside>
           <div className="table-wrapper">
             <table>

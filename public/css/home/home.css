@@ -42,6 +42,11 @@
 #sounds .home-wrapper .sound-wrapper .filter {
   list-style: none;
   padding: 0;
+  display: none;
+}
+
+#sounds .home-wrapper .sound-wrapper .filter:hover {
+  cursor: pointer;
 }
 
 #sounds .home-wrapper .sound-wrapper .filter .selected {
