@@ -1,7 +1,7 @@
 exports.up = function (knex) {
     return knex.schema.createTable("Instrument", tbl => {
         tbl.increments("id").primary();
-        tbl.string("name")
+        tbl.string("instrument_name")
     })
 };
 

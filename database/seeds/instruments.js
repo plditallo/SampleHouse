@@ -5,39 +5,39 @@
               // Inserts seed entries
               return knex('Instrument').insert([{
                       "id": 1,
-                      "name": "drums",
+                      "instrument_name": "drums",
                   },
                   {
                       "id": 2,
-                      "name": "high hat",
+                      "instrument_name": "high hat",
                   },
                   {
                       "id": 3,
-                      "name": "hats",
+                      "instrument_name": "hats",
                   },
                   {
                       "id": 4,
-                      "name": "piano",
+                      "instrument_name": "piano",
                   },
                   {
                       "id": 5,
-                      "name": "trop",
+                      "instrument_name": "trop",
                   },
                   {
                       "id": 6,
-                      "name": "vocal chop",
+                      "instrument_name": "vocal chop",
                   },
                   {
                       "id": 7,
-                      "name": "vocal",
+                      "instrument_name": "vocal",
                   },
                   {
                       "id": 8,
-                      "name": "marimba",
+                      "instrument_name": "marimba",
                   },
                   {
                       "id": 9,
-                      "name": "flute",
+                      "instrument_name": "flute",
                   }
               ]);
           });

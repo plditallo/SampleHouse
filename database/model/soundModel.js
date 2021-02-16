@@ -20,7 +20,14 @@ function getSoundCount() {
 }
 
 function getSounds(limit, offset) {
-    return db("Sound").limit(limit).offset(offset)
+    return db("Sound")
+        .join("SoundToTag", "Sound.id", "=", "SoundToTag.sound_id")
+        .join("Tag", "Tag.id", "=", "SoundToTag.tag_id")
+        .join("SoundToInstrument", "Sound.id", "=", "SoundToInstrument.sound_id")
+        .join("Instrument", "Instrument.id", "=", "SoundToInstrument.instrument_id")
+        .join("SoundToGenre", "Sound.id", "=", "SoundToGenre.sound_id")
+        .join("Genre", "Genre.id", "=", "SoundToGenre.genre_id")
+    // .limit(limit).offset(offset)
 }
 
 function getSoundBy(column, value) {

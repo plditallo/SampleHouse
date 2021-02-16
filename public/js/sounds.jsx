@@ -59,13 +59,8 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList(offset, tags) {
-    // console.log({ tags });
-    if (tags && !tags.length) offset = 0;
-
     const { status, sounds } = await fetch(
-      `http://localhost:5000/api/audio?limit=${
-        this.state.limit
-      }&offset=${offset}&tags=${tags && tags.length ? tags : ""}`,
+      `http://localhost:5000/api/audio?limit=${this.state.limit}&offset=${offset}`,
       {
         method: "GET",
         type: "cors",
@@ -78,6 +73,8 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
+    console.log({ sounds });
+    // if no sounds set message
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -93,21 +90,11 @@ class Sounds extends React.Component {
     sounds.forEach((e) => {
       if (!this.state.soundList.includes(e)) newSoundList.push(e);
     });
-    console.log({ sounds });
-    // const soundCount = await this.getSoundCount();
-    const soundCount = 11;
     this.setState({
       ...this.state,
-      soundList: tags && tags.length ? sounds : newSoundList,
-      // soundList: newSoundList,
+      soundList: newSoundList,
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
-      maxPages:
-        tags && tags.length
-          ? Math.ceil(sounds.length / this.state.limit)
-          : Math.ceil(soundCount / this.state.limit),
-      page: tags && tags.length ? 1 : this.state.page,
-      offset: tags && tags.length ? 0 : this.state.offset,
     });
     // console.log(this.state.loadingSoundList);
   }
@@ -271,6 +258,7 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => await res.json());
+
     this.setState({
       ...this.state,
       maxPages: Math.ceil(soundCount / limit),

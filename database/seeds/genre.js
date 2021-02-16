@@ -5,19 +5,19 @@
               // Inserts seed entries
               return knex('Genre').insert([{
                       "id": 1,
-                      "name": "pop",
+                      "genre_name": "pop",
                   },
                   {
                       "id": 2,
-                      "name": "tropical",
+                      "genre_name": "tropical",
                   },
                   {
                       "id": 3,
-                      "name": "tropical house",
+                      "genre_name": "tropical house",
                   },
                   {
                       "id": 4,
-                      "name": "trap",
+                      "genre_name": "trap",
                   },
               ]);
           });

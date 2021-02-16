@@ -8,6 +8,11 @@ const {
     getSoundCount,
     getColumn,
 } = require("../../../database/model/soundModel");
+const {
+    getTags,
+    getInstruments,
+    getGenre
+} = require("../../../database/model/singleModel");
 const s3Client = require("s3").createClient();
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -20,45 +25,95 @@ const s3 = new AWS.S3({
 
 router.get("/", async (req, res) => {
     const {
-        offset,
-        limit = 25,
-        tags
+        offset = 0,
+            limit = 1000,
+            // tags = []
     } = req.query;
-    console.log({
-        tags
+
+    let soundsFetched = [] = await getSounds(limit, offset);
+    // soundsFetched = soundsFetched.slice(0, 10)
+
+    const soundList = {};
+    const fields = ["tag_name", "instrument_name", "genre_name"]
+    console.log(soundsFetched.length);
+    soundsFetched.forEach(e => {
+        console.log(e.name)
+        if (!(e.name in soundList)) {
+            // console.log(false)
+            soundList[e.name] = e;
+        } else {
+            const existing = soundList[e.name]
+            // console.log(true)
+            // console.log(Object.keys(existing))
+            Object.keys(existing).forEach(k => {
+                if (fields.includes(k) && !existing[k].includes(e[k])) {
+                    soundList[k] = existing[k].concat(`, ${e[k]}`)
+                }
+            })
+            // if (!existing.tag_name.includes(e.tag_name)) {
+            //     console.log("new tag")
+            // }
+            // if (!existing.genre_name.includes(e.genre_name)) {
+            //     console.log("new genre")
+            //     existing.genre_name = existing.genre_name.concat(`, ${e.genre_name}`)
+            // }
+            // if (!existing.instrument_name.includes(e.instrument_name)) {
+            //     console.log("new instrument")
+            // }
+        }
+        //     if (existing.length) {
+        //         var existingIndex = output.indexOf(existing[0]);
+        //         output[existingIndex].value = output[existingIndex].value.concat(item.value);
+        //     } else {
+        //         if (typeof item.value == 'string')
+        //             item.value = [item.value];
+        //         output.push(item);
+        //     }
     })
-    let sounds = [];
-    if (tags.length === 0) sounds = await getSounds(limit, offset);
-    else sounds = await getSoundsByTag(tags)
-    console.log(sounds.length,
-        //  {sounds}
-    )
-    return res.status(200).send(sounds)
+    console.log({
+        soundList
+    })
+
+
+    // console.log(soundList)
+
+
+
+
+
+    return res.status(200).send(soundList)
 })
 
 router.get("/count", async (req, res) => {
     const [count] = await getSoundCount()
     res.status(200).json(count['count(*)'])
 });
-
+//todo put tags, instruments, genre under single endpoint
 router.get("/tags", async (req, res) => {
-    const tagsList = [];
-    const tagsFetched = await getColumn("tags")
+    const tags = []
+    const tagsFetched = await getTags();
+    // console.log(tagsFetched)
     tagsFetched.forEach(({
-        tags
-    }) => tags ? tags.split(",").forEach(e => tagsList.includes(e) ? null : tagsList.push(e)) : null)
-    res.status(200).json(tagsList)
-});
+        tag_name
+    }) => tags.push(tag_name))
 
+    res.status(200).json(tags)
+});
 router.get("/instruments", async (req, res) => {
-    const instrumentList = [];
-    const instrumentsFetched = await getColumn("instrument_type")
+    const instruments = [];
+    const instrumentsFetched = await getInstruments()
     instrumentsFetched.forEach(({
-        instrument_type
-    }) => instrument_type ? instrument_type.split(",").forEach(e =>
-        instrumentList.includes(e) ? null : instrumentList.push(e)
-    ) : null)
-    res.status(200).json(instrumentList)
+        instrument_name
+    }) => instruments.push(instrument_name))
+    res.status(200).json(instruments)
+});
+router.get("/genre", async (req, res) => {
+    const genres = [];
+    const genresFetched = await getGenre()
+    genresFetched.forEach(({
+        genre_name
+    }) => genres.push(genre_name))
+    res.status(200).json(genres)
 });
 
 // router.get("/column/:column", async (req, res) => {

@@ -5,39 +5,39 @@
               // Inserts seed entries
               return knex('Tag').insert([{
                       "id": 1,
-                      "name": "closed hat",
+                      "tag_name": "closed hat",
                   },
                   {
                       "id": 2,
-                      "name": "hats",
+                      "tag_name": "hats",
                   },
                   {
                       "id": 3,
-                      "name": "hh",
+                      "tag_name": "hh",
                   },
                   {
                       "id": 4,
-                      "name": "pluck",
+                      "tag_name": "pluck",
                   },
                   {
                       "id": 5,
-                      "name": "trop",
+                      "tag_name": "trop",
                   },
                   {
                       "id": 6,
-                      "name": "vocal chop",
+                      "tag_name": "vocal chop",
                   },
                   {
                       "id": 7,
-                      "name": "lofi",
+                      "tag_name": "lofi",
                   },
                   {
                       "id": 8,
-                      "name": "woodwind",
+                      "tag_name": "woodwind",
                   },
                   {
                       "id": 9,
-                      "name": "tropical",
+                      "tag_name": "tropical",
                   },
               ]);
           });
