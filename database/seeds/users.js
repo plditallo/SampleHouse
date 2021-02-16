@@ -24,8 +24,8 @@ exports.seed = function (knex) {
           password: hashSync('password', 13),
           isVerified: true,
           first_name: "Test",
-          last_name: "user",
-          role: "test",
+          last_name: "User",
+          role: "testing",
           active_subscription: true,
           vst_access: true,
           created: Date.now()
