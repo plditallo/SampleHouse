@@ -66,4 +66,5 @@ function toggleAnswer(q) {
   a.classList.toggle("hide");
   if (a.style.maxHeight) a.style.maxHeight = null;
   else a.style.maxHeight = a.scrollHeight + "px";
+  console.log(a.classList);
 }
