@@ -6,12 +6,12 @@ exports.up = function (knex) {
         tbl.string("pack").references("Pack.id")
         tbl.string("type")
         tbl.boolean("exclusive")
-        // tbl.specificType('genre', 'text ARRAY');
+        tbl.specificType('genre', 'text ARRAY');
         tbl.integer("tempo");
         tbl.integer("duration");
         tbl.string("key");
-        // tbl.specificType('instrument_type', 'text ARRAY');
-        // tbl.specificType('tags', 'text ARRAY');
+        tbl.specificType('instrument_type', 'text ARRAY');
+        tbl.specificType('tags', 'text ARRAY');
         tbl.string("s3_uri").notNullable().unique();
         tbl.integer("download_count").default(0)
         tbl.date("date_added")
