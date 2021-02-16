@@ -11,7 +11,6 @@ exports.seed = function (knex) {
             "drums",
             "high hat",
             "hats",
-
           ],
           type: "one shot",
           pack: "SH Essential Drums",

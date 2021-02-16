@@ -10,10 +10,10 @@ function getTags() {
     return db("Tag")
 }
 
-function getInstruments(){
+function getInstruments() {
     return db("Instrument")
 }
 
-function getGenre(){
+function getGenre() {
     return db("Genre")
 }

@@ -4,6 +4,7 @@ exports.up = function (knex) {
         tbl.string("title");
         tbl.string("artist")
         tbl.string("description");
+        tbl.specific_type("sound_tags")
     })
 };
 

@@ -50,7 +50,9 @@ function removeSound(id) {
 
 
 function getSoundsByTag(tags) {
+    // return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`) //!single table
     // todo refactor this...
+    //! THIS DOES NOT WORK AFTER YOU WANT TO FILTER ON MULTIPLE COLUMNS
     console.log(tags) // tags = "tag1,tag2,tag3"
     tags = tags.split(",") // tags = ["tag1","tag2","tag3"]
     switch (tags.length) {
@@ -130,6 +132,5 @@ function getSoundsByTag(tags) {
                 .where("tags", "like", `%${tags[9]}%`).orWhere("instrument_type", "like", `%${tags[9]}%`)
     }
 
-    return db("Sound").limit(limit).offset(offset).where("tags", "like", `%${tags}%`)
     // // .whereIn("tags", [`%${tags}%`])
 }
