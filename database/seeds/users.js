@@ -18,6 +18,16 @@ exports.seed = function (knex) {
         balance: 20,
         created: Date.now()
       }, {
+        id: "f0889260-4acf-11eb-91bb-4b4493019fcc",
+        email: 'test@test.com',
+        password: hashSync('password', 13),
+        isVerified: true,
+        first_name: "Test",
+        last_name: "user",
+        role: "testing",
+        balance: 20,
+        created: Date.now()
+      }, {
         id: "de4fc280-59d4-11eb-aff7-07250d070e64",
         email: "craigfechtermusic@gmail.com",
         password: hashSync('password', 13),
