@@ -7,6 +7,7 @@ precompile your scripts for production - https://babeljs.io/docs/setup/
 check all links
 upadte manifest
 update sitemap
+update heroku deploy branch to production after checkout
 
 
 
