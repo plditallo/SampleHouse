@@ -17,6 +17,7 @@ Future Features
     - CRUD youtube videos
     - CRUD songs/packs
     - CRUD featured songs
+    - CRUD FAQ's
 - packs page
 - update subscription plan instead of cancel/resubscribe
 - author page (for creators of the sounds)
@@ -31,3 +32,7 @@ Future Features
 - authors to submit/upload packs (not singles) -> pay authors for sales (royalties)
 - waveform for sounds page
 - change password (hash forgot/change)
+
+
+Craig Update
+    - faq's sliding up

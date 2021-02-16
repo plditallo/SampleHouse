@@ -8,13 +8,17 @@ router.get("/", (req, res) => {
 })
 
 const otherPaths = {
-    auth: ["login", "register"]
+    auth: ["login", "register"],
+    account: ["profile"]
 }
 router.get("/:file", (req, res) => {
     // fetching favicon.ico??
     let file = req.params.file;
-    if (file.includes(".")) file = file.slice(0, file.indexOf("."))
+    // remove the .html
+    if (file.includes(".")) file = file.slice(0, file.indexOf("."));
+    // if wrong path, redirect
     if (otherPaths.auth.includes(file)) file = "authentication";
+    else if (otherPaths.account.includes(file)) file = "account";
 
     const filePath = path.join(htmlRoot + `/${file}.html`);
     console.log("FILE:", file, "EXISTS:", fs.existsSync(filePath)) //! testing

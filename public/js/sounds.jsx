@@ -20,15 +20,13 @@ class Sounds extends React.Component {
       loadingSoundList: true,
       loadingSoundStream: false,
       message: "",
+      filtering: false,
       tagFilters: [],
       userDownloads: [],
     };
   }
 
   nextBtnHandler = async () => {
-    // todo not paginating to next page on init songs
-    // todo reset button
-    // todo max pages on filter on tags
     this.stopStreaming();
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
@@ -61,13 +59,8 @@ class Sounds extends React.Component {
   };
 
   async fetchSoundList(offset, tags) {
-    // console.log({ tags });
-    if (tags && !tags.length) offset = 0;
-
     const { status, sounds } = await fetch(
-      `http://localhost:5000/api/audio?limit=${
-        this.state.limit
-      }&offset=${offset}&tags=${tags && tags.length ? tags : ""}`,
+      `http://localhost:5000/api/audio?limit=${this.state.limit}&offset=${offset}`,
       {
         method: "GET",
         type: "cors",
@@ -80,6 +73,8 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
+    console.log({ sounds });
+    // if no sounds set message
     if (status !== 200)
       return window.localStorage.removeItem("samplehousetoken");
 
@@ -95,21 +90,11 @@ class Sounds extends React.Component {
     sounds.forEach((e) => {
       if (!this.state.soundList.includes(e)) newSoundList.push(e);
     });
-    console.log({ sounds });
-    // const soundCount = await this.getSoundCount();
-    const soundCount = 11;
     this.setState({
       ...this.state,
-      soundList: tags && tags.length ? sounds : newSoundList,
-      // soundList: newSoundList,
+      soundList: newSoundList,
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
-      maxPages:
-        tags && tags.length
-          ? Math.ceil(sounds.length / this.state.limit)
-          : Math.ceil(soundCount / this.state.limit),
-      page: tags && tags.length ? 1 : this.state.page,
-      offset: tags && tags.length ? 0 : this.state.offset,
     });
     // console.log(this.state.loadingSoundList);
   }
@@ -242,25 +227,9 @@ class Sounds extends React.Component {
     this.fetchSoundList(this.state.offset, []);
   };
 
-  toggleFilterMenu = (filterType) => {
-    const selectedMenu = document.querySelector(`.${filterType}-filter`).style;
-    if (selectedMenu.display === "block") selectedMenu.display = "none";
-    else selectedMenu.display = "block";
-  };
-
-  getSoundCount = async () =>
-    fetch(`http://localhost:5000/api/audio/count`, {
-      method: "GET",
-      type: "cors",
-      headers: {
-        "Content-Type": "application/octet-stream",
-        authorization: this.state.token,
-      },
-    }).then(async (res) => await res.json());
-
   async componentDidMount() {
     const { token, limit, offset, userId } = this.state;
-    const soundCount = await this.getSoundCount();
+    const soundCount = await getSoundCount(token);
     const user = await fetch(`http://localhost:5000/api/user/${userId}`, {
       method: "GET",
       type: "cors",
@@ -289,6 +258,7 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => await res.json());
+
     this.setState({
       ...this.state,
       maxPages: Math.ceil(soundCount / limit),
@@ -317,11 +287,11 @@ class Sounds extends React.Component {
       tagFilters,
     } = this.state;
     // console.log(this.state);
-    console.log(
-      { soundList },
-      "soundListSlice",
-      soundList.sort((a, b) => a.id - b.id).slice(offset, offset + limit)
-    );
+    // console.log(
+    //   { soundList },
+    //   "soundListSlice",
+    //   soundList.sort((a, b) => a.id - b.id).slice(offset, offset + limit)
+    // );
 
     return (
       <div className="home-wrapper">
@@ -336,9 +306,8 @@ class Sounds extends React.Component {
         {loadingSoundList ? <div className="load-spinner" /> : null}
         <div className="sound-wrapper">
           <aside>
-            {/* filterMenu.tags: !this.state.filterMenu.tags  */}
             <h2>Filters</h2>
-            <h3 onClick={() => this.toggleFilterMenu("tag")}>Tags</h3>
+            <h3 onClick={() => toggleFilterMenu("tag")}>Tags</h3>
             <ul className="filter tag-filter">
               {tags.map((e, i) => (
                 <li
@@ -350,14 +319,12 @@ class Sounds extends React.Component {
                 </li>
               ))}
             </ul>
-            <h3 onClick={() => this.toggleFilterMenu("instrument")}>
-              Instruments
-            </h3>
+            <h3 onClick={() => toggleFilterMenu("instrument")}>Instruments</h3>
             <ul className="filter instrument-filter">
               {instruments.map((e, i) => (
                 <li
                   key={i}
-                  // onClick={() => this.toggleTagFilter(e)}
+                  onClick={() => this.toggleTagFilter(e)}
                   className={tagFilters.includes(e) ? "selected" : ""}
                 >
                   {e}
@@ -489,4 +456,21 @@ function encode(data) {
     return a + String.fromCharCode(b);
   }, "");
   return btoa(str).replace(/.{76}(?=.)/g, "$&\n");
+}
+
+async function getSoundCount(token) {
+  return await fetch(`http://localhost:5000/api/audio/count`, {
+    method: "GET",
+    type: "cors",
+    headers: {
+      "Content-Type": "application/octet-stream",
+      authorization: token,
+    },
+  }).then(async (res) => await res.json());
+}
+
+function toggleFilterMenu(filterType) {
+  const selectedMenu = document.querySelector(`.${filterType}-filter`).style;
+  if (selectedMenu.display === "block") selectedMenu.display = "none";
+  else selectedMenu.display = "block";
 }

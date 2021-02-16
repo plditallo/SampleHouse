@@ -1,4 +1,3 @@
-// todo setup database to track downloads for songs ()
 exports.up = function (knex) {
     return knex.schema.createTable("SoundDownload", tbl => {
         tbl.integer("id").primary();
