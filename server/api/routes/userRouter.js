@@ -93,16 +93,17 @@ router.post("/login",
                 });
                 //* check active subscription
                 getSubscriberById(user.id).then(([subscriber]) => {
-                    if (user.role !== "testing") { //!testing
-                        if (subscriber && subscriber.subscribe_end - Date.now() > 0)
-                            user.active_subscription = true
-                        else {
-                            user.active_subscription = false
-                            user.vst_access = false
-                            removeSubscription(user.id).then(null)
-                        }
+                    if (subscriber && subscriber.subscribe_end - Date.now() > 0)
+                        user.active_subscription = true
+                    else {
+                        user.active_subscription = false
+                        user.vst_access = false
+                        removeSubscription(user.id).then(null)
                     }
                     user.last_login = Date.now()
+                    if (user.role === "testing") { //!testing
+                        user.vst_access = true
+                    }
                     updateUser(user).then(null)
                     //* Login successful, write token, and send back user
                     res.status(200).json({

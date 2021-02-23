@@ -8,5 +8,4 @@ configureMiddleware(app);
 app.use("/api", apiRouter);
 app.use("/", serveRouter)
 
-
 module.exports = app;
