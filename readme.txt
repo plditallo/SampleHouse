@@ -8,6 +8,7 @@ check all links
 upadte manifest
 update sitemap
 update heroku deploy branch to production after checkout
+setup db and connection on a2hosting
 
 
 
@@ -19,6 +20,7 @@ Future Features
     - CRUD songs/packs
     - CRUD featured songs
     - CRUD FAQ's
+- SPEED -> Cache results on express server
 - packs page
 - update subscription plan instead of cancel/resubscribe
 - author page (for creators of the sounds)
@@ -36,4 +38,3 @@ Future Features
 
 
 Craig Update
-    - faq's sliding up

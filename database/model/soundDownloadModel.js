@@ -2,7 +2,7 @@ const db = require("../database-config");
 
 module.exports = {
     insertDownload,
-    getDownloadsByUser,
+    getDownloadsByUserId,
     checkDownloadByUser,
     checkExclusiveDownload,
     getSoundDownloadCount
@@ -12,7 +12,7 @@ function insertDownload(data) {
     return db("SoundDownload").insert(data)
 }
 
-function getDownloadsByUser(userId) {
+function getDownloadsByUserId(userId) {
     return db("SoundDownload").where({
         userId
     })

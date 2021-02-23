@@ -11,6 +11,9 @@ const {
     removeSubscription
 } = require("../../../database/model/subscriptionModel");
 const {
+    getDownloadsByUserId
+} = require("../../../database/model/soundDownloadModel");
+const {
     hashSync,
     compareSync
 } = require("bcryptjs");
@@ -27,7 +30,9 @@ const {
 const {
     checkExistingUsers
 } = require("../middleware/userMiddleware");
+const restricted = require("../middleware/restricted");
 
+//todo split this into a auth router and a user router
 
 router.post("/register",
     //* validate email and password
@@ -210,10 +215,7 @@ router.post("/resetPassword", [body('email').isEmail().normalizeEmail()], (req, 
 // })
 
 router.get("/:id", (req, res) => {
-    const {
-        id
-    } = req.params;
-    //todo send back user_type (beta, admin, user)
+    const id = req.params.id;
     getUserById(id).then(([user]) => {
         if (user) {
             let userData = {};
@@ -232,6 +234,16 @@ router.get("/:id", (req, res) => {
             else res.status(200).json(userData)
         }
     })
+})
+
+router.get("/:id/downloads", restricted, async (req, res) => {
+    const id = req.params.id;
+    const downloads = await getDownloadsByUserId(id);
+    console.log({
+        downloads
+    })
+    if (downloads) res.status(200).json(downloads)
+    else res.status(500)
 })
 
 router.use("/", (req, res) => {
@@ -261,29 +273,4 @@ function generateToken(user) {
         expiresIn: "72hr",
     };
     return jwt.sign(payload, JWT_SECRET, options);
-}
-
-
-const sound1 = {
-    type: "loop",
-    exclusive: "false",
-    duration: "12",
-    tempo: "120",
-    instrument_type: "guitar+electric guitar,",
-    genre: "pop+punk+edm",
-    key: "c#",
-    pack: "packName",
-    tags: "value1+value2",
-}
-const sound2 = {
-    type: "drum",
-    premium: "true",
-    duration: "15",
-    tempo: "150",
-    tag5: "value",
-    tag6: "value",
-    tag7: "value",
-    tag8: "value",
-    tag9: "value",
-    tag10: "value",
 }

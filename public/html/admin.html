@@ -4,36 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/core.css" />
-    <link rel="stylesheet" href="../css/home/home.css" />
-    <title>Home</title>
+    <title></title>
   </head>
   <body>
     <script src="../js/utils/jwt-decode.js"></script>
     <script src="../js/utils/jwt-verify.js"></script>
-    <script type="module">
+    <!--! Uncomment to verify token to access page -->
+    <!-- <script type="module">
       const token = window.localStorage.getItem("samplehousetoken");
       if (!token || (token && !jwt_verify(jwt_decode(token))))
         window.location = "/";
-      // todo add a first initial in localStorage for profile button in header
-    </script>
-    <script type="text/javascript">
-      // window.addEventListener("beforeunload", (event) => {
-      //   // Cancel the event as stated by the standard.
-      //   event.preventDefault();
-      //   // Older browsers supported custom message
-      //   event.returnValue = "test";
-      //   return "testtest";
-      // });
-      // window.onbeforeunload = (evt) => {
-      //   console.log("unload", evt);
-      //   return "Cancel unload?";
-      // };
-    </script>
+    </script> -->
     <header id="header"></header>
     <nav id="sticky-nav"></nav>
     <nav id="hamburger-menu"></nav>
 
-    <section id="sounds"></section>
+    <!--! Content goes here -->
+    <div id="admin">
+      <h1>Admin Page</h1>
+    </div>
 
     <footer id="footer"></footer>
     <!--* Load React. -->
@@ -51,6 +40,5 @@
     <script type="text/babel" src="../js/sticky-nav.jsx"></script>
     <script type="text/babel" src="../js/hamburgerMenu.jsx"></script>
     <script type="text/babel" src="../js/footer.jsx"></script>
-    <script type="text/babel" src="../js/sounds.jsx"></script>
   </body>
 </html>
