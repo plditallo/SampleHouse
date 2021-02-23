@@ -26,62 +26,21 @@ const s3 = new AWS.S3({
 router.get("/", async (req, res) => {
     const {
         offset = 0,
-            limit = 1000,
-            // tags = []
+            limit = 25,
+            tags,
+            genres,
+            instrument_type
     } = req.query;
-
-    let soundsFetched = [] = await getSounds(limit, offset);
-    // soundsFetched = soundsFetched.slice(0, 10)
-
-    const soundList = {};
-    const fields = ["tag_name", "instrument_name", "genre_name"]
-    console.log(soundsFetched.length);
-    soundsFetched.forEach(e => {
-        console.log(e.name)
-        if (!(e.name in soundList)) {
-            // console.log(false)
-            soundList[e.name] = e;
-        } else {
-            const existing = soundList[e.name]
-            // console.log(true)
-            // console.log(Object.keys(existing))
-            Object.keys(existing).forEach(k => {
-                if (fields.includes(k) && !existing[k].includes(e[k])) {
-                    soundList[k] = existing[k].concat(`, ${e[k]}`)
-                }
-            })
-            // if (!existing.tag_name.includes(e.tag_name)) {
-            //     console.log("new tag")
-            // }
-            // if (!existing.genre_name.includes(e.genre_name)) {
-            //     console.log("new genre")
-            //     existing.genre_name = existing.genre_name.concat(`, ${e.genre_name}`)
-            // }
-            // if (!existing.instrument_name.includes(e.instrument_name)) {
-            //     console.log("new instrument")
-            // }
-        }
-        //     if (existing.length) {
-        //         var existingIndex = output.indexOf(existing[0]);
-        //         output[existingIndex].value = output[existingIndex].value.concat(item.value);
-        //     } else {
-        //         if (typeof item.value == 'string')
-        //             item.value = [item.value];
-        //         output.push(item);
-        //     }
-    })
     console.log({
-        soundList
+        tags,
+        genres,
+        instrument_type
     })
-
-
-    // console.log(soundList)
-
-
-
-
-
-    return res.status(200).send(soundList)
+    const sounds = await getSounds(limit, offset)
+    if (sounds) res.status(200).send(sounds)
+    else res.status(500).json({
+        "msg": "unable to fetch sounds"
+    })
 })
 
 router.get("/count", async (req, res) => {
@@ -107,7 +66,7 @@ router.get("/instruments", async (req, res) => {
     }) => instruments.push(instrument_name))
     res.status(200).json(instruments)
 });
-router.get("/genre", async (req, res) => {
+router.get("/genres", async (req, res) => {
     const genres = [];
     const genresFetched = await getGenre()
     genresFetched.forEach(({

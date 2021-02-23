@@ -13,6 +13,7 @@ class Sounds extends React.Component {
       covers: {},
       tags: [],
       instruments: [],
+      genres: [],
       soundSourceNode: null,
       token,
       userId: jwt_decode(token).subject,
@@ -22,6 +23,7 @@ class Sounds extends React.Component {
       message: "",
       filtering: false,
       tagFilters: [],
+      filters: { tags: [], instrument_type: [], genres: [] },
       userDownloads: [],
     };
   }
@@ -31,7 +33,7 @@ class Sounds extends React.Component {
     window.scrollTo(0, 0);
     const { limit, offset, page, maxPageFetched, maxPages } = this.state;
     let needToFetch = page === maxPageFetched && page <= maxPages;
-    if (this.state.tagFilters.length) needToFetch = false;
+    //! if (this.state.tagFilters.length) needToFetch = false;
     console.log({ needToFetch });
     this.setState({
       ...this.state,
@@ -58,18 +60,23 @@ class Sounds extends React.Component {
       });
   };
 
-  async fetchSoundList(offset, tags) {
-    const { status, sounds } = await fetch(
-      `http://localhost:5000/api/audio?limit=${this.state.limit}&offset=${offset}`,
-      {
-        method: "GET",
-        type: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: this.state.token,
-        },
-      }
-    ).then(async (res) => ({
+  async fetchSoundList(offset, filters = this.state.filters) {
+    let url = new URL("http://localhost:5000/api/audio");
+    url.search = new URLSearchParams({
+      limit: this.state.limit,
+      offset,
+      tags: filters.tags,
+      instrument_type: filters.instrument_type,
+      genres: filters.genres,
+    });
+    const { status, sounds } = await fetch(url, {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: this.state.token,
+      },
+    }).then(async (res) => ({
       status: res.status,
       sounds: await res.json(),
     }));
@@ -218,13 +225,33 @@ class Sounds extends React.Component {
     else tagFilters = tagFilters.filter((e) => e !== tag);
     this.setState({ ...this.state, tagFilters, page: 1, offset: 0 });
     this.fetchSoundList(this.state.offset, tagFilters);
+
+    // let filters = this.state.filters;
   };
 
-  resetTagFilter = () => {
-    if (this.state.tagFilters.length) {
-      this.setState({ ...this.state, tagFilters: [], page: 1, offset: 0 });
+  toggleFilter = (type, value) => {
+    let filters = this.state.filters;
+    if (!filters[type].includes(value)) filters[type].push(value);
+    else filters[type] = filters[type].filter((e) => e !== value);
+    this.setState({ ...this.state, filters, page: 1, offset: 0 });
+    this.fetchSoundList(this.state.offset, filters);
+  };
+
+  resetFilter = () => {
+    const { filters } = this.state;
+    if (
+      filters.tags.length ||
+      filters.instrument_type.length ||
+      filters.genres.length
+    ) {
+      this.setState({
+        ...this.state,
+        filters: { tags: [], instrument_type: [], genres: [] },
+        page: 1,
+        offset: 0,
+      });
     }
-    this.fetchSoundList(this.state.offset, []);
+    this.fetchSoundList(this.state.offset, {});
   };
 
   async componentDidMount() {
@@ -258,6 +285,14 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => await res.json());
+    const genres = await fetch("http://localhost:5000/api/audio/genres", {
+      method: "GET",
+      type: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: token,
+      },
+    }).then(async (res) => await res.json());
 
     this.setState({
       ...this.state,
@@ -265,6 +300,7 @@ class Sounds extends React.Component {
       user,
       tags,
       instruments,
+      genres,
     });
     this.fetchSoundList(offset);
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -279,12 +315,12 @@ class Sounds extends React.Component {
       offset,
       limit,
       loadingSoundList,
-      // loadingSoundStream,
       message,
       user,
       tags,
       instruments,
-      tagFilters,
+      genres,
+      filters,
     } = this.state;
     // console.log(this.state);
     // console.log(
@@ -312,8 +348,8 @@ class Sounds extends React.Component {
               {tags.map((e, i) => (
                 <li
                   key={i}
-                  onClick={() => this.toggleTagFilter(e)}
-                  className={tagFilters.includes(e) ? "selected" : ""}
+                  onClick={() => this.toggleFilter("tags", e)}
+                  className={filters["tags"].includes(e) ? "selected" : ""}
                 >
                   {e}
                 </li>
@@ -324,17 +360,28 @@ class Sounds extends React.Component {
               {instruments.map((e, i) => (
                 <li
                   key={i}
-                  onClick={() => this.toggleTagFilter(e)}
-                  className={tagFilters.includes(e) ? "selected" : ""}
+                  onClick={() => this.toggleFilter("instrument_type", e)}
+                  className={
+                    filters["instrument_type"].includes(e) ? "selected" : ""
+                  }
                 >
                   {e}
                 </li>
               ))}
             </ul>
-            <button
-              onClick={() => this.resetTagFilter()}
-              className="reset-tags"
-            >
+            <h3 onClick={() => toggleFilterMenu("genre")}>Genres</h3>
+            <ul className="filter genre-filter">
+              {genres.map((e, i) => (
+                <li
+                  key={i}
+                  onClick={() => this.toggleFilter("genres", e)}
+                  className={filters["genres"].includes(e) ? "selected" : ""}
+                >
+                  {e}
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => this.resetFilter()} className="reset-tags">
               reset filters
             </button>
           </aside>
@@ -388,7 +435,7 @@ class Sounds extends React.Component {
                                 <span
                                   key={i}
                                   className="tag"
-                                  onClick={() => this.toggleTagFilter(e)}
+                                  onClick={() => this.toggleFilter("tags", e)}
                                 >
                                   {e}
                                 </span>
