@@ -25,15 +25,24 @@ class Sounds extends React.Component {
       tagFilters: [],
       filters: { tags: [], instrument_type: [], genres: [] },
       userDownloads: [],
+      searchQuery: "",
     };
   }
 
   nextBtnHandler = async () => {
     this.stopStreaming();
     window.scrollTo(0, 0);
-    let { limit, offset, page, maxPageFetched, maxPages } = this.state;
+    let {
+      limit,
+      offset,
+      page,
+      maxPageFetched,
+      maxPages,
+      searchQuery,
+    } = this.state;
 
     let needToFetch = page === maxPageFetched && page <= maxPages;
+    if (searchQuery) needToFetch = false;
     console.log({ needToFetch });
     this.setState({
       ...this.state,
@@ -60,19 +69,22 @@ class Sounds extends React.Component {
       });
   };
 
-  async fetchSoundList(offset) {
+  async fetchSoundList(offset, searchQuery) {
     const { filters } = this.state;
     let filtering = false;
     Object.values(filters).forEach((e) => {
       if (e.length && filtering === false) filtering = true;
     });
+    if (searchQuery === null) filtering = false;
+    // console.log({ filtering });
     let url = new URL("http://localhost:5000/api/audio");
     url.search = new URLSearchParams({
       limit: this.state.limit,
       offset,
-      tags: filters.tags,
-      instrument_type: filters.instrument_type,
-      genres: filters.genres,
+      tags: filtering ? filters.tags : [],
+      instrument_type: filtering ? filters.instrument_type : [],
+      genres: filtering ? filters.genres : [],
+      searchQuery: searchQuery ? searchQuery : "",
     });
     const { status, sounds } = await fetch(url, {
       method: "GET",
@@ -98,13 +110,18 @@ class Sounds extends React.Component {
       }
     });
     let newSoundList = [...this.state.soundList];
-    if (filtering === false && this.state.filtering) newSoundList = [];
+    if (
+      (filtering === false && this.state.filtering) ||
+      searchQuery === null ||
+      searchQuery
+    )
+      newSoundList = [];
     sounds.forEach((e) => {
       if (!this.state.soundList.includes(e)) newSoundList.push(e);
     });
     this.setState({
       ...this.state,
-      soundList: filtering ? sounds : newSoundList,
+      soundList: sounds.length ? (filtering ? sounds : newSoundList) : [],
       filtering,
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
@@ -229,12 +246,13 @@ class Sounds extends React.Component {
     let filters = this.state.filters;
     if (!filters[type].includes(value)) filters[type].push(value);
     else filters[type] = filters[type].filter((e) => e !== value);
-
+    document.getElementById("search").value = "";
     this.setState({
       ...this.state,
       filters,
       page: 1,
       offset: 0,
+      searchQuery: "",
     });
     this.fetchSoundList(this.state.offset);
   };
@@ -252,9 +270,23 @@ class Sounds extends React.Component {
         page: 1,
         offset: 0,
         filtering: false,
+        searchQuery: "",
       });
     }
-    this.fetchSoundList(this.state.offset, {});
+    this.fetchSoundList(0, null);
+  };
+
+  searchHandler = () => {
+    const searchQuery = document.getElementById("search").value;
+    this.setState({
+      ...this.state,
+      filters: { tags: [], instrument_type: [], genres: [] },
+      page: 1,
+      offset: 0,
+      filtering: false,
+      searchQuery,
+    });
+    this.fetchSoundList(0, searchQuery);
   };
 
   async componentDidMount() {
@@ -325,9 +357,10 @@ class Sounds extends React.Component {
       genres,
       filters,
       filtering,
+      searchQuery,
     } = this.state;
 
-    if (filtering) {
+    if (filtering || searchQuery) {
       maxPages = Math.ceil(soundList.length / limit);
     }
 
@@ -337,7 +370,10 @@ class Sounds extends React.Component {
         {/* todo color exclusive different color */}
         <div className="search-wrapper">
           <h1>SOUNDS</h1>
-          <div className="search-bar">SEARCH</div>
+          <input id="search" type="text" name="search" />
+          <button id="search-btn" onClick={this.searchHandler}>
+            Search
+          </button>
           <h3>{user.balance} credits</h3>
         </div>
         {message ? <h2>{message}</h2> : null}

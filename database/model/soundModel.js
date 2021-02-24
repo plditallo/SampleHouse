@@ -5,6 +5,7 @@ module.exports = {
     getSoundCount,
     getSounds,
     getSoundsBy,
+    searchSounds,
     getSoundsByTag,
     getColumn,
     updateSound,
@@ -32,6 +33,19 @@ function getSounds(limit, offset) {
 
 function getSoundsBy(column, value) {
     return db("Sound").where(column, "like", `%${value}%`);
+}
+
+function searchSounds(value) {
+    return db("Sound")
+        .where("name", "like", `%${value}%`)
+        .orWhere("pack", "like", `%${value}%`)
+        .orWhere("type", "like", `%${value}%`)
+        .orWhere("genre", "like", `%${value}%`)
+        .orWhere("tempo", "like", `%${value}%`)
+        .orWhere("duration", "like", `%${value}%`)
+        .orWhere("key", "like", `%${value}%`)
+        .orWhere("instrument_type", "like", `%${value}%`)
+        .orWhere("tags", "like", `%${value}%`)
 }
 
 function getColumn(column) {

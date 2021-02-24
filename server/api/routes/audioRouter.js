@@ -4,6 +4,7 @@ const downloadDb = require("../../../database/model/soundDownloadModel");
 const {
     getSounds,
     getSoundsBy,
+    searchSounds,
     getSoundCount,
     getColumn,
 } = require("../../../database/model/soundModel");
@@ -28,7 +29,8 @@ router.get("/", async (req, res) => {
             limit = 25,
             tags,
             genres,
-            instrument_type
+            instrument_type,
+            searchQuery
     } = req.query;
     let filtering = false;
     if (tags || genres || instrument_type) filtering = true;
@@ -38,8 +40,8 @@ router.get("/", async (req, res) => {
         instrument_type: instrument_type ? instrument_type.split(",") : []
     }
     let sounds = []
-    if (!filtering) sounds = await getSounds(limit, offset)
-    else {
+    if (!filtering && !searchQuery) sounds = await getSounds(limit, offset)
+    else if (filtering) {
         //! how to DRY???
         if (filters.tags.length) {
             const value = filters.tags[0];
@@ -63,11 +65,23 @@ router.get("/", async (req, res) => {
                 return sounds = sounds.filter(e => (e[key] && e[key].includes(value)))
             }
         })
+    } else if (searchQuery) {
+        const queries = searchQuery.split(" ");
+        let i = 0;
+        let searchedSounds = []
+        console.log(queries)
+        while (i < queries.length) {
+            await searchSounds(queries[0]).then(res => res.forEach(e => {
+                if (!searchedSounds.includes(e)) searchedSounds.push(e)
+            }))
+            i++;
+        }
+        sounds = searchedSounds
     }
-    // console.log(sounds.length)
-    console.log({
-        sounds
-    })
+    console.log(sounds.length)
+    // console.log({
+    //     sounds
+    // })
     if (sounds) res.status(200).send(sounds)
     else res.status(500).json({
         "msg": "unable to fetch sounds"
