@@ -40,38 +40,29 @@ router.get("/", async (req, res) => {
     let sounds = []
     if (!filtering) sounds = await getSounds(limit, offset)
     else {
-        let soundList = []
-        Object.keys(filters).forEach(async key => {
+        //! how to DRY???
+        if (filters.tags.length) {
+            const value = filters.tags[0];
+            sounds = await getSoundsBy("tags", filters.tags[0])
+            filters.tags = filters.tags.filter(e => e !== value)
+
+        } else if (filters.genres.length) {
+            const value = filters.genres[0];
+            sounds = await getSoundsBy("genre", filters.genres[0])
+            filters.genres = filters.genres.filter(e => e !== value)
+
+        } else if (filters.instrument_type.length) {
+            const value = filters.instrument_type[0];
+            sounds = await getSoundsBy("instrument_type", filters.instrument_type[0])
+            filters.instrument_type = filters.instrument_type.filter(e => e !== value)
+        }
+        Object.keys(filters).forEach(key => {
             if (filters[key].length) {
                 const value = filters[key][0]
                 filters[key] = filters[key].filter(e => e !== value)
-                soundList = await getSoundsBy(key, value)
+                return sounds = sounds.filter(e => (e[key] && e[key].includes(value)))
             }
         })
-        // console.log(soundsList)
-
-        // console.log(filters)
-        // if (filters.tags.length) {
-        //     const value = filters.tags[0];
-        //     sounds = await getSoundsBy("tags", filters.tags[0])
-        //     filters.tags = filters.tags.filter(e => e !== value)
-
-        // } else if (filters.genres.length) {
-        //     const value = filters.genres[0];
-        //     sounds = await getSoundsBy("genre", filters.genres[0])
-        //     filters.genres = filters.genres.filter(e => e !== value)
-
-        // } else if (filters.instrument_type.length) {
-        //     const value = filters.instrument_type[0];
-        //     sounds = await getSoundsBy("instrument_type", filters.instrument_type[0])
-        //     filters.instrument_type = filters.instrument_type.filter(e => e !== value)
-        // }
-        // console.log({
-        //     sounds
-        // })
-        // console.log("after", filters)
-        // console.log(sounds.length)
-        return sounds
     }
     // console.log(sounds.length)
     console.log({

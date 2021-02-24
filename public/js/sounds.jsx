@@ -62,6 +62,10 @@ class Sounds extends React.Component {
 
   async fetchSoundList(offset) {
     const { filters } = this.state;
+    let filtering = false;
+    Object.values(filters).forEach((e) => {
+      if (e.length && filtering === false) filtering = true;
+    });
     let url = new URL("http://localhost:5000/api/audio");
     url.search = new URLSearchParams({
       limit: this.state.limit,
@@ -93,14 +97,15 @@ class Sounds extends React.Component {
         this.fetchCover(e.pack);
       }
     });
-    const newSoundList = [...this.state.soundList];
-    // if (sounds)
+    let newSoundList = [...this.state.soundList];
+    if (filtering === false && this.state.filtering) newSoundList = [];
     sounds.forEach((e) => {
       if (!this.state.soundList.includes(e)) newSoundList.push(e);
     });
     this.setState({
       ...this.state,
-      soundList: newSoundList,
+      soundList: filtering ? sounds : newSoundList,
+      filtering,
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
     });
@@ -220,20 +225,11 @@ class Sounds extends React.Component {
     // console.log("link clicked for download");
   }
 
-  // toggleTagFilter = async (tag) => {
-  //   let tagFilters = this.state.tagFilters;
-  //   if (!tagFilters.includes(tag)) tagFilters.push(tag);
-  //   else tagFilters = tagFilters.filter((e) => e !== tag);
-  //   this.setState({ ...this.state, tagFilters, page: 1, offset: 0 });
-  //   this.fetchSoundList(this.state.offset, tagFilters);
-
-  //   // let filters = this.state.filters;
-  // };
-
   toggleFilter = (type, value) => {
     let filters = this.state.filters;
     if (!filters[type].includes(value)) filters[type].push(value);
     else filters[type] = filters[type].filter((e) => e !== value);
+
     this.setState({
       ...this.state,
       filters,
