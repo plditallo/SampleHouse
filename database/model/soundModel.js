@@ -4,7 +4,7 @@ module.exports = {
     insertSound,
     getSoundCount,
     getSounds,
-    getSoundBy,
+    getSoundsBy,
     getSoundsByTag,
     getColumn,
     updateSound,
@@ -30,8 +30,8 @@ function getSounds(limit, offset) {
     // .limit(limit).offset(offset)
 }
 
-function getSoundBy(column, value) {
-    return db("Sound").where(column, value)
+function getSoundsBy(column, value) {
+    return db("Sound").where(column, "like", `%${value}%`);
 }
 
 function getColumn(column) {

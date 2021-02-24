@@ -45,7 +45,7 @@ class Sounds extends React.Component {
           : maxPageFetched,
       loadingSoundList: needToFetch,
     });
-    if (needToFetch) await this.fetchSoundList(offset + limit);
+    if (needToFetch) this.fetchSoundList(offset + limit);
   };
 
   prevBtnHandler = () => {
@@ -60,7 +60,8 @@ class Sounds extends React.Component {
       });
   };
 
-  async fetchSoundList(offset, filters = this.state.filters) {
+  async fetchSoundList(offset) {
+    const { filters } = this.state;
     let url = new URL("http://localhost:5000/api/audio");
     url.search = new URLSearchParams({
       limit: this.state.limit,
@@ -82,8 +83,8 @@ class Sounds extends React.Component {
     }));
     console.log({ sounds });
     // if no sounds set message
-    if (status !== 200)
-      return window.localStorage.removeItem("samplehousetoken");
+    // if (status !== 200)
+    //   return window.localStorage.removeItem("samplehousetoken");
 
     const packList = [];
     sounds.forEach((e) => {
@@ -219,22 +220,27 @@ class Sounds extends React.Component {
     // console.log("link clicked for download");
   }
 
-  toggleTagFilter = async (tag) => {
-    let tagFilters = this.state.tagFilters;
-    if (!tagFilters.includes(tag)) tagFilters.push(tag);
-    else tagFilters = tagFilters.filter((e) => e !== tag);
-    this.setState({ ...this.state, tagFilters, page: 1, offset: 0 });
-    this.fetchSoundList(this.state.offset, tagFilters);
+  // toggleTagFilter = async (tag) => {
+  //   let tagFilters = this.state.tagFilters;
+  //   if (!tagFilters.includes(tag)) tagFilters.push(tag);
+  //   else tagFilters = tagFilters.filter((e) => e !== tag);
+  //   this.setState({ ...this.state, tagFilters, page: 1, offset: 0 });
+  //   this.fetchSoundList(this.state.offset, tagFilters);
 
-    // let filters = this.state.filters;
-  };
+  //   // let filters = this.state.filters;
+  // };
 
   toggleFilter = (type, value) => {
     let filters = this.state.filters;
     if (!filters[type].includes(value)) filters[type].push(value);
     else filters[type] = filters[type].filter((e) => e !== value);
-    this.setState({ ...this.state, filters, page: 1, offset: 0 });
-    this.fetchSoundList(this.state.offset, filters);
+    this.setState({
+      ...this.state,
+      filters,
+      page: 1,
+      offset: 0,
+    });
+    this.fetchSoundList(this.state.offset);
   };
 
   resetFilter = () => {
@@ -249,6 +255,7 @@ class Sounds extends React.Component {
         filters: { tags: [], instrument_type: [], genres: [] },
         page: 1,
         offset: 0,
+        filtering: false,
       });
     }
     this.fetchSoundList(this.state.offset, {});

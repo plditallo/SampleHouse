@@ -3,8 +3,7 @@ const userDb = require("../../../database/model/userModel");
 const downloadDb = require("../../../database/model/soundDownloadModel");
 const {
     getSounds,
-    getSoundBy,
-    getSoundsByTag,
+    getSoundsBy,
     getSoundCount,
     getColumn,
 } = require("../../../database/model/soundModel");
@@ -31,12 +30,53 @@ router.get("/", async (req, res) => {
             genres,
             instrument_type
     } = req.query;
+    let filtering = false;
+    if (tags || genres || instrument_type) filtering = true;
+    const filters = {
+        tags: tags ? tags.split(",") : [],
+        genres: genres ? genres.split(",") : [],
+        instrument_type: instrument_type ? instrument_type.split(",") : []
+    }
+    let sounds = []
+    if (!filtering) sounds = await getSounds(limit, offset)
+    else {
+        let soundList = []
+        Object.keys(filters).forEach(async key => {
+            if (filters[key].length) {
+                const value = filters[key][0]
+                filters[key] = filters[key].filter(e => e !== value)
+                soundList = await getSoundsBy(key, value)
+            }
+        })
+        // console.log(soundsList)
+
+        // console.log(filters)
+        // if (filters.tags.length) {
+        //     const value = filters.tags[0];
+        //     sounds = await getSoundsBy("tags", filters.tags[0])
+        //     filters.tags = filters.tags.filter(e => e !== value)
+
+        // } else if (filters.genres.length) {
+        //     const value = filters.genres[0];
+        //     sounds = await getSoundsBy("genre", filters.genres[0])
+        //     filters.genres = filters.genres.filter(e => e !== value)
+
+        // } else if (filters.instrument_type.length) {
+        //     const value = filters.instrument_type[0];
+        //     sounds = await getSoundsBy("instrument_type", filters.instrument_type[0])
+        //     filters.instrument_type = filters.instrument_type.filter(e => e !== value)
+        // }
+        // console.log({
+        //     sounds
+        // })
+        // console.log("after", filters)
+        // console.log(sounds.length)
+        return sounds
+    }
+    // console.log(sounds.length)
     console.log({
-        tags,
-        genres,
-        instrument_type
+        sounds
     })
-    const sounds = await getSounds(limit, offset)
     if (sounds) res.status(200).send(sounds)
     else res.status(500).json({
         "msg": "unable to fetch sounds"
