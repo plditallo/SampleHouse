@@ -31,9 +31,9 @@ class Sounds extends React.Component {
   nextBtnHandler = async () => {
     this.stopStreaming();
     window.scrollTo(0, 0);
-    const { limit, offset, page, maxPageFetched, maxPages } = this.state;
+    let { limit, offset, page, maxPageFetched, maxPages } = this.state;
+
     let needToFetch = page === maxPageFetched && page <= maxPages;
-    //! if (this.state.tagFilters.length) needToFetch = false;
     console.log({ needToFetch });
     this.setState({
       ...this.state,
@@ -310,7 +310,7 @@ class Sounds extends React.Component {
   }
 
   render() {
-    const {
+    let {
       soundList,
       covers,
       page,
@@ -324,13 +324,12 @@ class Sounds extends React.Component {
       instruments,
       genres,
       filters,
+      filtering,
     } = this.state;
-    // console.log(this.state);
-    // console.log(
-    //   { soundList },
-    //   "soundListSlice",
-    //   soundList.sort((a, b) => a.id - b.id).slice(offset, offset + limit)
-    // );
+
+    if (filtering) {
+      maxPages = Math.ceil(soundList.length / limit);
+    }
 
     return (
       <div className="home-wrapper">
