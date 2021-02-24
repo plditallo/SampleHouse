@@ -20,7 +20,7 @@ const verifyAdmin = require("./middleware/verifyAdmin");
 router.use("/user", userRouter);
 router.use("/token", tokenRouter);
 // router.use("/purchase", restricted, purchaseRouter);
-router.use("/audio", audioRouter) //todo restricted back in as middleware
+router.use("/audio", restricted, audioRouter)
 router.use("/contact", contactRouter)
 router.use("/paypal", payPalRouter)
 router.use("/product", restricted, productRouter)

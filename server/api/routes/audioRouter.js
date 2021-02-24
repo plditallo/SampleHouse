@@ -169,7 +169,7 @@ router.get("/download/:key", async (req, res) => {
     // insert
     if (!previousDownload) {
         console.log("not downloaded");
-        const [sound] = await getSoundBy("name", soundName)
+        const [sound] = await getSoundsBy("name", soundName)
         const {
             exclusive
         } = sound;

@@ -258,6 +258,7 @@ class Sounds extends React.Component {
 
   resetFilter = () => {
     const { filters } = this.state;
+    document.getElementById("search").value = "";
     if (
       filters.tags.length ||
       filters.instrument_type.length ||
@@ -319,6 +320,7 @@ class Sounds extends React.Component {
         },
       }
     ).then(async (res) => await res.json());
+
     const genres = await fetch("http://localhost:5000/api/audio/genres", {
       method: "GET",
       type: "cors",
@@ -327,6 +329,21 @@ class Sounds extends React.Component {
         authorization: token,
       },
     }).then(async (res) => await res.json());
+
+    window.document
+      .getElementById("search")
+      .addEventListener("keyup", function (e) {
+        var code;
+        if (e.key !== undefined) {
+          code = e.key; //Enter
+        } else if (e.keyIdentifier !== undefined) {
+          code = e.keyIdentifier; //13
+        } else if (e.keyCode !== undefined) {
+          code = e.keyCode;
+        }
+        if (code === "Enter" || code === 13)
+          document.getElementById("search-btn").click();
+      });
 
     this.setState({
       ...this.state,
