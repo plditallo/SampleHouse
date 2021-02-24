@@ -78,7 +78,7 @@ router.get("/", async (req, res) => {
         }
         sounds = searchedSounds
     }
-    console.log(sounds.length)
+    // console.log(sounds.length)
     // console.log({
     //     sounds
     // })

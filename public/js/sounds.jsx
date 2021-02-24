@@ -126,7 +126,6 @@ class Sounds extends React.Component {
       loadingSoundList: false,
       message: sounds.length ? "" : "No Sounds Found.",
     });
-    // console.log(this.state.loadingSoundList);
   }
 
   async streamSound(sound, evt) {
