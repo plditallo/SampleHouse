@@ -9,7 +9,8 @@ module.exports = {
     getSoundsByTag,
     getColumn,
     updateSound,
-    removeSound
+    removeSound,
+    getSoundById
 }
 //! .whereIn and LIKE for search functionality
 function insertSound(sound) {
@@ -33,6 +34,13 @@ function getSounds(limit, offset) {
 
 function getSoundsBy(column, value) {
     return db("Sound").where(column, "like", `%${value}%`);
+}
+
+function getSoundById(id) {
+    return db("Sound").where({
+        id
+    })
+
 }
 
 function searchSounds(value) {

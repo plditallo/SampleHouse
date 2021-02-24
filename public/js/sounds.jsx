@@ -24,7 +24,6 @@ class Sounds extends React.Component {
       filtering: false,
       tagFilters: [],
       filters: { tags: [], instrument_type: [], genres: [] },
-      userDownloads: [],
       searchQuery: "",
     };
   }
@@ -97,7 +96,7 @@ class Sounds extends React.Component {
       status: res.status,
       sounds: await res.json(),
     }));
-    console.log({ sounds });
+    // console.log({ sounds });
     // if no sounds set message
     // if (status !== 200)
     //   return window.localStorage.removeItem("samplehousetoken");
@@ -287,6 +286,10 @@ class Sounds extends React.Component {
       searchQuery,
     });
     this.fetchSoundList(0, searchQuery);
+  };
+
+  editHandler = (sound) => {
+    console.log({ sound });
   };
 
   async componentDidMount() {
@@ -507,15 +510,25 @@ class Sounds extends React.Component {
                             : null}
                         </td>
                         <td className="type">{sound.type}</td>
-                        <td>
-                          {/* //todo already downloaded? */}
-                          <img
-                            src="../assets/download-icon.png"
-                            alt="download"
-                            onClick={() => this.download(sound)}
-                            className="download-btn"
-                          />
-                        </td>
+                        {user.role !== "admin" ? (
+                          <td>
+                            <img
+                              src="../assets/download-icon.png"
+                              alt="download"
+                              onClick={() => this.download(sound)}
+                              className="download-btn"
+                            />
+                          </td>
+                        ) : (
+                          <td
+                            className="edit"
+                            onClick={() =>
+                              (window.location = `admin#${sound.id}`)
+                            }
+                          >
+                            edit
+                          </td>
+                        )}
                       </tr>
                     );
                   })}

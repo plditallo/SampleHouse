@@ -7,6 +7,7 @@ const {
     searchSounds,
     getSoundCount,
     getColumn,
+    getSoundById,
 } = require("../../../database/model/soundModel");
 const {
     getTags,
@@ -193,6 +194,13 @@ router.get("/download/:key", async (req, res) => {
 
 })
 //? todo the client is refreshing because of an update to the userDb or downloadDb
+
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    const sound = await getSoundById(id)
+    if (sound) res.status(200).json(sound);
+    else res.status(500)
+})
 
 router.use("/", (req, res) => {
     res.status(200).json({
